@@ -303,6 +303,19 @@
       text-align: center;
       color: #8b6f5a;
     }
+    .footer-links {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .footer-links a {
+      color: #8b6f5a;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 11px;
+    }
 
     /* Floating WhatsApp button */
     .wa-float {
@@ -343,6 +356,30 @@
       display: block;
       width: 260px;
       height: 260px;
+    }
+
+    /* Info / Policy sections */
+    .info-section {
+      margin-top: 30px;
+      padding: 18px 16px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid #e6dcd1;
+    }
+    .info-section h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      color: var(--accent);
+    }
+    .info-section p,
+    .info-section ul {
+      margin: 4px 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .info-section ul {
+      padding-left: 18px;
     }
 
     @media (max-width: 900px) {
@@ -444,8 +481,92 @@
     <p>WhatsApp: +91 70755 35180</p>
   </section>
 
+  <!-- Info / Policy Sections -->
+  <section id="cancellation" class="info-section">
+    <h3>Cancellation & Refunds</h3>
+    <p>
+      Orders can be cancelled within <strong>2 hours</strong> of placing the order by contacting us on WhatsApp.
+      Once the order is packed or shipped, cancellation may not be possible.
+    </p>
+    <p>
+      Refunds are processed only for:
+    </p>
+    <ul>
+      <li>Wrong product delivered</li>
+      <li>Damaged or leaked packages (with unboxing photos/video proof)</li>
+      <li>Order cancelled before dispatch</li>
+    </ul>
+    <p>
+      Approved refunds will be initiated within <strong>5–7 working days</strong> to the original payment method.
+    </p>
+  </section>
+
+  <section id="terms" class="info-section">
+    <h3>Terms and Conditions</h3>
+    <ul>
+      <li>All products are homemade and prepared in small batches.</li>
+      <li>Prices, offers and availability are subject to change without prior notice.</li>
+      <li>Weights mentioned (500gm / 1kg) are approximate net weights at the time of packing.</li>
+      <li>By placing an order, you agree to share your contact & address details for delivery and updates.</li>
+      <li>In case of disputes, decision of SRK Pickles will be final.</li>
+    </ul>
+  </section>
+
+  <section id="shipping" class="info-section">
+    <h3>Shipping</h3>
+    <p>
+      We currently ship within India only. Shipping charges are calculated as per the rule mentioned above.
+      In some remote locations, additional charges may apply – we will inform you on WhatsApp before dispatch.
+    </p>
+    <p>
+      Orders are usually dispatched within <strong>2–4 working days</strong>. Delivery time depends on your location
+      and courier service (typically 3–7 days after dispatch).
+    </p>
+    <p>
+      Once your order is shipped, tracking details will be shared on WhatsApp wherever available.
+    </p>
+  </section>
+
+  <section id="privacy" class="info-section">
+    <h3>Privacy</h3>
+    <p>
+      We value your privacy. Your name, phone number, address and order details are used only for:
+    </p>
+    <ul>
+      <li>Processing and delivering your orders</li>
+      <li>Order updates or support over WhatsApp / phone</li>
+      <li>Occasional updates about offers (only if you choose to receive them)</li>
+    </ul>
+    <p>
+      We do not sell or share your personal information with any third parties, except courier and payment partners
+      who need the data to fulfil your order.
+    </p>
+  </section>
+
+  <section id="contact" class="info-section">
+    <h3>Contact Us</h3>
+    <p>
+      Have a question about orders, payments or custom combos? Reach out to us:
+    </p>
+    <ul>
+      <li><strong>WhatsApp:</strong> <a href="https://wa.me/917075535180" target="_blank">+91 70755 35180</a></li>
+      <li><strong>Email:</strong> <a href="mailto:srkpicklescare@gmail.com">srkpicklescare@gmail.com</a> (example – change to your real email)</li>
+      <li><strong>Timings:</strong> 9:00 AM – 8:00 PM (IST), all days</li>
+    </ul>
+    <p>
+      You can also use the cart form above, place your order, and we will confirm everything on WhatsApp.
+    </p>
+  </section>
+
   <footer>
-    © SRK Pickles • Handmade in India • Hosted on Netlify
+    © SRK Pickles • Handmade in India • Hosted on GitHub Pages
+    <div class="footer-links">
+      <a href="#cancellation">Cancellation & Refunds</a>
+      <a href="#terms">Terms & Conditions</a>
+      <a href="#shipping">Shipping</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#contact">Contact Us</a>
+    </div>
   </footer>
 </main>
 
@@ -455,35 +576,36 @@
 <script>
   /* ========= CONFIG ========= */
 
-  // Replace with your own Razorpay Key ID
-  const RAZORPAY_KEY_ID = "rzp_test_yourkeyhere";
+  // Your Razorpay Test Key ID
+  const RAZORPAY_KEY_ID = "rzp_test_RjIlHnCaJvNjJ7";
 
-  // Replace with your deployed Google Apps Script Web App URL
+  // Optional: Google Sheets webhook (leave as-is to disable)
   const SHEETS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
-  // Your WhatsApp number (for both QR & order)
+  // Your WhatsApp number (for orders)
   const OWNER_WHATSAPP_NUMBER = "917075535180";
 
   /* ========= PRODUCT DATA ========= */
-const IMAGE_MAP = {
-  "mango-garlic": "images/mango-garlic.jpg",
-  "mango-no-garlic": "images/mango-plain.jpg",
-  "magaya": "images/magaya.jpg",
-  "bellam-avakaya": "images/bellam-avakaya.jpg",
-  "tomato": "images/tomato.jpg",
-  "gongura": "images/gongura.jpg",
-  "ginger": "images/ginger.jpg",
-  "red-chilli": "images/red-chilli.jpg",
-  "tamarind": "images/tamarind.jpg",
-  "amla": "images/amla.jpg",
-  "lemon": "images/lemon.jpg",
-  "kandi-podi": "images/kandi-podi.jpg",
-  "karapu-podi": "images/karapu-podi.jpg",
-  "karivepaku-podi": "images/karivepaku-podi.jpg",
-  "idly-chutney-podi": "images/idly-chutney-podi.jpg",
-  "sambar-podi": "images/sambar-podi.jpg",
-  "rasam-podi": "images/rasam-podi.jpg"
-};
+  const IMAGE_MAP = {
+    "mango-garlic": "images/mango-garlic.jpg",
+    "mango-no-garlic": "images/mango-plain.jpg",
+    "magaya": "images/magaya.jpg",
+    "bellam-avakaya": "images/bellam-avakaya.jpg",
+    "tomato": "images/tomato.jpg",
+    "gongura": "images/gongura.jpg",
+    "ginger": "images/ginger.jpg",
+    "red-chilli": "images/red-chilli.jpg",
+    "tamarind": "images/tamarind.jpg",
+    "amla": "images/amla.jpg",
+    "lemon": "images/lemon.jpg",
+    "kandi-podi": "images/kandi-podi.jpg",
+    "karapu-podi": "images/karapu-podi.jpg",
+    "karivepaku-podi": "images/karivepaku-podi.jpg",
+    "idly-chutney-podi": "images/idly-chutney-podi.jpg",
+    "sambar-podi": "images/sambar-podi.jpg",
+    "rasam-podi": "images/rasam-podi.jpg"
+  };
+
   const PRODUCTS = [
     // Pickles
     { id:"mango-garlic", category:"pickles", name:"Mango Pickle (With Garlic)", desc:"Classic taste that stays with you forever - best of all.", prices:{ "500":400, "1000":800 } },
@@ -514,7 +636,7 @@ const IMAGE_MAP = {
     card.className = "product-card";
 
     const img = document.createElement("img");
-    img.src = IMAGE_MAP[product.id] || "srk-logo.png";        // uniform style – use logo as product image
+    img.src = IMAGE_MAP[product.id] || "srk-logo.png";
     img.alt = product.name;
     card.appendChild(img);
 
@@ -726,10 +848,11 @@ const IMAGE_MAP = {
       cartItemsDiv.appendChild(row);
     }
 
-    cartCountSpan.textContent = String(totals.totalQty);
-    subtotalSpan.textContent = "Rs. " + totals.subtotal;
-    deliverySpan.textContent = "Rs. " + totals.delivery;
-    grandSpan.textContent = "Rs. " + totals.grand;
+    const totalsNow = getTotals();
+    cartCountSpan.textContent = String(totalsNow.totalQty);
+    subtotalSpan.textContent = "Rs. " + totalsNow.subtotal;
+    deliverySpan.textContent = "Rs. " + totalsNow.delivery;
+    grandSpan.textContent = "Rs. " + totalsNow.grand;
   }
 
   /* ========= GOOGLE SHEETS INTEGRATION ========= */
@@ -807,8 +930,9 @@ const IMAGE_MAP = {
       return;
     }
 
-    if (!RAZORPAY_KEY_ID || RAZORPAY_KEY_ID.indexOf("rzp_test_RjIlHnCaJvNjJ7") !== -1) {
-      alert("Razorpay key is not configured. Please set RAZORPAY_KEY_ID in the code.");
+    // Check that Razorpay script loaded
+    if (typeof Razorpay === "undefined") {
+      alert("Unable to load Razorpay checkout. Please check your internet connection or disable ad blocker.");
       return;
     }
 
@@ -871,4 +995,3 @@ const IMAGE_MAP = {
 </script>
 </body>
 </html>
-
