@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SRK Pickles – Online Store</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Razorpay Checkout -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <style>
+    :root {
+      --bg: #fffdf7;
+      --accent: #0f5b4f;
+      --accent-2: #c0392b;
+      --card: #ffffff;
+      --muted: #7a6a60;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: #222;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 14px 18px;
+      background: linear-gradient(90deg, #f7e8d9, #fffefc);
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-wrap img {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      object-fit: cover;
+      box-shadow: 0 6px 18px rgba(16,24,40,0.14);
+    }
+    .brand {
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--accent);
+    }
+    .tagline {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      margin-left: 24px;
+      flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: var(--accent-2);
+      background: #fff;
+      border: 1px solid rgba(192,57,43,0.12);
+    }
+
+    .search-wrap {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .search-wrap input {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #e6dcd1;
+      font-size: 13px;
+      width: 180px;
+    }
+    .btn-pill {
+      border-radius: 999px;
+      border: none;
+      background: var(--accent-2);
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Offer banner */
+    .offer-banner {
+      background: #c0392b;
+      color: #fff;
+      text-align: center;
+      padding: 10px 6px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.75fr) minmax(0, 0.9fr);
+      gap: 18px;
+    }
+
+    h2.section-title {
+      margin: 18px 0 10px;
+      color: #4d3825;
+      font-size: 20px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
+    .product-card {
+      background: var(--card);
+      border-radius: 14px;
+      border: 2px solid #e6dcd1;
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      box-shadow: 0 4px 14px rgba(16,24,40,0.05);
+    }
+    .product-card img {
+      width: 90px;
+      height: 90px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .product-card h4 {
+      margin: 0 0 4px;
+      font-size: 15px;
+      color: var(--accent);
+    }
+    .product-desc {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .price-line {
+      margin-top: 6px;
+      font-size: 13px;
+    }
+    .price-main {
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+    .product-actions {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .product-actions select,
+    .product-actions input {
+      padding: 5px 6px;
+      border-radius: 8px;
+      border: 1px solid #e6dcd1;
+      font-size: 12px;
+    }
+    .product-actions input {
+      width: 50px;
+      text-align: center;
+    }
+    .btn-add {
+      background: var(--accent-2);
+      color: #fff;
+      border-radius: 8px;
+      border: none;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Cart / sidebar */
+    .cart-box {
+      position: sticky;
+      top: 100px;
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #efe7df;
+      padding: 14px;
+      box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+    }
+    .cart-box h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      color: var(--accent);
+    }
+    .cart-items {
+      max-height: 260px;
+      overflow-y: auto;
+      margin: 8px 0 10px;
+      padding-right: 2px;
+    }
+    .cart-empty {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .cart-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px dashed #f0e6de;
+      font-size: 12px;
+    }
+    .cart-row:last-child { border-bottom: none; }
+    .cart-row-title {
+      font-weight: 600;
+      color: #4d3825;
+      margin-bottom: 2px;
+    }
+    .cart-row-sub {
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .cart-row-controls button {
+      border-radius: 999px;
+      border: none;
+      background: #f3e6dd;
+      padding: 2px 7px;
+      margin-left: 3px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .cart-total-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .cart-total-line strong {
+      font-weight: 700;
+    }
+    .cart-note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .cart-form {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cart-form label {
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+    .cart-form input,
+    .cart-form textarea {
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid #e6dcd1;
+      font-size: 13px;
+      resize: vertical;
+    }
+
+    .btn-checkout {
+      width: 100%;
+      border-radius: 999px;
+      border: none;
+      padding: 9px 10px;
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    footer {
+      margin-top: 22px;
+      font-size: 12px;
+      text-align: center;
+      color: #8b6f5a;
+    }
+
+    /* Floating WhatsApp button */
+    .wa-float {
+      position: fixed;
+      width: 55px;
+      height: 55px;
+      bottom: 22px;
+      right: 22px;
+      background: #25d366;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(16,24,40,0.25);
+      z-index: 999;
+    }
+
+    /* QR Poster */
+    .qr-poster {
+      margin-top: 40px;
+      padding: 20px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px dashed #e0c8b8;
+      text-align: center;
+    }
+    .qr-poster h3 {
+      margin-top: 0;
+      color: var(--accent);
+    }
+    .qr-poster img {
+      margin: 10px auto;
+      display: block;
+      width: 260px;
+      height: 260px;
+    }
+
+    @media (max-width: 900px) {
+      header { flex-wrap: wrap; }
+      nav { margin-left: 0; }
+      .layout { grid-template-columns: minmax(0,1fr); }
+      .products-grid { grid-template-columns: minmax(0,1fr); }
+      .cart-box { position: static; margin-top: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="logo-wrap">
+    <!-- Put srk-logo.png in SAME folder as this HTML -->
+    <img src="srk-logo.png" alt="SRK Pickles Logo" />
+    <div>
+      <div class="brand">SRK Pickles</div>
+      <div class="tagline">Flavor Crafted.</div>
+    </div>
+  </div>
+
+  <nav>
+    <a href="#pickles">PICKLES</a>
+    <a href="#powders">POWDERS</a>
+  </nav>
+
+  <div class="search-wrap">
+    <input id="search" placeholder="Search products..." />
+    <button class="btn-pill">Cart (<span id="cart-count">0</span>)</button>
+  </div>
+</header>
+
+<div class="offer-banner">🎉 Buy 2 kg & Get ½ kg FREE — Limited Time Offer! 🎉</div>
+
+<main>
+  <div class="layout">
+    <!-- LEFT: Products -->
+    <section>
+      <h2 id="pickles" class="section-title">Pickles</h2>
+      <div id="pickles-list" class="products-grid"></div>
+
+      <h2 id="powders" class="section-title">Powders</h2>
+      <div id="powders-list" class="products-grid"></div>
+    </section>
+
+    <!-- RIGHT: Cart -->
+    <aside class="cart-box">
+      <h3>Your Cart</h3>
+      <div id="cart-items" class="cart-items cart-empty">No items in cart</div>
+
+      <div class="cart-total-line">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">Rs. 0</span>
+      </div>
+      <div class="cart-total-line">
+        <span>Delivery</span>
+        <span id="cart-delivery">Rs. 0</span>
+      </div>
+      <div class="cart-total-line">
+        <strong>Total Payable</strong>
+        <strong id="cart-grand">Rs. 0</strong>
+      </div>
+      <div class="cart-note">
+        Delivery rule: Free delivery for orders above Rs.1200, otherwise flat Rs.80.
+      </div>
+
+      <div class="cart-form">
+        <div>
+          <label for="cust-name">Customer Name</label>
+          <input id="cust-name" placeholder="Name" />
+        </div>
+        <div>
+          <label for="cust-phone">Phone Number</label>
+          <input id="cust-phone" placeholder="Phone number" />
+        </div>
+        <div>
+          <label for="cust-address">Address</label>
+          <textarea id="cust-address" rows="3" placeholder="Delivery address"></textarea>
+        </div>
+      </div>
+
+      <!-- This button will: 1) Take Razorpay payment 2) Send order on WhatsApp -->
+      <button id="btn-pay-wa" class="btn-checkout">
+        Pay Online & Send Order on WhatsApp
+      </button>
+    </aside>
+  </div>
+
+  <!-- QR Ordering Poster -->
+  <section class="qr-poster">
+    <h3>Scan to Order on WhatsApp</h3>
+    <p>Show this QR in your shop or events. Customers can scan and chat directly with SRK Pickles.</p>
+    <img
+      src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fwa.me%2F917075535180"
+      alt="WhatsApp Order QR"
+    />
+    <p>WhatsApp: +91 70755 35180</p>
+  </section>
+
+  <footer>
+    © SRK Pickles • Handmade in India • Hosted on Netlify
+  </footer>
+</main>
+
+<!-- Floating WhatsApp quick-chat button -->
+<a href="https://wa.me/917075535180" class="wa-float" target="_blank">💬</a>
+
+<script>
+  /* ========= CONFIG ========= */
+
+  // Replace with your own Razorpay Key ID
+  const RAZORPAY_KEY_ID = "rzp_test_yourkeyhere";
+
+  // Replace with your deployed Google Apps Script Web App URL
+  const SHEETS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+  // Your WhatsApp number (for both QR & order)
+  const OWNER_WHATSAPP_NUMBER = "917075535180";
+
+  /* ========= PRODUCT DATA ========= */
+const IMAGE_MAP = {
+  "mango-garlic": "images/mango-garlic.jpg",
+  "mango-no-garlic": "images/mango-plain.jpg",
+  "magaya": "images/magaya.jpg",
+  "bellam-avakaya": "images/bellam-avakaya.jpg",
+  "tomato": "images/tomato.jpg",
+  "gongura": "images/gongura.jpg",
+  "ginger": "images/ginger.jpg",
+  "red-chilli": "images/red-chilli.jpg",
+  "tamarind": "images/tamarind.jpg",
+  "amla": "images/amla.jpg",
+  "lemon": "images/lemon.jpg",
+  "kandi-podi": "images/kandi-podi.jpg",
+  "karapu-podi": "images/karapu-podi.jpg",
+  "karivepaku-podi": "images/karivepaku-podi.jpg",
+  "idly-chutney-podi": "images/idly-chutney-podi.jpg",
+  "sambar-podi": "images/sambar-podi.jpg",
+  "rasam-podi": "images/rasam-podi.jpg"
+};
+  const PRODUCTS = [
+    // Pickles
+    { id:"mango-garlic", category:"pickles", name:"Mango Pickle (With Garlic)", desc:"Classic taste that stays with you forever - best of all.", prices:{ "500":400, "1000":800 } },
+    { id:"mango-no-garlic", category:"pickles", name:"Mango Pickle (Without Garlic)", desc:"Classic taste that stays with you forever - best of all.", prices:{ "500":350, "1000":700 } },
+    { id:"magaya", category:"pickles", name:"Magaya Pickle", desc:"Sun-dried Mango pickle. An aromatic preparation that is an all-time favourite.", prices:{ "500":350, "1000":700 } },
+    { id:"bellam-avakaya", category:"pickles", name:"Bellam Avakaya", desc:"Sweet Avakaya. Blend of classic Avakaya & jaggery.", prices:{ "500":400, "1000":800 } },
+    { id:"tomato", category:"pickles", name:"Tomato Pickle", desc:"Spicy, tangy and savoury tomato pickle.", prices:{ "500":350, "1000":700 } },
+    { id:"gongura", category:"pickles", name:"Gongura Pickle", desc:"Sorrel Leaves pickle, heartthrob of Telugu people.", prices:{ "500":350, "1000":700 } },
+    { id:"ginger", category:"pickles", name:"Ginger Pickle", desc:"Sweet and spicy ginger pickle for anytime and anything.", prices:{ "500":350, "1000":700 } },
+    { id:"red-chilli", category:"pickles", name:"Red Chilli Pickle", desc:"Red Chilli Pickle, Korivi Karam – spicy earthy flavour.", prices:{ "500":350, "1000":700 } },
+    { id:"tamarind", category:"pickles", name:"Tamarind Pickle", desc:"Sharp, spicy and tangy flavoured pickle.", prices:{ "500":350, "1000":700 } },
+    { id:"amla", category:"pickles", name:"Amla Pickle", desc:"Spicy, tangy amla pickle.", prices:{ "500":350, "1000":700 } },
+    { id:"lemon", category:"pickles", name:"Lemon Pickle", desc:"Juicy marinated lemon pickle.", prices:{ "500":350, "1000":700 } },
+
+    // Powders
+    { id:"kandi-podi", category:"powders", name:"Kandi Podi", desc:"Toor Dal Powder – spicy lentil powder.", prices:{ "500":300, "1000":600 } },
+    { id:"karapu-podi", category:"powders", name:"Karapu podi (Nalla karam)", desc:"Hot, spicy and tangy powder.", prices:{ "500":300, "1000":600 } },
+    { id:"karivepaku-podi", category:"powders", name:"Karivepaku podi", desc:"Curry Leaves Powder – sour and spicy.", prices:{ "500":300, "1000":600 } },
+    { id:"idly-chutney-podi", category:"powders", name:"Idly chutney podi", desc:"Flavourful spicy chutney powder.", prices:{ "500":300, "1000":600 } },
+    { id:"sambar-podi", category:"powders", name:"Sambar podi", desc:"Traditional sambar powder.", prices:{ "500":300, "1000":600 } },
+    { id:"rasam-podi", category:"powders", name:"Rasam podi", desc:"Flavourful, spicy and aromatic rasam powder.", prices:{ "500":300, "1000":600 } }
+  ];
+
+  /* ========= RENDER PRODUCTS ========= */
+
+  function makeProductCard(product) {
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    const img = document.createElement("img");
+    img.src = IMAGE_MAP[product.id] || "srk-logo.png";        // uniform style – use logo as product image
+    img.alt = product.name;
+    card.appendChild(img);
+
+    const info = document.createElement("div");
+
+    const h4 = document.createElement("h4");
+    h4.textContent = product.name;
+    info.appendChild(h4);
+
+    const desc = document.createElement("div");
+    desc.className = "product-desc";
+    desc.textContent = product.desc;
+    info.appendChild(desc);
+
+    const priceLine = document.createElement("div");
+    priceLine.className = "price-line";
+    priceLine.innerHTML =
+      '<span class="price-main">Rs.' + product.prices["1000"] +
+      '/kg</span> | Rs.' + product.prices["500"] + '/500gm';
+    info.appendChild(priceLine);
+
+    const actions = document.createElement("div");
+    actions.className = "product-actions";
+
+    const sizeSelect = document.createElement("select");
+    const opt1 = document.createElement("option");
+    opt1.value = "1000";
+    opt1.textContent = "1 kg – Rs." + product.prices["1000"];
+    const opt2 = document.createElement("option");
+    opt2.value = "500";
+    opt2.textContent = "500 gm – Rs." + product.prices["500"];
+    sizeSelect.appendChild(opt1);
+    sizeSelect.appendChild(opt2);
+
+    const qtyInput = document.createElement("input");
+    qtyInput.type = "number";
+    qtyInput.min = "1";
+    qtyInput.value = "1";
+
+    const addBtn = document.createElement("button");
+    addBtn.className = "btn-add";
+    addBtn.textContent = "ADD TO CART";
+
+    addBtn.addEventListener("click", function () {
+      const size = sizeSelect.value;
+      const qty = parseInt(qtyInput.value, 10) || 1;
+      addToCart(product, size, qty);
+    });
+
+    actions.appendChild(sizeSelect);
+    actions.appendChild(qtyInput);
+    actions.appendChild(addBtn);
+
+    info.appendChild(actions);
+    card.appendChild(info);
+    return card;
+  }
+
+  function renderProducts() {
+    const picklesList = document.getElementById("pickles-list");
+    const powdersList = document.getElementById("powders-list");
+    picklesList.innerHTML = "";
+    powdersList.innerHTML = "";
+
+    const searchValue = document.getElementById("search").value.toLowerCase();
+
+    for (let i = 0; i < PRODUCTS.length; i++) {
+      const p = PRODUCTS[i];
+      const match =
+        !searchValue ||
+        p.name.toLowerCase().indexOf(searchValue) !== -1 ||
+        p.desc.toLowerCase().indexOf(searchValue) !== -1;
+
+      if (!match) continue;
+
+      const card = makeProductCard(p);
+      if (p.category === "pickles") picklesList.appendChild(card);
+      else powdersList.appendChild(card);
+    }
+  }
+
+  /* ========= CART ========= */
+
+  let CART = [];
+
+  function addToCart(product, size, qty) {
+    const key = product.id + "|" + size;
+    let existing = null;
+    for (let i = 0; i < CART.length; i++) {
+      if (CART[i].key === key) {
+        existing = CART[i];
+        break;
+      }
+    }
+    const unitPrice = product.prices[size];
+    if (!unitPrice) return;
+
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      CART.push({
+        key: key,
+        name: product.name,
+        size: size,
+        qty: qty,
+        unitPrice: unitPrice
+      });
+    }
+    renderCart();
+  }
+
+  function calculateDelivery(subtotal) {
+    // Delivery rule: free >= 1200, else 80
+    if (subtotal >= 1200) return 0;
+    return 80;
+  }
+
+  function getTotals() {
+    let subtotal = 0;
+    let totalQty = 0;
+    for (let i = 0; i < CART.length; i++) {
+      subtotal += CART[i].unitPrice * CART[i].qty;
+      totalQty += CART[i].qty;
+    }
+    const delivery = calculateDelivery(subtotal);
+    const grand = subtotal + delivery;
+    return { subtotal, delivery, grand, totalQty };
+  }
+
+  function renderCart() {
+    const cartItemsDiv = document.getElementById("cart-items");
+    const cartCountSpan = document.getElementById("cart-count");
+    const subtotalSpan = document.getElementById("cart-subtotal");
+    const deliverySpan = document.getElementById("cart-delivery");
+    const grandSpan = document.getElementById("cart-grand");
+
+    if (!CART.length) {
+      cartItemsDiv.className = "cart-items cart-empty";
+      cartItemsDiv.textContent = "No items in cart";
+      cartCountSpan.textContent = "0";
+      subtotalSpan.textContent = "Rs. 0";
+      deliverySpan.textContent = "Rs. 0";
+      grandSpan.textContent = "Rs. 0";
+      return;
+    }
+
+    cartItemsDiv.className = "cart-items";
+    cartItemsDiv.innerHTML = "";
+
+    const totals = getTotals();
+
+    for (let i = 0; i < CART.length; i++) {
+      const item = CART[i];
+
+      const row = document.createElement("div");
+      row.className = "cart-row";
+
+      const left = document.createElement("div");
+      const title = document.createElement("div");
+      title.className = "cart-row-title";
+      title.textContent = item.name;
+      const sub = document.createElement("div");
+      sub.className = "cart-row-sub";
+      const sizeLabel = item.size === "1000" ? "1 kg" : "500 gm";
+      sub.textContent = sizeLabel + " × " + item.qty;
+      left.appendChild(title);
+      left.appendChild(sub);
+
+      const right = document.createElement("div");
+      const amount = document.createElement("div");
+      amount.textContent = "Rs." + (item.unitPrice * item.qty);
+
+      const controls = document.createElement("div");
+      controls.className = "cart-row-controls";
+
+      (function(index){
+        const minusBtn = document.createElement("button");
+        minusBtn.textContent = "-";
+        minusBtn.addEventListener("click", function () {
+          CART[index].qty -= 1;
+          if (CART[index].qty <= 0) CART.splice(index, 1);
+          renderCart();
+        });
+
+        const plusBtn = document.createElement("button");
+        plusBtn.textContent = "+";
+        plusBtn.addEventListener("click", function () {
+          CART[index].qty += 1;
+          renderCart();
+        });
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "x";
+        removeBtn.addEventListener("click", function () {
+          CART.splice(index, 1);
+          renderCart();
+        });
+
+        controls.appendChild(minusBtn);
+        controls.appendChild(plusBtn);
+        controls.appendChild(removeBtn);
+      })(i);
+
+      right.appendChild(amount);
+      right.appendChild(controls);
+
+      row.appendChild(left);
+      row.appendChild(right);
+      cartItemsDiv.appendChild(row);
+    }
+
+    cartCountSpan.textContent = String(totals.totalQty);
+    subtotalSpan.textContent = "Rs. " + totals.subtotal;
+    deliverySpan.textContent = "Rs. " + totals.delivery;
+    grandSpan.textContent = "Rs. " + totals.grand;
+  }
+
+  /* ========= GOOGLE SHEETS INTEGRATION ========= */
+
+  function sendOrderToGoogleSheets(orderData) {
+    if (!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL.indexOf("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1) {
+      console.warn("Google Sheets webhook URL not configured.");
+      return;
+    }
+    try {
+      fetch(SHEETS_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData)
+      }).catch(function(err) {
+        console.error("Sheets error:", err);
+      });
+    } catch (e) {
+      console.error("Sheets error:", e);
+    }
+  }
+
+  /* ========= WHATSAPP MESSAGE BUILDER ========= */
+
+  function buildWhatsAppMessage(name, phone, addr, paymentId, totals) {
+    let text = "New SRK Pickles Order%0A%0A";
+    text += "Name: " + encodeURIComponent(name) + "%0A";
+    text += "Phone: " + encodeURIComponent(phone) + "%0A";
+    text += "Address: " + encodeURIComponent(addr) + "%0A%0A";
+
+    text += "Items:%0A";
+    for (let i = 0; i < CART.length; i++) {
+      const item = CART[i];
+      const sizeLabel = item.size === "1000" ? "1 kg" : "500 gm";
+      const line =
+        "- " + item.name + " (" + sizeLabel + ") x " + item.qty +
+        " = Rs." + (item.unitPrice * item.qty);
+      text += encodeURIComponent(line) + "%0A";
+    }
+
+    text += "%0ASubtotal: Rs." + totals.subtotal;
+    text += "%0ADelivery: Rs." + totals.delivery;
+    text += "%0ATotal: Rs." + totals.grand;
+
+    if (paymentId) {
+      text += "%0A%0APayment: Paid via Razorpay";
+      text += "%0ATransaction ID: " + encodeURIComponent(paymentId);
+    } else {
+      text += "%0A%0APayment: Cash on Delivery";
+    }
+
+    return text;
+  }
+
+  /* ========= PAYMENT + WHATSAPP FLOW ========= */
+
+  function startPaymentAndWhatsApp() {
+    if (!CART.length) {
+      alert("Please add at least one item to the cart.");
+      return;
+    }
+
+    const name = document.getElementById("cust-name").value.trim();
+    const phone = document.getElementById("cust-phone").value.trim();
+    const addr = document.getElementById("cust-address").value.trim();
+
+    if (!name || !phone || !addr) {
+      alert("Please fill Name, Phone and Address.");
+      return;
+    }
+
+    const totals = getTotals();
+    if (totals.grand <= 0) {
+      alert("Total amount is zero.");
+      return;
+    }
+
+    if (!RAZORPAY_KEY_ID || RAZORPAY_KEY_ID.indexOf("rzp_test_yourkeyhere") !== -1) {
+      alert("Razorpay key is not configured. Please set RAZORPAY_KEY_ID in the code.");
+      return;
+    }
+
+    const options = {
+      key: RAZORPAY_KEY_ID,
+      amount: totals.grand * 100, // in paise
+      currency: "INR",
+      name: "SRK Pickles",
+      description: "Online order payment",
+      prefill: {
+        name: name,
+        contact: phone
+      },
+      notes: {
+        address: addr
+      },
+      theme: {
+        color: "#0f5b4f"
+      },
+      handler: function (response) {
+        const paymentId = response.razorpay_payment_id;
+        alert("Payment successful! Transaction ID: " + paymentId);
+
+        // send to Google Sheets
+        const orderPayload = {
+          name: name,
+          phone: phone,
+          address: addr,
+          cart: CART,
+          subtotal: totals.subtotal,
+          delivery: totals.delivery,
+          total: totals.grand,
+          paymentId: paymentId,
+          createdAt: new Date().toISOString()
+        };
+        sendOrderToGoogleSheets(orderPayload);
+
+        // open WhatsApp with order + payment ID
+        const msg = buildWhatsAppMessage(name, phone, addr, paymentId, totals);
+        const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
+        window.open(url, "_blank");
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on("payment.failed", function (resp) {
+      alert("Payment failed or cancelled. Please try again.");
+      console.error(resp.error);
+    });
+    rzp.open();
+  }
+
+  /* ========= INIT ========= */
+
+  document.getElementById("btn-pay-wa").addEventListener("click", startPaymentAndWhatsApp);
+  document.getElementById("search").addEventListener("input", renderProducts);
+
+  renderProducts();
+  renderCart();
+</script>
+</body>
+</html>
