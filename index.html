@@ -155,6 +155,13 @@
       background: linear-gradient(90deg,#c0392b,#f1b27a);
     }
 
+    section.products-wrapper,
+    .info-section,
+    .reviews-section,
+    .qr-poster {
+      scroll-margin-top: 90px; /* so clicking nav scrolls nicely */
+    }
+
     section.products-wrapper {
       background:#fffdf9;
       border-radius:18px;
@@ -610,6 +617,54 @@
       color: #4d3825;
     }
 
+    /* Review form */
+    .review-form {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #f1e1d5;
+    }
+    .review-form-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #4d3825;
+      margin-bottom: 4px;
+    }
+    .review-form-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .review-form-row input,
+    .review-form-row select,
+    .review-form textarea {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #e6dcd1;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .review-form textarea {
+      resize: vertical;
+      min-height: 50px;
+    }
+    .review-form button {
+      border-radius: 999px;
+      border: none;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #0f5b4f;
+      color: #fff;
+      margin-top: 2px;
+    }
+    .review-form-note {
+      font-size: 11px;
+      color: #7a6a60;
+      margin-top: 4px;
+    }
+
     /* Referral box */
     .referral-box {
       margin-top: 0;
@@ -918,7 +973,8 @@
           </div>
         </div>
 
-        <div class="reviews-grid">
+        <div class="reviews-grid" id="reviews-grid">
+          <!-- Static sample reviews -->
           <article class="review-card">
             <div class="review-stars">★★★★★</div>
             <div class="review-text">
@@ -978,6 +1034,32 @@
               <span>Rahul,</span> Chennai
             </div>
           </article>
+        </div>
+
+        <!-- Review form -->
+        <div class="review-form">
+          <div class="review-form-title">Post your review</div>
+          <div class="review-form-row">
+            <input id="review-name" placeholder="Your name" />
+            <input id="review-location" placeholder="City / Place (optional)" />
+          </div>
+          <div class="review-form-row">
+            <select id="review-rating">
+              <option value="">Rating (1–5)</option>
+              <option value="5">★★★★★ – Loved it</option>
+              <option value="4">★★★★☆ – Very good</option>
+              <option value="3">★★★☆☆ – Good</option>
+              <option value="2">★★☆☆☆ – Okay</option>
+              <option value="1">★☆☆☆☆ – Not happy</option>
+            </select>
+          </div>
+          <div class="review-form-row">
+            <textarea id="review-text" placeholder="Write about the taste, packing, delivery experience..."></textarea>
+          </div>
+          <button type="button" id="review-submit">Submit Review</button>
+          <div class="review-form-note">
+            Your review will appear here on this device. For public testimonials, we may also share highlights on our social media.
+          </div>
         </div>
       </section>
 
@@ -1291,7 +1373,6 @@
   /* ========= DISCOUNT HELPERS ========= */
 
   function calculateAutoDiscount(subtotal) {
-    // Auto tiered discount
     if (subtotal >= 2500) return Math.round(subtotal * 0.10); // 10% off
     if (subtotal >= 1500) return Math.round(subtotal * 0.05); // 5% off
     return 0;
@@ -1325,7 +1406,6 @@
     const badgeWrap = document.createElement("div");
     badgeWrap.className = "badge-wrapper";
 
-    // Bestseller badge
     if (product.id === "mango-garlic" || product.id === "gongura") {
       const badge = document.createElement("div");
       badge.className = "badge badge-bestseller";
@@ -1333,7 +1413,6 @@
       badgeWrap.appendChild(badge);
     }
 
-    // Combo badges
     if (product.category === "combos") {
       const badge = document.createElement("div");
       badge.className = "badge badge-combo";
@@ -1341,7 +1420,6 @@
       badgeWrap.appendChild(badge);
     }
 
-    // Offer badges on a couple of items
     if (product.id === "bellam-avakaya" || product.id === "kandi-podi") {
       const badge = document.createElement("div");
       badge.className = "badge badge-offer";
@@ -1491,7 +1569,6 @@
   }
 
   function calculateDelivery(subtotalBeforeDiscount) {
-    // Delivery rule: based on original subtotal
     if (subtotalBeforeDiscount >= 1200) return 0;
     return 80;
   }
@@ -1903,6 +1980,99 @@
     }, 2000);
   }
 
+  /* ========= REVIEWS: ADD & LOAD (localStorage) ========= */
+
+  const REVIEWS_STORAGE_KEY = "srk_reviews_extra";
+
+  function makeStars(rating) {
+    const r = Math.max(1, Math.min(5, rating || 5));
+    return "★★★★★".slice(0, r) + "☆☆☆☆☆".slice(0, 5 - r);
+  }
+
+  function addReviewToDOM(review) {
+    const grid = document.getElementById("reviews-grid");
+    if (!grid) return;
+    const card = document.createElement("article");
+    card.className = "review-card";
+
+    const stars = document.createElement("div");
+    stars.className = "review-stars";
+    stars.textContent = makeStars(review.rating);
+    card.appendChild(stars);
+
+    const text = document.createElement("div");
+    text.className = "review-text";
+    text.textContent = review.text;
+    card.appendChild(text);
+
+    const user = document.createElement("div");
+    user.className = "review-user";
+    const locPart = review.location ? (", " + review.location) : "";
+    user.innerHTML = "<span>" + (review.name || "Customer") + ",</span> " + (review.location || "");
+    card.appendChild(user);
+
+    // Insert new review at TOP of list (after existing static ones visually)
+    grid.insertBefore(card, grid.firstChild);
+  }
+
+  function loadStoredReviews() {
+    try {
+      const raw = localStorage.getItem(REVIEWS_STORAGE_KEY);
+      if (!raw) return;
+      const arr = JSON.parse(raw);
+      if (!Array.isArray(arr)) return;
+      arr.forEach(addReviewToDOM);
+    } catch (e) {
+      console.warn("Could not load stored reviews", e);
+    }
+  }
+
+  function saveReview(review) {
+    try {
+      const raw = localStorage.getItem(REVIEWS_STORAGE_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      arr.push(review);
+      localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(arr));
+    } catch (e) {
+      console.warn("Could not save review", e);
+    }
+  }
+
+  function handleReviewSubmit() {
+    const nameEl = document.getElementById("review-name");
+    const locEl = document.getElementById("review-location");
+    const ratingEl = document.getElementById("review-rating");
+    const textEl = document.getElementById("review-text");
+
+    const name = (nameEl.value || "").trim();
+    const location = (locEl.value || "").trim();
+    const rating = parseInt(ratingEl.value, 10);
+    const text = (textEl.value || "").trim();
+
+    if (!text || !rating) {
+      alert("Please select a rating and write your review.");
+      return;
+    }
+
+    const review = {
+      name: name || "Customer",
+      location: location,
+      rating: rating,
+      text: text,
+      createdAt: new Date().toISOString()
+    };
+
+    addReviewToDOM(review);
+    saveReview(review);
+
+    nameEl.value = "";
+    locEl.value = "";
+    ratingEl.value = "";
+    textEl.value = "";
+
+    alert("Thank you! Your review has been added.");
+  }
+
   /* ========= INIT ========= */
 
   document.getElementById("btn-wa-order").addEventListener("click", sendOrderOnWhatsApp);
@@ -1911,7 +2081,6 @@
     applyCouponFromCode();
   });
 
-  // Cart button scrolls to cart
   document.getElementById("cart-button").addEventListener("click", function () {
     const cartBox = document.querySelector(".cart-box");
     if (cartBox) {
@@ -1923,11 +2092,15 @@
   document.getElementById("ref-generate").addEventListener("click", handleReferralGenerate);
   document.getElementById("ref-share-wa").addEventListener("click", handleReferralShareWA);
 
-  // Run initial renders
+  // Review submit
+  document.getElementById("review-submit").addEventListener("click", handleReviewSubmit);
+
+  // Initial load
   renderProducts();
   renderCart();
   initCountdown();
   initOfferModal();
+  loadStoredReviews();
 </script>
 </body>
 </html>
