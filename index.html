@@ -8,9 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Razorpay Checkout -->
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
   <style>
     :root {
       --bg: #fffdf7;
@@ -284,6 +281,27 @@
       resize: vertical;
     }
 
+    .payment-methods {
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #e6dcd1;
+      background: #fffdf9;
+      font-size: 13px;
+    }
+    .payment-methods-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #4d3825;
+    }
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
     .btn-checkout {
       width: 100%;
       border-radius: 999px;
@@ -463,9 +481,29 @@
         </div>
       </div>
 
-      <!-- This button will: 1) Take Razorpay payment 2) Send order on WhatsApp -->
-      <button id="btn-pay-wa" class="btn-checkout">
-        Pay Online & Send Order on WhatsApp
+      <!-- Payment methods -->
+      <div class="payment-methods">
+        <div class="payment-methods-title">Payment Method</div>
+        <label class="payment-option">
+          <input type="radio" name="payment" value="PhonePe" />
+          PhonePe (UPI)
+        </label>
+        <label class="payment-option">
+          <input type="radio" name="payment" value="Google Pay" />
+          Google Pay (UPI)
+        </label>
+        <label class="payment-option">
+          <input type="radio" name="payment" value="Cash on Delivery" checked />
+          Cash on Delivery (COD)
+        </label>
+        <p style="font-size:11px;color:#7a6a60;margin-top:4px;">
+          If you choose UPI (PhonePe / Google Pay), we will share our UPI ID / QR on WhatsApp for payment confirmation.
+        </p>
+      </div>
+
+      <!-- This button will send order on WhatsApp with selected payment method -->
+      <button id="btn-wa-order" class="btn-checkout">
+        Place Order on WhatsApp
       </button>
     </aside>
   </div>
@@ -488,9 +526,7 @@
       Orders can be cancelled within <strong>2 hours</strong> of placing the order by contacting us on WhatsApp.
       Once the order is packed or shipped, cancellation may not be possible.
     </p>
-    <p>
-      Refunds are processed only for:
-    </p>
+    <p>Refunds are processed only for:</p>
     <ul>
       <li>Wrong product delivered</li>
       <li>Damaged or leaked packages (with unboxing photos/video proof)</li>
@@ -529,9 +565,7 @@
 
   <section id="privacy" class="info-section">
     <h3>Privacy</h3>
-    <p>
-      We value your privacy. Your name, phone number, address and order details are used only for:
-    </p>
+    <p>We value your privacy. Your name, phone number, address and order details are used only for:</p>
     <ul>
       <li>Processing and delivering your orders</li>
       <li>Order updates or support over WhatsApp / phone</li>
@@ -545,17 +579,13 @@
 
   <section id="contact" class="info-section">
     <h3>Contact Us</h3>
-    <p>
-      Have a question about orders, payments or custom combos? Reach out to us:
-    </p>
+    <p>Have a question about orders, payments or custom combos? Reach out to us:</p>
     <ul>
       <li><strong>WhatsApp:</strong> <a href="https://wa.me/917075535180" target="_blank">+91 70755 35180</a></li>
-      <li><strong>Email:</strong> <a href="mailto:srkpicklescare@gmail.com">srkpicklescare@gmail.com</a> (example – change to your real email)</li>
+      <li><strong>Email:</strong> <a href="mailto:srkpicklescare@gmail.com">srkpicklescare@gmail.com</a></li>
       <li><strong>Timings:</strong> 9:00 AM – 8:00 PM (IST), all days</li>
     </ul>
-    <p>
-      You can also use the cart form above, place your order, and we will confirm everything on WhatsApp.
-    </p>
+    <p>You can also use the cart form above, place your order, and we will confirm everything on WhatsApp.</p>
   </section>
 
   <footer>
@@ -575,9 +605,6 @@
 
 <script>
   /* ========= CONFIG ========= */
-
-  // Your Razorpay Test Key ID
-  const RAZORPAY_KEY_ID = "rzp_test_RjIlHnCaJvNjJ7";
 
   // Optional: Google Sheets webhook (leave as-is to disable)
   const SHEETS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
@@ -749,7 +776,6 @@
   }
 
   function calculateDelivery(subtotal) {
-    // Delivery rule: free >= 1200, else 80
     if (subtotal >= 1200) return 0;
     return 80;
   }
@@ -855,7 +881,7 @@
     grandSpan.textContent = "Rs. " + totalsNow.grand;
   }
 
-  /* ========= GOOGLE SHEETS INTEGRATION ========= */
+  /* ========= GOOGLE SHEETS (optional) ========= */
 
   function sendOrderToGoogleSheets(orderData) {
     if (!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL.indexOf("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1) {
@@ -877,11 +903,20 @@
 
   /* ========= WHATSAPP MESSAGE BUILDER ========= */
 
-  function buildWhatsAppMessage(name, phone, addr, paymentId, totals) {
+  function getSelectedPaymentMethod() {
+    const radios = document.querySelectorAll('input[name="payment"]');
+    for (let i = 0; i < radios.length; i++) {
+      if (radios[i].checked) return radios[i].value;
+    }
+    return null;
+  }
+
+  function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals) {
     let text = "New SRK Pickles Order%0A%0A";
     text += "Name: " + encodeURIComponent(name) + "%0A";
     text += "Phone: " + encodeURIComponent(phone) + "%0A";
-    text += "Address: " + encodeURIComponent(addr) + "%0A%0A";
+    text += "Address: " + encodeURIComponent(addr) + "%0A";
+    text += "Payment Method: " + encodeURIComponent(paymentMethod) + "%0A%0A";
 
     text += "Items:%0A";
     for (let i = 0; i < CART.length; i++) {
@@ -896,20 +931,14 @@
     text += "%0ASubtotal: Rs." + totals.subtotal;
     text += "%0ADelivery: Rs." + totals.delivery;
     text += "%0ATotal: Rs." + totals.grand;
-
-    if (paymentId) {
-      text += "%0A%0APayment: Paid via Razorpay";
-      text += "%0ATransaction ID: " + encodeURIComponent(paymentId);
-    } else {
-      text += "%0A%0APayment: Cash on Delivery";
-    }
+    text += "%0A%0A(Note: For PhonePe / Google Pay, please pay to the UPI ID shared by SRK Pickles.)";
 
     return text;
   }
 
-  /* ========= PAYMENT + WHATSAPP FLOW ========= */
+  /* ========= WHATSAPP ORDER FLOW ========= */
 
-  function startPaymentAndWhatsApp() {
+  function sendOrderOnWhatsApp() {
     if (!CART.length) {
       alert("Please add at least one item to the cart.");
       return;
@@ -918,9 +947,14 @@
     const name = document.getElementById("cust-name").value.trim();
     const phone = document.getElementById("cust-phone").value.trim();
     const addr = document.getElementById("cust-address").value.trim();
+    const paymentMethod = getSelectedPaymentMethod();
 
     if (!name || !phone || !addr) {
       alert("Please fill Name, Phone and Address.");
+      return;
+    }
+    if (!paymentMethod) {
+      alert("Please select a payment method.");
       return;
     }
 
@@ -930,64 +964,29 @@
       return;
     }
 
-    // Check that Razorpay script loaded
-    if (typeof Razorpay === "undefined") {
-      alert("Unable to load Razorpay checkout. Please check your internet connection or disable ad blocker.");
-      return;
-    }
-
-    const options = {
-      key: RAZORPAY_KEY_ID,
-      amount: totals.grand * 100, // in paise
-      currency: "INR",
-      name: "SRK Pickles",
-      description: "Online order payment",
-      prefill: {
-        name: name,
-        contact: phone
-      },
-      notes: {
-        address: addr
-      },
-      theme: {
-        color: "#0f5b4f"
-      },
-      handler: function (response) {
-        const paymentId = response.razorpay_payment_id;
-        alert("Payment successful! Transaction ID: " + paymentId);
-
-        // send to Google Sheets
-        const orderPayload = {
-          name: name,
-          phone: phone,
-          address: addr,
-          cart: CART,
-          subtotal: totals.subtotal,
-          delivery: totals.delivery,
-          total: totals.grand,
-          paymentId: paymentId,
-          createdAt: new Date().toISOString()
-        };
-        sendOrderToGoogleSheets(orderPayload);
-
-        // open WhatsApp with order + payment ID
-        const msg = buildWhatsAppMessage(name, phone, addr, paymentId, totals);
-        const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
-        window.open(url, "_blank");
-      }
+    // send to Google Sheets (optional)
+    const orderPayload = {
+      name: name,
+      phone: phone,
+      address: addr,
+      cart: CART,
+      subtotal: totals.subtotal,
+      delivery: totals.delivery,
+      total: totals.grand,
+      paymentMethod: paymentMethod,
+      createdAt: new Date().toISOString()
     };
+    sendOrderToGoogleSheets(orderPayload);
 
-    const rzp = new Razorpay(options);
-    rzp.on("payment.failed", function (resp) {
-      alert("Payment failed or cancelled. Please try again.");
-      console.error(resp.error);
-    });
-    rzp.open();
+    // open WhatsApp with order
+    const msg = buildWhatsAppMessage(name, phone, addr, paymentMethod, totals);
+    const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
+    window.open(url, "_blank");
   }
 
   /* ========= INIT ========= */
 
-  document.getElementById("btn-pay-wa").addEventListener("click", startPaymentAndWhatsApp);
+  document.getElementById("btn-wa-order").addEventListener("click", sendOrderOnWhatsApp);
   document.getElementById("search").addEventListener("input", renderProducts);
 
   renderProducts();
