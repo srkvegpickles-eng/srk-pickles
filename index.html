@@ -301,6 +301,12 @@
       margin-bottom: 4px;
       font-size: 13px;
     }
+    .upi-info {
+      font-size: 11px;
+      color: #7a6a60;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
 
     .btn-checkout {
       width: 100%;
@@ -496,9 +502,11 @@
           <input type="radio" name="payment" value="Cash on Delivery" checked />
           Cash on Delivery (COD)
         </label>
-        <p style="font-size:11px;color:#7a6a60;margin-top:4px;">
-          If you choose UPI (PhonePe / Google Pay), we will share our UPI ID / QR on WhatsApp for payment confirmation.
-        </p>
+        <div class="upi-info">
+          UPI Mobile Number: <strong>70755 35180</strong><br/>
+          UPI ID: <strong>tarunkrishna7651@ybl</strong><br/>
+          For PhonePe / Google Pay, we’ll also send a UPI payment link in WhatsApp.
+        </div>
       </div>
 
       <!-- This button will send order on WhatsApp with selected payment method -->
@@ -606,11 +614,15 @@
 <script>
   /* ========= CONFIG ========= */
 
-  // Optional: Google Sheets webhook (leave as-is to disable)
+  // If you create a Google Apps Script to store orders, put URL here
   const SHEETS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
   // Your WhatsApp number (for orders)
   const OWNER_WHATSAPP_NUMBER = "917075535180";
+
+  // UPI details (linked to 7075535180)
+  const UPI_ID = "tarunkrishna7651@ybl";
+  const UPI_MOBILE = "7075535180";
 
   /* ========= PRODUCT DATA ========= */
   const IMAGE_MAP = {
@@ -911,6 +923,17 @@
     return null;
   }
 
+  function buildUpiLink(totalAmount) {
+    const params = new URLSearchParams({
+      pa: UPI_ID,
+      pn: "SRK Pickles",
+      am: String(totalAmount),
+      cu: "INR",
+      tn: "SRK Pickles Order"
+    });
+    return "upi://pay?" + params.toString();
+  }
+
   function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals) {
     let text = "New SRK Pickles Order%0A%0A";
     text += "Name: " + encodeURIComponent(name) + "%0A";
@@ -931,7 +954,14 @@
     text += "%0ASubtotal: Rs." + totals.subtotal;
     text += "%0ADelivery: Rs." + totals.delivery;
     text += "%0ATotal: Rs." + totals.grand;
-    text += "%0A%0A(Note: For PhonePe / Google Pay, please pay to the UPI ID shared by SRK Pickles.)";
+
+    if (paymentMethod === "PhonePe" || paymentMethod === "Google Pay") {
+      const upiLink = buildUpiLink(totals.grand);
+      text += "%0A%0AUPI Mobile: " + encodeURIComponent(UPI_MOBILE);
+      text += "%0AUPI ID: " + encodeURIComponent(UPI_ID);
+      text += "%0AUPI Payment Link (tap to pay):%0A" + encodeURIComponent(upiLink);
+      text += "%0A%0A(Note: Once paid, please share payment screenshot / UTR on WhatsApp.)";
+    }
 
     return text;
   }
@@ -964,7 +994,6 @@
       return;
     }
 
-    // send to Google Sheets (optional)
     const orderPayload = {
       name: name,
       phone: phone,
@@ -978,7 +1007,6 @@
     };
     sendOrderToGoogleSheets(orderPayload);
 
-    // open WhatsApp with order
     const msg = buildWhatsAppMessage(name, phone, addr, paymentMethod, totals);
     const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
     window.open(url, "_blank");
