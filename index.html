@@ -106,7 +106,7 @@
       transform: translateY(-1px);
     }
 
-    /* Offer banner */
+    /* Offer banner with countdown */
     .offer-banner {
       background: #c0392b;
       color: #fff;
@@ -114,6 +114,10 @@
       padding: 10px 6px;
       font-weight: 700;
       font-size: 15px;
+    }
+    .offer-banner span#countdown {
+      font-weight: 800;
+      margin-left: 8px;
     }
 
     main {
@@ -173,6 +177,8 @@
       align-items: flex-start;
       box-shadow: 0 4px 14px rgba(16,24,40,0.05);
       transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      position: relative;
+      overflow: hidden;
     }
     .product-card:hover {
       transform: translateY(-3px);
@@ -202,6 +208,11 @@
     .price-main {
       color: var(--accent-2);
       font-weight: 700;
+    }
+    .price-save {
+      font-size: 12px;
+      color: #0f5b4f;
+      margin-top: 2px;
     }
     .product-actions {
       margin-top: 6px;
@@ -236,6 +247,37 @@
       background: #a83224;
       box-shadow: 0 4px 10px rgba(192,57,43,0.25);
       transform: translateY(-1px);
+    }
+
+    /* Discount badges on product */
+    .badge-wrapper {
+      display:flex;
+      flex-wrap:wrap;
+      gap:4px;
+      margin-bottom:4px;
+    }
+    .badge {
+      display:inline-block;
+      font-size:11px;
+      font-weight:700;
+      border-radius:999px;
+      padding:2px 8px;
+      border:1px solid transparent;
+    }
+    .badge-bestseller {
+      color:#c0392b;
+      background:#ffe9df;
+      border-color:#f7c0a0;
+    }
+    .badge-offer {
+      color:#0f5b4f;
+      background:#e6fff5;
+      border-color:#9de0c0;
+    }
+    .badge-combo {
+      color:#8b4b0f;
+      background:#fff3d6;
+      border-color:#f4cf84;
     }
 
     /* Cart / sidebar */
@@ -351,6 +393,47 @@
       margin-top: 4px;
       line-height: 1.4;
     }
+
+    .coupon-box {
+      margin-top:10px;
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px dashed #e6dcd1;
+      background:#fffdf9;
+    }
+    .coupon-box label {
+      font-size:12px;
+      font-weight:600;
+      color:#4d3825;
+    }
+    .coupon-row {
+      margin-top:6px;
+      display:flex;
+      gap:6px;
+    }
+    .coupon-row input {
+      flex:1;
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid #e6dcd1;
+      font-size:12px;
+    }
+    .coupon-row button {
+      border-radius:999px;
+      border:none;
+      padding:6px 10px;
+      font-size:12px;
+      font-weight:600;
+      cursor:pointer;
+      background:#c0392b;
+      color:#fff;
+    }
+    .coupon-message {
+      margin-top:4px;
+      font-size:11px;
+    }
+    .coupon-message.ok { color:#0f5b4f; }
+    .coupon-message.err { color:#c0392b; }
 
     .btn-checkout {
       width: 100%;
@@ -527,6 +610,95 @@
       color: #4d3825;
     }
 
+    /* Referral box */
+    .referral-box {
+      margin-top: 0;
+      padding: 12px 12px 14px;
+      border-radius: 16px;
+      background:#fff;
+      border:1px solid #e6dcd1;
+      font-size:13px;
+    }
+    .referral-box h3 {
+      margin:0 0 6px;
+      font-size:15px;
+      color:#4d3825;
+    }
+    .referral-input-row {
+      display:flex;
+      gap:6px;
+      margin-top:6px;
+    }
+    .referral-input-row input {
+      flex:1;
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid #e6dcd1;
+      font-size:12px;
+    }
+    .referral-actions {
+      margin-top:6px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .referral-actions button {
+      border-radius:999px;
+      border:none;
+      padding:6px 10px;
+      font-size:12px;
+      cursor:pointer;
+      background:#0f5b4f;
+      color:#fff;
+    }
+    .referral-link-output {
+      margin-top:6px;
+      font-size:12px;
+      color:#7a6a60;
+      word-break:break-all;
+    }
+
+    /* Offer modal */
+    .modal-backdrop {
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.4);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    .modal-backdrop.show {
+      display:flex;
+    }
+    .modal {
+      position:relative;
+      background:#fffdf9;
+      padding:16px 18px 18px;
+      border-radius:16px;
+      max-width:320px;
+      width:90%;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+      border:1px solid #f1e1d5;
+      font-size:14px;
+      color:#4d3825;
+    }
+    .modal h3 {
+      margin-top:0;
+      margin-bottom:8px;
+      font-size:18px;
+      color:#c0392b;
+    }
+    .modal-close {
+      position:absolute;
+      top:6px;
+      right:10px;
+      border:none;
+      background:transparent;
+      font-size:20px;
+      cursor:pointer;
+    }
+
     @media (max-width: 900px) {
       header { flex-wrap: wrap; }
       nav { margin-left: 0; }
@@ -570,6 +742,8 @@
   <nav>
     <a href="#pickles">PICKLES</a>
     <a href="#powders">POWDERS</a>
+    <a href="#combos">COMBOS</a>
+    <a href="#offers">OFFERS</a>
     <a href="#reviews">REVIEWS</a>
   </nav>
 
@@ -581,9 +755,12 @@
   </div>
 </header>
 
-<div class="offer-banner">🎉 Buy 2 kg & Get ½ kg FREE — Limited Time Offer! 🎉</div>
+<div class="offer-banner">
+  🎉 Festive Offer: Extra savings on your SRK Pickles order!
+  <span id="countdown"></span>
+</div>
 
-<!-- Optional small hero section -->
+<!-- Optional hero section -->
 <section style="
   max-width:1180px;
   margin:18px auto 0;
@@ -639,9 +816,12 @@
 
       <h2 id="powders" class="section-title">Powders</h2>
       <div id="powders-list" class="products-grid"></div>
+
+      <h2 id="combos" class="section-title">Combos (Best Value)</h2>
+      <div id="combos-list" class="products-grid"></div>
     </section>
 
-    <!-- RIGHT: Cart + Reviews column -->
+    <!-- RIGHT: Cart + Reviews + Referral -->
     <div class="right-column">
       <!-- Cart -->
       <aside class="cart-box">
@@ -651,6 +831,14 @@
         <div class="cart-total-line">
           <span>Subtotal</span>
           <span id="cart-subtotal">Rs. 0</span>
+        </div>
+        <div class="cart-total-line">
+          <span>Auto Discount</span>
+          <span id="cart-auto-discount">- Rs. 0</span>
+        </div>
+        <div class="cart-total-line">
+          <span>Coupon Discount</span>
+          <span id="cart-coupon-discount">- Rs. 0</span>
         </div>
         <div class="cart-total-line">
           <span>Delivery</span>
@@ -701,7 +889,17 @@
           </div>
         </div>
 
-        <!-- This button will send order on WhatsApp with selected payment method -->
+        <!-- Coupon system -->
+        <div class="coupon-box">
+          <label for="coupon-code">Have a coupon?</label>
+          <div class="coupon-row">
+            <input id="coupon-code" placeholder="Enter code (e.g., SRKWELCOME)" />
+            <button type="button" id="apply-coupon-btn">Apply</button>
+          </div>
+          <div id="coupon-message" class="coupon-message"></div>
+        </div>
+
+        <!-- This button will send order on WhatsApp with discounts & payment method -->
         <button id="btn-wa-order" class="btn-checkout">
           Place Order on WhatsApp
         </button>
@@ -782,6 +980,23 @@
           </article>
         </div>
       </section>
+
+      <!-- Referral box -->
+      <section class="referral-box" id="referral">
+        <h3>Share & Earn</h3>
+        <p style="margin:0;font-size:12px;color:#7a6a60;">
+          Share your referral link with friends. On every successful order, both of you can get a discount
+          (as per SRK Pickles offer).
+        </p>
+        <div class="referral-input-row">
+          <input id="ref-name" placeholder="Your name or phone (for ref code)" />
+        </div>
+        <div class="referral-actions">
+          <button type="button" id="ref-generate">Generate Link</button>
+          <button type="button" id="ref-share-wa">Share on WhatsApp</button>
+        </div>
+        <div id="ref-output" class="referral-link-output"></div>
+      </section>
     </div>
   </div>
 
@@ -794,6 +1009,85 @@
       alt="WhatsApp Order QR"
     />
     <p>WhatsApp: +91 70755 35180</p>
+  </section>
+
+  <!-- OFFERS SECTION -->
+  <section id="offers" class="info-section">
+    <h3>Offers & Discounts – How You Save</h3>
+    <p>
+      At <strong>SRK Pickles</strong>, we want you to enjoy more flavours at a better value. Here is how all our
+      offers work. These are applied automatically in your cart.
+    </p>
+
+    <h4 style="margin:10px 0 4px;font-size:14px;color:#4d3825;">1. Auto Discounts (No coupon needed)</h4>
+    <ul>
+      <li><strong>5% OFF</strong> on orders with subtotal <strong>₹1500 or more</strong></li>
+      <li><strong>10% OFF</strong> on orders with subtotal <strong>₹2500 or more</strong></li>
+      <li>This discount is applied automatically in the cart under <em>“Auto Discount”</em>.</li>
+    </ul>
+
+    <h4 style="margin:10px 0 4px;font-size:14px;color:#4d3825;">2. Coupon Codes</h4>
+    <p>Enter coupon codes in the <strong>“Have a coupon?”</strong> box in the cart.</p>
+    <ul>
+      <li><strong>SRKWELCOME</strong> – ₹50 OFF on orders above ₹500 (for first-time customers)</li>
+      <li><strong>FEST10</strong> – 10% OFF on orders above ₹1000</li>
+      <li><strong>PICKLELOVE</strong> – 7% OFF on orders above ₹800</li>
+      <li>Only one coupon can be applied per order. If the minimum amount is not reached, the coupon won’t apply.</li>
+    </ul>
+
+    <h4 style="margin:10px 0 4px;font-size:14px;color:#4d3825;">3. Combo Offers</h4>
+    <p>Check the <strong>COMBOS</strong> section on top.</p>
+    <ul>
+      <li><strong>Family Pickle Combo 1</strong> – Mango (with garlic), Ginger, Amla, Gongura – 500g each (2kg total)</li>
+      <li><strong>Family Pickle Combo 2</strong> – Gongura, Lemon, Magaya, Tomato – 500g each (2kg total)</li>
+      <li>MRP for each combo is ₹1600, but you get it at <strong>₹1450</strong> – you save ₹150 per combo.</li>
+    </ul>
+
+    <h4 style="margin:10px 0 4px;font-size:14px;color:#4d3825;">4. Free Delivery Rule</h4>
+    <ul>
+      <li><strong>Free delivery</strong> for orders with subtotal <strong>₹1200 or more</strong>.</li>
+      <li>For orders below ₹1200, a flat delivery charge of <strong>₹80</strong> is added.</li>
+      <li>This is shown as <em>“Delivery”</em> in your cart summary.</li>
+    </ul>
+
+    <h4 style="margin:10px 0 4px;font-size:14px;color:#4d3825;">5. Referral Benefits</h4>
+    <ul>
+      <li>Use the <strong>“Share & Earn”</strong> box on the right side to generate your personal referral link.</li>
+      <li>Share it with friends and family on WhatsApp directly from the website.</li>
+      <li>For every successful order through your referral (as per SRK Pickles policy), both you and your friend
+          can get special discounts or extra offers.</li>
+    </ul>
+
+    <h4 style="margin:10px 0 4px;font-size:14px;color:#4d3825;">6. How Discounts Are Applied</h4>
+    <ul>
+      <li>Your bill summary shows:
+        <ul>
+          <li><strong>Subtotal</strong> – total of all items</li>
+          <li><strong>Auto Discount</strong> – 5% or 10% based on subtotal</li>
+          <li><strong>Coupon Discount</strong> – if you have applied a valid coupon</li>
+          <li><strong>Delivery</strong> – based on free delivery rule</li>
+          <li><strong>Total Payable</strong> – final amount after all savings</li>
+        </ul>
+      </li>
+      <li>Auto discount and coupon discount can both apply together, but total discount will never go above the subtotal.</li>
+    </ul>
+
+    <h4 style="margin:10px 0 4px;font-size:14px;color:#4d3825;">7. Payment & UPI Offers</h4>
+    <ul>
+      <li>You can choose <strong>PhonePe</strong>, <strong>Google Pay</strong> (UPI) or <strong>Cash on Delivery</strong>.</li>
+      <li>For UPI, we share our UPI details and a payment link:
+        <ul>
+          <li>UPI ID: <strong>tarunkrishna7651@ybl</strong></li>
+          <li>UPI Mobile: <strong>70755 35180</strong></li>
+        </ul>
+      </li>
+      <li>After UPI payment, you can send the screenshot / UTR number on WhatsApp for quick confirmation.</li>
+    </ul>
+
+    <p style="margin-top:10px;">
+      If you have any doubt about how a discount is applied on your cart, just place your order and we will clarify it
+      on WhatsApp before confirming dispatch.
+    </p>
   </section>
 
   <!-- Info / Policy Sections -->
@@ -868,6 +1162,7 @@
   <footer>
     © SRK Pickles • Handmade in India • Hosted on GitHub Pages
     <div class="footer-links">
+      <a href="#offers">Offers</a>
       <a href="#cancellation">Cancellation & Refunds</a>
       <a href="#terms">Terms & Conditions</a>
       <a href="#shipping">Shipping</a>
@@ -880,18 +1175,54 @@
 <!-- Floating WhatsApp quick-chat button -->
 <a href="https://wa.me/917075535180" class="wa-float" target="_blank">💬</a>
 
+<!-- Offer Modal -->
+<div id="offer-modal" class="modal-backdrop">
+  <div class="modal">
+    <button class="modal-close" type="button" id="offer-close">×</button>
+    <h3>Welcome to SRK Pickles!</h3>
+    <p>Get <strong>₹50 OFF</strong> on your first order above ₹500.</p>
+    <p>Use coupon code: <strong>SRKWELCOME</strong></p>
+    <button type="button" id="offer-apply" class="btn-checkout" style="margin-top:10px;">
+      Apply SRKWELCOME
+    </button>
+  </div>
+</div>
+
 <script>
   /* ========= CONFIG ========= */
 
-  // Optional: Google Sheets order logging
+  // Optional: Google Sheets logging
   const SHEETS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
-  // Your WhatsApp number (for orders)
+  // WhatsApp number (for orders)
   const OWNER_WHATSAPP_NUMBER = "917075535180";
 
-  // UPI details (linked to 7075535180)
+  // UPI details
   const UPI_ID = "tarunkrishna7651@ybl";
   const UPI_MOBILE = "7075535180";
+
+  // Coupons
+  let APPLIED_COUPON = null;
+  const COUPONS = {
+    SRKWELCOME: {
+      type: "flat",
+      amount: 50,
+      minSubtotal: 500,
+      label: "₹50 OFF on orders above ₹500"
+    },
+    FEST10: {
+      type: "percent",
+      amount: 10,
+      minSubtotal: 1000,
+      label: "10% OFF on orders above ₹1000"
+    },
+    PICKLELOVE: {
+      type: "percent",
+      amount: 7,
+      minSubtotal: 800,
+      label: "7% OFF when you enjoy your favourite pickles"
+    }
+  };
 
   /* ========= PRODUCT DATA ========= */
   const IMAGE_MAP = {
@@ -911,7 +1242,9 @@
     "karivepaku-podi": "images/karivepaku-podi.jpg",
     "idly-chutney-podi": "images/idly-chutney-podi.jpg",
     "sambar-podi": "images/sambar-podi.jpg",
-    "rasam-podi": "images/rasam-podi.jpg"
+    "rasam-podi": "images/rasam-podi.jpg",
+    "combo-1": "images/combo-1.jpg",
+    "combo-2": "images/combo-2.jpg"
   };
 
   const PRODUCTS = [
@@ -934,8 +1267,43 @@
     { id:"karivepaku-podi", category:"powders", name:"Karivepaku podi", desc:"Curry Leaves Powder – sour and spicy.", prices:{ "500":300, "1000":600 } },
     { id:"idly-chutney-podi", category:"powders", name:"Idly chutney podi", desc:"Flavourful spicy chutney powder.", prices:{ "500":300, "1000":600 } },
     { id:"sambar-podi", category:"powders", name:"Sambar podi", desc:"Traditional sambar powder.", prices:{ "500":300, "1000":600 } },
-    { id:"rasam-podi", category:"powders", name:"Rasam podi", desc:"Flavourful, spicy and aromatic rasam powder.", prices:{ "500":300, "1000":600 } }
+    { id:"rasam-podi", category:"powders", name:"Rasam podi", desc:"Flavourful, spicy and aromatic rasam powder.", prices:{ "500":300, "1000":600 } },
+
+    // Combos (UI with savings)
+    {
+      id:"combo-1",
+      category:"combos",
+      name:"Family Pickle Combo 1",
+      desc:"Mango (with garlic), Ginger, Amla, Gongura – 500gm each (Total 2kg).",
+      prices:{ "combo":1450 },
+      mrp:1600
+    },
+    {
+      id:"combo-2",
+      category:"combos",
+      name:"Family Pickle Combo 2",
+      desc:"Gongura, Lemon, Magaya, Tomato – 500gm each (Total 2kg).",
+      prices:{ "combo":1450 },
+      mrp:1600
+    }
   ];
+
+  /* ========= DISCOUNT HELPERS ========= */
+
+  function calculateAutoDiscount(subtotal) {
+    // Auto tiered discount
+    if (subtotal >= 2500) return Math.round(subtotal * 0.10); // 10% off
+    if (subtotal >= 1500) return Math.round(subtotal * 0.05); // 5% off
+    return 0;
+  }
+
+  function calculateCouponDiscount(subtotal) {
+    if (!APPLIED_COUPON) return 0;
+    const conf = APPLIED_COUPON;
+    if (subtotal < conf.minSubtotal) return 0;
+    if (conf.type === "flat") return conf.amount;
+    return Math.round((conf.amount / 100) * subtotal);
+  }
 
   /* ========= RENDER PRODUCTS ========= */
 
@@ -954,19 +1322,35 @@
     h4.textContent = product.name;
     info.appendChild(h4);
 
-    // Badge for popular items
+    const badgeWrap = document.createElement("div");
+    badgeWrap.className = "badge-wrapper";
+
+    // Bestseller badge
     if (product.id === "mango-garlic" || product.id === "gongura") {
       const badge = document.createElement("div");
+      badge.className = "badge badge-bestseller";
       badge.textContent = "Bestseller";
-      badge.style.display = "inline-block";
-      badge.style.fontSize = "11px";
-      badge.style.fontWeight = "700";
-      badge.style.color = "#c0392b";
-      badge.style.background = "#ffe9df";
-      badge.style.borderRadius = "999px";
-      badge.style.padding = "2px 8px";
-      badge.style.marginBottom = "4px";
-      info.appendChild(badge);
+      badgeWrap.appendChild(badge);
+    }
+
+    // Combo badges
+    if (product.category === "combos") {
+      const badge = document.createElement("div");
+      badge.className = "badge badge-combo";
+      badge.textContent = "Combo – Save More";
+      badgeWrap.appendChild(badge);
+    }
+
+    // Offer badges on a couple of items
+    if (product.id === "bellam-avakaya" || product.id === "kandi-podi") {
+      const badge = document.createElement("div");
+      badge.className = "badge badge-offer";
+      badge.textContent = "Limited Offer";
+      badgeWrap.appendChild(badge);
+    }
+
+    if (badgeWrap.children.length > 0) {
+      info.appendChild(badgeWrap);
     }
 
     const desc = document.createElement("div");
@@ -976,23 +1360,47 @@
 
     const priceLine = document.createElement("div");
     priceLine.className = "price-line";
-    priceLine.innerHTML =
-      '<span class="price-main">Rs.' + product.prices["1000"] +
-      '/kg</span> | Rs.' + product.prices["500"] + '/500gm';
-    info.appendChild(priceLine);
+
+    const priceKeys = Object.keys(product.prices);
+    if (priceKeys.includes("combo")) {
+      const main = product.prices.combo;
+      priceLine.innerHTML = '<span class="price-main">Rs.' + main + '</span> (Combo pack)';
+      info.appendChild(priceLine);
+
+      if (product.mrp && product.mrp > main) {
+        const save = product.mrp - main;
+        const saveLine = document.createElement("div");
+        saveLine.className = "price-save";
+        saveLine.textContent = "Value Rs." + product.mrp + " – You save Rs." + save;
+        info.appendChild(saveLine);
+      }
+    } else {
+      priceLine.innerHTML =
+        '<span class="price-main">Rs.' + product.prices["1000"] +
+        '/kg</span> | Rs.' + product.prices["500"] + '/500gm';
+      info.appendChild(priceLine);
+    }
 
     const actions = document.createElement("div");
     actions.className = "product-actions";
 
     const sizeSelect = document.createElement("select");
-    const opt1 = document.createElement("option");
-    opt1.value = "1000";
-    opt1.textContent = "1 kg – Rs." + product.prices["1000"];
-    const opt2 = document.createElement("option");
-    opt2.value = "500";
-    opt2.textContent = "500 gm – Rs." + product.prices["500"];
-    sizeSelect.appendChild(opt1);
-    sizeSelect.appendChild(opt2);
+
+    if (priceKeys.includes("combo")) {
+      const opt = document.createElement("option");
+      opt.value = "combo";
+      opt.textContent = "Combo Pack – Rs." + product.prices.combo;
+      sizeSelect.appendChild(opt);
+    } else {
+      const opt1 = document.createElement("option");
+      opt1.value = "1000";
+      opt1.textContent = "1 kg – Rs." + product.prices["1000"];
+      const opt2 = document.createElement("option");
+      opt2.value = "500";
+      opt2.textContent = "500 gm – Rs." + product.prices["500"];
+      sizeSelect.appendChild(opt1);
+      sizeSelect.appendChild(opt2);
+    }
 
     const qtyInput = document.createElement("input");
     qtyInput.type = "number";
@@ -1021,8 +1429,10 @@
   function renderProducts() {
     const picklesList = document.getElementById("pickles-list");
     const powdersList = document.getElementById("powders-list");
+    const combosList = document.getElementById("combos-list");
     picklesList.innerHTML = "";
     powdersList.innerHTML = "";
+    combosList.innerHTML = "";
 
     const searchValue = document.getElementById("search").value.toLowerCase();
 
@@ -1037,7 +1447,8 @@
 
       const card = makeProductCard(p);
       if (p.category === "pickles") picklesList.appendChild(card);
-      else powdersList.appendChild(card);
+      else if (p.category === "powders") powdersList.appendChild(card);
+      else if (p.category === "combos") combosList.appendChild(card);
     }
   }
 
@@ -1071,8 +1482,17 @@
     renderCart();
   }
 
-  function calculateDelivery(subtotal) {
-    if (subtotal >= 1200) return 0;
+  function getSubtotalOnly() {
+    let subtotal = 0;
+    for (let i = 0; i < CART.length; i++) {
+      subtotal += CART[i].unitPrice * CART[i].qty;
+    }
+    return subtotal;
+  }
+
+  function calculateDelivery(subtotalBeforeDiscount) {
+    // Delivery rule: based on original subtotal
+    if (subtotalBeforeDiscount >= 1200) return 0;
     return 80;
   }
 
@@ -1083,9 +1503,24 @@
       subtotal += CART[i].unitPrice * CART[i].qty;
       totalQty += CART[i].qty;
     }
+
+    const autoDiscount = calculateAutoDiscount(subtotal);
+    const couponDiscount = calculateCouponDiscount(subtotal);
+    let totalDiscount = autoDiscount + couponDiscount;
+    if (totalDiscount > subtotal) totalDiscount = subtotal;
+
     const delivery = calculateDelivery(subtotal);
-    const grand = subtotal + delivery;
-    return { subtotal, delivery, grand, totalQty };
+    const grand = subtotal - totalDiscount + delivery;
+
+    return {
+      subtotal,
+      autoDiscount,
+      couponDiscount,
+      totalDiscount,
+      delivery,
+      grand,
+      totalQty
+    };
   }
 
   function renderCart() {
@@ -1094,6 +1529,8 @@
     const subtotalSpan = document.getElementById("cart-subtotal");
     const deliverySpan = document.getElementById("cart-delivery");
     const grandSpan = document.getElementById("cart-grand");
+    const autoDiscSpan = document.getElementById("cart-auto-discount");
+    const couponDiscSpan = document.getElementById("cart-coupon-discount");
 
     if (!CART.length) {
       cartItemsDiv.className = "cart-items cart-empty";
@@ -1102,6 +1539,8 @@
       subtotalSpan.textContent = "Rs. 0";
       deliverySpan.textContent = "Rs. 0";
       grandSpan.textContent = "Rs. 0";
+      autoDiscSpan.textContent = "- Rs. 0";
+      couponDiscSpan.textContent = "- Rs. 0";
       return;
     }
 
@@ -1122,7 +1561,9 @@
       title.textContent = item.name;
       const sub = document.createElement("div");
       sub.className = "cart-row-sub";
-      const sizeLabel = item.size === "1000" ? "1 kg" : "500 gm";
+      let sizeLabel;
+      if (item.size === "combo") sizeLabel = "Combo Pack";
+      else sizeLabel = item.size === "1000" ? "1 kg" : "500 gm";
       sub.textContent = sizeLabel + " × " + item.qty;
       left.appendChild(title);
       left.appendChild(sub);
@@ -1170,11 +1611,12 @@
       cartItemsDiv.appendChild(row);
     }
 
-    const totalsNow = getTotals();
-    cartCountSpan.textContent = String(totalsNow.totalQty);
-    subtotalSpan.textContent = "Rs. " + totalsNow.subtotal;
-    deliverySpan.textContent = "Rs. " + totalsNow.delivery;
-    grandSpan.textContent = "Rs. " + totalsNow.grand;
+    cartCountSpan.textContent = String(totals.totalQty);
+    subtotalSpan.textContent = "Rs. " + totals.subtotal;
+    deliverySpan.textContent = "Rs. " + totals.delivery;
+    grandSpan.textContent = "Rs. " + totals.grand;
+    autoDiscSpan.textContent = "- Rs. " + totals.autoDiscount;
+    couponDiscSpan.textContent = "- Rs. " + totals.couponDiscount;
   }
 
   /* ========= GOOGLE SHEETS (optional) ========= */
@@ -1195,6 +1637,60 @@
     } catch (e) {
       console.error("Sheets error:", e);
     }
+  }
+
+  /* ========= COUPON APPLY ========= */
+
+  function applyCouponFromCode(inputCode) {
+    const msgEl = document.getElementById("coupon-message");
+    const raw = (typeof inputCode === "string" && inputCode) ||
+                (document.getElementById("coupon-code") && document.getElementById("coupon-code").value) ||
+                "";
+    const code = raw.trim().toUpperCase();
+
+    if (!code) {
+      if (msgEl) {
+        msgEl.textContent = "Please enter a coupon code.";
+        msgEl.className = "coupon-message err";
+      }
+      return;
+    }
+
+    const conf = COUPONS[code];
+    if (!conf) {
+      APPLIED_COUPON = null;
+      if (msgEl) {
+        msgEl.textContent = "Invalid coupon code.";
+        msgEl.className = "coupon-message err";
+      }
+      renderCart();
+      return;
+    }
+
+    const subtotal = getSubtotalOnly();
+    if (subtotal < conf.minSubtotal) {
+      APPLIED_COUPON = null;
+      if (msgEl) {
+        msgEl.textContent = "This coupon needs minimum order of Rs." + conf.minSubtotal + ".";
+        msgEl.className = "coupon-message err";
+      }
+      renderCart();
+      return;
+    }
+
+    APPLIED_COUPON = {
+      code,
+      type: conf.type,
+      amount: conf.amount,
+      minSubtotal: conf.minSubtotal,
+      label: conf.label
+    };
+
+    if (msgEl) {
+      msgEl.textContent = "Coupon " + code + " applied: " + conf.label;
+      msgEl.className = "coupon-message ok";
+    }
+    renderCart();
   }
 
   /* ========= WHATSAPP MESSAGE BUILDER ========= */
@@ -1228,7 +1724,9 @@
     text += "Items:%0A";
     for (let i = 0; i < CART.length; i++) {
       const item = CART[i];
-      const sizeLabel = item.size === "1000" ? "1 kg" : "500 gm";
+      let sizeLabel;
+      if (item.size === "combo") sizeLabel = "Combo Pack";
+      else sizeLabel = item.size === "1000" ? "1 kg" : "500 gm";
       const line =
         "- " + item.name + " (" + sizeLabel + ") x " + item.qty +
         " = Rs." + (item.unitPrice * item.qty);
@@ -1236,8 +1734,14 @@
     }
 
     text += "%0ASubtotal: Rs." + totals.subtotal;
+    text += "%0AAuto Discount: Rs." + totals.autoDiscount;
+    text += "%0ACoupon Discount: Rs." + totals.couponDiscount;
     text += "%0ADelivery: Rs." + totals.delivery;
-    text += "%0ATotal: Rs." + totals.grand;
+    text += "%0ATotal Payable: Rs." + totals.grand;
+
+    if (APPLIED_COUPON) {
+      text += "%0ACoupon Used: " + encodeURIComponent(APPLIED_COUPON.code);
+    }
 
     if (paymentMethod === "PhonePe" || paymentMethod === "Google Pay") {
       const upiLink = buildUpiLink(totals.grand);
@@ -1284,9 +1788,12 @@
       address: addr,
       cart: CART,
       subtotal: totals.subtotal,
+      autoDiscount: totals.autoDiscount,
+      couponDiscount: totals.couponDiscount,
       delivery: totals.delivery,
       total: totals.grand,
       paymentMethod: paymentMethod,
+      couponCode: APPLIED_COUPON ? APPLIED_COUPON.code : null,
       createdAt: new Date().toISOString()
     };
     sendOrderToGoogleSheets(orderPayload);
@@ -1296,10 +1803,113 @@
     window.open(url, "_blank");
   }
 
+  /* ========= REFERRAL ========= */
+
+  function generateReferralCode(raw) {
+    const base = raw.replace(/\s+/g,'').toUpperCase().slice(0,8);
+    const rnd = Math.floor(Math.random()*900 + 100);
+    return base || ("SRK" + rnd);
+  }
+
+  function getBaseUrl() {
+    const loc = window.location;
+    return loc.origin + loc.pathname.replace(/index\.html$/i, "");
+  }
+
+  function handleReferralGenerate() {
+    const nameRaw = document.getElementById("ref-name").value.trim();
+    const code = generateReferralCode(nameRaw || "SRK");
+    const link = getBaseUrl() + "?ref=" + encodeURIComponent(code);
+    const out = document.getElementById("ref-output");
+    if (out) {
+      out.innerHTML =
+        "Your referral code: <strong>" + code +
+        "</strong><br/>Referral link:<br/>" + link;
+    }
+    return { code, link };
+  }
+
+  function handleReferralShareWA() {
+    const { code, link } = handleReferralGenerate();
+    const text =
+      "Hi! Try SRK Pickles – homemade Andhra pickles and powders.%0A" +
+      "Use my referral code: " + encodeURIComponent(code) + "%0A" +
+      "Order here: " + encodeURIComponent(link);
+    const url = "https://wa.me/?text=" + text;
+    window.open(url, "_blank");
+  }
+
+  /* ========= COUNTDOWN BANNER ========= */
+
+  function initCountdown() {
+    const el = document.getElementById("countdown");
+    if (!el) return;
+    const target = new Date("2025-12-31T23:59:59");
+
+    function update() {
+      const now = new Date();
+      const diff = target - now;
+      if (diff <= 0) {
+        el.textContent = "Offer ends soon!";
+        return;
+      }
+      const d = Math.floor(diff / (1000*60*60*24));
+      const h = Math.floor((diff / (1000*60*60)) % 24);
+      const m = Math.floor((diff / (1000*60)) % 60);
+      el.textContent = "Ends in " + d + "d " + h + "h " + m + "m";
+    }
+    update();
+    setInterval(update, 60000);
+  }
+
+  /* ========= OFFER MODAL ========= */
+
+  function initOfferModal() {
+    const modal = document.getElementById("offer-modal");
+    if (!modal) return;
+    const closeBtn = document.getElementById("offer-close");
+    const applyBtn = document.getElementById("offer-apply");
+
+    function closeModal() {
+      modal.classList.remove("show");
+      try {
+        localStorage.setItem("srk_offer_seen", "1");
+      } catch(e) {}
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closeModal);
+    }
+    if (applyBtn) {
+      applyBtn.addEventListener("click", function() {
+        const input = document.getElementById("coupon-code");
+        if (input) {
+          input.value = "SRKWELCOME";
+        }
+        applyCouponFromCode("SRKWELCOME");
+        closeModal();
+        const cartBox = document.querySelector(".cart-box");
+        if (cartBox) cartBox.scrollIntoView({behavior:"smooth"});
+      });
+    }
+
+    try {
+      const seen = localStorage.getItem("srk_offer_seen");
+      if (seen) return;
+    } catch(e) {}
+
+    setTimeout(function() {
+      modal.classList.add("show");
+    }, 2000);
+  }
+
   /* ========= INIT ========= */
 
   document.getElementById("btn-wa-order").addEventListener("click", sendOrderOnWhatsApp);
   document.getElementById("search").addEventListener("input", renderProducts);
+  document.getElementById("apply-coupon-btn").addEventListener("click", function() {
+    applyCouponFromCode();
+  });
 
   // Cart button scrolls to cart
   document.getElementById("cart-button").addEventListener("click", function () {
@@ -1309,8 +1919,15 @@
     }
   });
 
+  // Referral buttons
+  document.getElementById("ref-generate").addEventListener("click", handleReferralGenerate);
+  document.getElementById("ref-share-wa").addEventListener("click", handleReferralShareWA);
+
+  // Run initial renders
   renderProducts();
   renderCart();
+  initCountdown();
+  initOfferModal();
 </script>
 </body>
 </html>
