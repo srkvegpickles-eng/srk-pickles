@@ -357,7 +357,7 @@ function applyCouponFromCode(inputCode){
   const conf=COUPONS[code]; if(!conf){ APPLIED_COUPON=null; if(msgEl){ msgEl.textContent="Invalid coupon code."; msgEl.className="coupon-message err" } renderCart(); return }
   const subtotal = CART.reduce((s,i)=>s+i.unitPrice*i.qty,0);
   if(subtotal<conf.minSubtotal){ APPLIED_COUPON=null; if(msgEl){ msgEl.textContent="This coupon needs minimum order of Rs."+conf.minSubtotal+"."; msgEl.className="coupon-message err" } renderCart(); return }
-  APPLIED_COUPON={code:type:conf.type,amount:conf.amount,minSubtotal:conf.minSubtotal,label:conf.label};
+  APPLIED_COUPON = { code: code, type: conf.type, amount: conf.amount, minSubtotal: conf.minSubtotal, label: conf.label };
 }
 
 /* ======= WHATSAPP ORDER (simple) ======= */
@@ -376,7 +376,7 @@ const STATIC_REVIEWS = [
   { name:"Rahul", location:"Chennai", rating:4, text:"Delivery was a day late but the taste made up for it. Tomato and Lemon pickle are superb." }
 ];
 function makeStars(r){ const rint=Math.max(1,Math.min(5,Number(r)||5)); return "★★★★★".slice(0,rint)+"☆☆☆☆☆".slice(0,5-rint) }
-function createReviewCard(review){ const card=document.createElement("article"); card.className="review-card"; const stars=document.createElement("div"); stars.className="review-stars"; stars.textContent=makeStars(review.rating); card.appendChild(stars); const text=document.createElement("div"); text.className="review-text"; text.textContent=review.text; card.appendChild(text); const user=document.createElement("div"); user.className="review-user"; user.innerHTML='<span>'+(review.name||"Customer')+',</span> '+(review.location||""); card.appendChild(user); return card }
+function createReviewCard(review){ const card=document.createElement("article"); card.className="review-card"; const stars=document.createElement("div"); stars.className="review-stars"; stars.textContent=makeStars(review.rating); card.appendChild(stars); const text=document.createElement("div"); text.className="review-text"; text.textContent=review.text; card.appendChild(text); const user=document.createElement("div"); user.className="review-user"; user.innerHTML = '<span>' + (review.name || "Customer") + ',</span> ' + (review.location || ''); card.appendChild(user); return card }
 function renderReviewsInto(targetId,arr){ const el=document.getElementById(targetId); if(!el) return; el.innerHTML=""; arr.forEach(r=>el.appendChild(createReviewCard(r))) }
 function loadStoredReviews(){ try{ const raw=localStorage.getItem(REVIEWS_STORAGE_KEY); const stored=raw?JSON.parse(raw):[]; const merged=Array.isArray(stored)?stored.concat(STATIC_REVIEWS):STATIC_REVIEWS.slice(); renderReviewsInto("reviews-grid", merged.slice(0,4)); renderReviewsInto("reviews-modal-grid", merged); updateReviewsSummary(merged); }catch(e){ console.warn("loadStoredReviews failed",e); renderReviewsInto("reviews-grid", STATIC_REVIEWS.slice(0,4)); renderReviewsInto("reviews-modal-grid", STATIC_REVIEWS); updateReviewsSummary(STATIC_REVIEWS) } }
 function saveReviewToStorage(review){ try{ const raw=localStorage.getItem(REVIEWS_STORAGE_KEY); const arr=raw?JSON.parse(raw):[]; arr.unshift(review); if(arr.length>500) arr.length=500; localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(arr)); }catch(e){ console.warn("saveReview failed",e) } }
