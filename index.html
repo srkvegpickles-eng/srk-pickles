@@ -807,7 +807,6 @@
     <a href="#combos">COMBOS</a>
     <a href="#offers">OFFERS</a>
     <a href="#reviews">REVIEWS</a>
-    <a href="#my-orders">MY ORDERS</a>
   </nav>
 
   <div class="search-wrap">
@@ -1071,14 +1070,6 @@
         </div>
       </section>
 
-
-      <!-- My Orders -->
-      <section id="my-orders" class="info-section" aria-label="My Orders" style="margin-top:0;">
-        <h3>My Orders</h3>
-        <div id="orders-list" style="font-size:13px;color:#4d3825;">
-          <div id="no-orders-msg" style="color:var(--muted);">No orders yet.</div>
-        </div>
-      </section>
       <!-- Referral box -->
       <section class="referral-box" id="referral">
         <h3>Share & Earn</h3>
@@ -1891,17 +1882,6 @@
     };
     sendOrderToGoogleSheets(orderPayload);
 
-    // Save order locally so user can see order history (stored in browser localStorage)
-    try {
-      const existing = JSON.parse(localStorage.getItem('srk_orders') || '[]');
-      // assign an id and initial status
-      const orderToSave = Object.assign({}, orderPayload, { id: 'ORD' + Date.now(), status: 'Pending' });
-      existing.unshift(orderToSave);
-      localStorage.setItem('srk_orders', JSON.stringify(existing));
-      // update UI immediately
-      renderOrders();
-    } catch (e) { console.warn('Could not save order locally', e); }
-
     const msg = buildWhatsAppMessage(name, phone, addr, paymentMethod, totals);
     const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
     window.open(url, "_blank");
@@ -2208,121 +2188,6 @@
       gotoSectionById(id);
     });
   });
-
-  /* ========= ORDER HISTORY (My Orders) ========= */
-
-  function renderOrders() {
-    const container = document.getElementById('orders-list');
-    if (!container) return;
-    let orders = [];
-    try { orders = JSON.parse(localStorage.getItem('srk_orders') || '[]'); } catch(e) { orders = []; }
-    container.innerHTML = '';
-    if (!orders || orders.length === 0) {
-      const no = document.createElement('div');
-      no.id = 'no-orders-msg';
-      no.textContent = 'No orders yet.';
-      no.style.color = 'var(--muted)';
-      container.appendChild(no);
-      return;
-    }
-
-    orders.forEach(function(o, idx) {
-      const wrapper = document.createElement('div');
-      wrapper.style.border = '1px solid #efe7df';
-      wrapper.style.padding = '8px';
-      wrapper.style.borderRadius = '10px';
-      wrapper.style.marginBottom = '8px';
-      wrapper.style.background = '#fffdf9';
-
-      const top = document.createElement('div');
-      top.style.display = 'flex';
-      top.style.justifyContent = 'space-between';
-      top.style.alignItems = 'baseline';
-
-      const left = document.createElement('div');
-      left.innerHTML = '<strong>' + (o.id || ('ORD' + (Date.now()+idx))) + '</strong><br/>' +
-        '<span style="font-size:13px;color:var(--muted);">' + (new Date(o.createdAt)).toLocaleString() + '</span>';
-
-      const right = document.createElement('div');
-      right.style.textAlign = 'right';
-      right.innerHTML = '<div style="font-weight:700;color:#4d3825;">Status: <span id="status-'+idx+'">' + (o.status || 'Pending') + '</span></div>' +
-                        '<div style="font-size:13px;color:var(--muted);">Total: Rs.' + (o.total || o.total || 0) + '</div>';
-
-      top.appendChild(left);
-      top.appendChild(right);
-      wrapper.appendChild(top);
-
-      // items
-      const items = document.createElement('div');
-      items.style.marginTop = '6px';
-      items.style.fontSize = '13px';
-      items.innerHTML = '<strong>Items:</strong>';
-      const ul = document.createElement('ul');
-      ul.style.margin = '6px 0 0 14px';
-      (o.cart || []).forEach(function(it){
-        let sizeLabel = it.size==='combo' ? 'Combo' : (it.size==='1000' ? '1kg' : '500g');
-        const li = document.createElement('li');
-        li.textContent = it.name + ' (' + sizeLabel + ') × ' + it.qty + ' = Rs.' + (it.unitPrice*it.qty);
-        ul.appendChild(li);
-      });
-      items.appendChild(ul);
-      wrapper.appendChild(items);
-
-      // buttons: View on WhatsApp again, Mark as Delivered (for demo), Remove
-      const actions = document.createElement('div');
-      actions.style.display = 'flex';
-      actions.style.gap = '8px';
-      actions.style.marginTop = '8px';
-
-      const waBtn = document.createElement('button');
-      waBtn.className = 'btn-pill';
-      waBtn.style.padding = '6px 8px';
-      waBtn.textContent = 'View on WhatsApp';
-      waBtn.addEventListener('click', function(){
-        // rebuild quick message to view
-        let text = 'Order ' + (o.id || '') + '%0A';
-        text += 'Total: Rs.' + (o.total||0) + '%0A';
-        text += 'Status: ' + (o.status||'') + '%0A';
-        window.open('https://wa.me/' + OWNER_WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text), '_blank');
-      });
-
-      const deliveredBtn = document.createElement('button');
-      deliveredBtn.className = 'btn-pill';
-      deliveredBtn.style.background = '#0f5b4f';
-      deliveredBtn.textContent = 'Mark Delivered';
-      deliveredBtn.addEventListener('click', function(){
-        try {
-          let arr = JSON.parse(localStorage.getItem('srk_orders') || '[]');
-          if (arr[idx]) { arr[idx].status = 'Delivered'; localStorage.setItem('srk_orders', JSON.stringify(arr)); renderOrders(); }
-        } catch(e){}
-      });
-
-      const removeBtn = document.createElement('button');
-      removeBtn.className = 'btn-pill';
-      removeBtn.style.background = '#c0392b';
-      removeBtn.textContent = 'Remove';
-      removeBtn.addEventListener('click', function(){
-        if (!confirm('Remove this order from history?')) return;
-        try {
-          let arr = JSON.parse(localStorage.getItem('srk_orders') || '[]');
-          arr.splice(idx,1);
-          localStorage.setItem('srk_orders', JSON.stringify(arr));
-          renderOrders();
-        } catch(e){}
-      });
-
-      actions.appendChild(waBtn);
-      actions.appendChild(deliveredBtn);
-      actions.appendChild(removeBtn);
-      wrapper.appendChild(actions);
-
-      container.appendChild(wrapper);
-    });
-  }
-
-  // Initialize orders UI on load
-  try { document.addEventListener('DOMContentLoaded', renderOrders); } catch(e){}
-
 </script>
 </body>
 </html>
