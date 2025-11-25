@@ -2,331 +2,439 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>SRK Pickles – Orders & Tracking</title>
+  <title>SRK Pickles – Online Store (Final)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#fffdf7;--accent:#0f5b4f;--accent-2:#c0392b;--muted:#7a6a60}
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial; margin:0; background:var(--bg); color:#222}
-    header{display:flex;align-items:center;gap:16px;padding:12px 16px;background:linear-gradient(90deg,#fff7f1,#fffefc);position:sticky;top:0;z-index:50;border-bottom:1px solid #eee}
-    .brand{font-weight:800;color:var(--accent);font-size:20px}
-    nav{margin-left:16px;display:flex;gap:8px}
-    nav button{background:#fff;border:1px solid #e6dcd1;padding:8px 10px;border-radius:999px;cursor:pointer}
-    .actions{margin-left:auto;display:flex;gap:8px;align-items:center}
-    .btn{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:700}
+    :root{--bg:#fffdf7;--accent:#0f5b4f;--accent-2:#c0392b;--card:#ffffff;--muted:#7a6a60}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:#222;line-height:1.5}
+    header{display:flex;align-items:center;gap:20px;padding:14px 18px;background:linear-gradient(90deg,#f7e8d9,#fffefc);border-bottom:1px solid #eee;position:sticky;top:0;z-index:1200}
+    .logo-wrap{display:flex;align-items:center;gap:12px}
+    .logo-wrap img{width:64px;height:64px;border-radius:14px;object-fit:cover;box-shadow:0 6px 18px rgba(16,24,40,0.14)}
+    .brand{font-weight:800;font-size:22px;color:var(--accent)}
+    .tagline{font-size:13px;color:var(--muted)}
+    nav{display:flex;gap:10px;margin-left:24px;flex-wrap:wrap}
+    nav a{ text-decoration:none;font-size:14px;font-weight:700;padding:8px 10px;border-radius:999px;color:var(--accent-2);background:#fff;border:1px solid rgba(192,57,43,0.12)}
+    .search-wrap{margin-left:auto;display:flex;gap:8px;align-items:center}
+    .search-wrap input{padding:8px 10px;border-radius:999px;border:1px solid #e6dcd1;font-size:13px;width:180px}
+    .btn-pill{border-radius:999px;border:none;background:var(--accent-2);color:#fff;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer}
+    .offer-banner{background:#c0392b;color:#fff;text-align:center;padding:10px 6px;font-weight:700;font-size:15px}
+    main{max-width:1180px;margin:24px auto;padding:0 16px 40px}
+    .layout{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,0.9fr);gap:18px;align-items:flex-start}
+    .right-column{display:flex;flex-direction:column;gap:14px}
+    h2.section-title{margin:18px 0 10px;color:#4d3825;font-size:20px;position:relative;padding-bottom:4px}
+    h2.section-title::after{content:"";position:absolute;left:0;bottom:0;width:60px;height:3px;border-radius:999px;background:linear-gradient(90deg,#c0392b,#f1b27a)}
+    section.products-wrapper,.info-section,.reviews-section,.qr-poster{scroll-margin-top:90px}
+    section.products-wrapper{background:#fffdf9;border-radius:18px;border:1px solid #f1e1d5;padding:12px 12px 18px}
+    .products-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .product-card{background:var(--card);border-radius:14px;border:2px solid #e6dcd1;padding:10px;display:flex;gap:10px;align-items:flex-start;box-shadow:0 4px 14px rgba(16,24,40,0.05);position:relative;overflow:hidden}
+    .product-card img{width:90px;height:90px;border-radius:12px;object-fit:cover;flex-shrink:0}
+    .product-card h4{margin:0 0 4px;font-size:15px;color:var(--accent)}
+    .product-desc{font-size:13px;color:var(--muted)}
+    .price-line{margin-top:6px;font-size:13px}
+    .price-main{color:var(--accent-2);font-weight:700}
+    .price-save{font-size:12px;color:#0f5b4f;margin-top:2px}
+    .product-actions{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+    .product-actions select,.product-actions input{padding:5px 6px;border-radius:8px;border:1px solid #e6dcd1;font-size:12px}
+    .btn-add{background:var(--accent-2);color:#fff;border-radius:8px;border:none;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer}
+    .cart-box{position:sticky;top:100px;background:#ffffff;border-radius:16px;border:1px solid #efe7df;padding:14px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+    .cart-row{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px dashed #f0e6de;font-size:12px}
+    .cart-row:last-child{border-bottom:none}
+    .cart-row-title{font-weight:600;color:#4d3825;margin-bottom:2px}
+    .cart-row-sub{color:var(--muted);font-size:11px}
+    .cart-note{font-size:11px;color:var(--muted);margin-top:4px}
+    .coupon-box{margin-top:10px;padding:8px 10px;border-radius:10px;border:1px dashed #e6dcd1;background:#fffdf9}
+    .coupon-row{margin-top:6px;display:flex;gap:6px}
+    .coupon-row input{flex:1;padding:6px 8px;border-radius:999px;border:1px solid #e6dcd1;font-size:12px}
+    .coupon-message{margin-top:4px;font-size:11px}
+    .coupon-message.ok{color:#0f5b4f}
+    .coupon-message.err{color:#c0392b}
+    .btn-checkout{width:100%;border-radius:999px;border:none;padding:9px 10px;margin-top:8px;font-size:13px;font-weight:800;cursor:pointer;background:var(--accent);color:#fff}
+    .reviews-section{margin-top:0;padding:14px 12px 16px;border-radius:16px;background:#fff;border:1px solid #f1e1d5}
+    .reviews-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin-top:6px;max-height:420px;overflow:auto;padding-right:6px}
+    .review-card{background:#fffdf9;border-radius:12px;border:1px solid #f1e1d5;padding:8px 9px;font-size:13px;color:#4d3825;box-shadow:0 3px 8px rgba(16,24,40,0.04)}
+    .review-stars{color:#f5a623;font-size:13px;margin-bottom:4px}
+    .review-text{font-size:12px;margin-bottom:6px}
+    .review-user{font-size:11px;color:#7a6a60}
+    .review-form{margin-top:10px;padding-top:10px;border-top:1px dashed #f1e1d5}
+    .review-form-row{display:flex;gap:6px;margin-bottom:6px}
+    .review-form-row input,.review-form-row select,.review-form textarea{width:100%;padding:6px 8px;border-radius:8px;border:1px solid #e6dcd1;font-size:12px;font-family:inherit}
+    .review-form textarea{resize:vertical;min-height:50px}
+    .review-form button{border-radius:999px;border:none;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;background:#0f5b4f;color:#fff;margin-top:2px}
+    .referral-box{margin-top:0;padding:12px 12px 14px;border-radius:16px;background:#fff;border:1px solid #e6dcd1;font-size:13px}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:99999;padding:18px}
+    .modal-backdrop.show{display:flex}
+    .reviews-modal{background:#fff;border-radius:12px;max-width:880px;width:100%;max-height:86vh;overflow:auto;padding:18px;box-shadow:0 14px 48px rgba(0,0,0,0.35)}
+    .reviews-modal h3{margin-top:0;color:var(--accent)}
+    .btn{display:inline-block;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer;border:none;background:var(--accent);color:#fff}
     .btn.secondary{background:#f3e6dd;color:#4d3825}
-    main{max-width:980px;margin:20px auto;padding:0 16px}
-    .card{background:#fff;padding:14px;border-radius:12px;border:1px solid #efe7df;margin-bottom:12px}
-    .muted{color:var(--muted);font-size:13px}
-    .orders-grid{display:grid;gap:10px}
-    .order-row{border:1px dashed #eee;padding:10px;border-radius:10px;background:#fffdf9}
-    .order-id{font-weight:700;color:var(--accent)}
-    .status-pill{display:inline-block;padding:6px 8px;border-radius:999px;font-size:13px}
-    .status-placed{background:#fff3d6;color:#8b4b0f;border:1px solid #f4cf84}
-    .status-packed{background:#e6fff5;color:#0f5b4f;border:1px solid #9de0c0}
-    .status-shipped{background:#e7f0ff;color:#0f3b8a;border:1px solid #c7d9ff}
-    .status-otd{background:#fff4f0;color:#ad3b2c;border:1px solid #f5c9be}
-    .status-delivered{background:#e7ffe9;color:#0b6b2d;border:1px solid #bfe8c1}
-    .timeline{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
-    .small{font-size:13px;color:#666}
-    input[type="text"], input[type="tel"]{padding:8px;border-radius:8px;border:1px solid #e6dcd1;width:100%}
-    .flex{display:flex;gap:8px;align-items:center}
-    .col{flex:1}
-    .note{font-size:13px;color:#7a6a60;margin-top:8px}
-    .link{color:var(--accent-2);text-decoration:underline;cursor:pointer}
-    footer{padding:20px;text-align:center;color:#8b6f5a;font-size:13px}
-    @media(max-width:600px){ header{flex-wrap:wrap} .actions{width:100%;justify-content:space-between} }
+    .highlight{box-shadow:0 10px 40px rgba(192,57,43,0.12);transform:translateY(-2px);transition:box-shadow 0.25s ease,transform 0.25s ease}
+    .wa-float{position:fixed;width:55px;height:55px;bottom:22px;right:22px;background:#25d366;color:white;border-radius:50%;text-align:center;font-size:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;box-shadow:0 6px 18px rgba(16,24,40,0.25);z-index:999}
+    @media(max-width:900px){header{flex-wrap:wrap}nav{margin-left:0}.layout{grid-template-columns:1fr}.products-grid{grid-template-columns:1fr}.cart-box{position:static;margin-top:20px}}
   </style>
 </head>
 <body>
 <header>
-  <div class="brand">SRK Pickles</div>
+  <div class="logo-wrap">
+    <img src="srk-logo.png" alt="SRK Pickles Logo" />
+    <div>
+      <div class="brand">SRK Pickles</div>
+      <div class="tagline">Flavor Crafted.</div>
+    </div>
+  </div>
+
   <nav>
-    <button id="nav-shop">Shop</button>
-    <button id="nav-orders">My Orders</button>
-    <button id="nav-contact">Contact</button>
+    <a href="#pickles">PICKLES</a>
+    <a href="#powders">POWDERS</a>
+    <a href="#combos">COMBOS</a>
+    <a href="#offers">OFFERS</a>
+    <a href="#reviews">REVIEWS</a>
   </nav>
-  <div class="actions">
-    <div class="muted">WhatsApp: <a href="https://wa.me/917075535180" target="_blank">+91 70755 35180</a></div>
-    <button class="btn" id="btn-open-cart">Cart</button>
+
+  <div class="search-wrap">
+    <input id="search" placeholder="Search products..." />
+    <button class="btn-pill" id="cart-button" type="button">Cart (<span id="cart-count">0</span>)</button>
   </div>
 </header>
 
-<main id="main">
-  <section id="shop-section" class="card">
-    <h2>Welcome — Shop Pickles</h2>
-    <p class="muted">This demo contains limited products. Add items to cart and place an order. Orders are saved locally; customers can view order history by phone number and track updates here.</p>
+<div class="offer-banner">
+  🎉 Festive Offer: Extra savings on your SRK Pickles order!
+  <span id="countdown"></span>
+</div>
 
-    <div id="products" class="orders-grid"></div>
-  </section>
+<main>
+  <div class="layout">
+    <section class="products-wrapper">
+      <h2 id="pickles" class="section-title">Pickles</h2>
+      <div id="pickles-list" class="products-grid"></div>
 
-  <section id="orders-section" class="card" style="display:none;">
-    <h2>My Orders</h2>
-    <p class="muted">Enter the phone number you used while placing orders to view order history and tracking updates.</p>
+      <h2 id="powders" class="section-title">Powders</h2>
+      <div id="powders-list" class="products-grid"></div>
 
-    <div class="flex" style="margin-top:8px;">
-      <input type="tel" id="lookup-phone" placeholder="Enter phone number (e.g., 7075535180)" />
-      <button class="btn" id="lookup-btn">Lookup</button>
+      <h2 id="combos" class="section-title">Combos (Best Value)</h2>
+      <div id="combos-list" class="products-grid"></div>
+    </section>
+
+    <div class="right-column">
+      <aside class="cart-box">
+        <h3>Your Cart</h3>
+        <div id="cart-items" class="cart-items cart-empty">No items in cart</div>
+
+        <div class="cart-total-line"><span>Subtotal</span><span id="cart-subtotal">Rs. 0</span></div>
+        <div class="cart-total-line"><span>Auto Discount</span><span id="cart-auto-discount">- Rs. 0</span></div>
+        <div class="cart-total-line"><span>Coupon Discount</span><span id="cart-coupon-discount">- Rs. 0</span></div>
+        <div class="cart-total-line"><span>Delivery</span><span id="cart-delivery">Rs. 0</span></div>
+        <div class="cart-total-line"><strong>Total Payable</strong><strong id="cart-grand">Rs. 0</strong></div>
+        <div class="cart-note">Delivery rule: Free delivery for orders above Rs.1200, otherwise flat Rs.80.</div>
+
+        <div class="cart-form">
+          <div><label for="cust-name">Customer Name</label><input id="cust-name" placeholder="Name" /></div>
+          <div><label for="cust-phone">Phone Number</label><input id="cust-phone" placeholder="Phone number" /></div>
+          <div><label for="cust-address">Address</label><textarea id="cust-address" rows="3" placeholder="Delivery address"></textarea></div>
+        </div>
+
+        <div class="payment-methods" style="margin-top:10px;padding:8px 10px;border-radius:10px;border:1px solid #e6dcd1;background:#fffdf9;font-size:13px;">
+          <div class="payment-methods-title">Payment Method</div>
+          <label class="payment-option"><input type="radio" name="payment" value="PhonePe" /> PhonePe (UPI)</label><br/>
+          <label class="payment-option"><input type="radio" name="payment" value="Google Pay" /> Google Pay (UPI)</label><br/>
+          <label class="payment-option"><input type="radio" name="payment" value="Cash on Delivery" checked /> Cash on Delivery (COD)</label>
+          <div class="upi-info">UPI Mobile Number: <strong>70755 35180</strong><br/>UPI ID: <strong>tarunkrishna7651@ybl</strong></div>
+        </div>
+
+        <div class="coupon-box">
+          <label for="coupon-code">Have a coupon?</label>
+          <div class="coupon-row">
+            <input id="coupon-code" placeholder="Enter code (e.g., SRKWELCOME)" />
+            <button type="button" id="apply-coupon-btn" class="btn secondary">Apply</button>
+          </div>
+          <div id="coupon-message" class="coupon-message"></div>
+        </div>
+
+        <button id="btn-wa-order" class="btn-checkout">Place Order on WhatsApp</button>
+      </aside>
+
+      <section class="reviews-section" id="reviews" aria-label="Customer Reviews">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div class="reviews-title">Customer Reviews</div>
+            <div class="reviews-subtitle">Real feedback from homes that love SRK Pickles.</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="reviews-stars" id="reviews-average-stars">★★★★★</div>
+            <div class="reviews-count" id="reviews-count">No reviews yet</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+          <button class="btn" id="btn-open-reviews-modal">View all reviews</button>
+          <button class="btn secondary" id="btn-write-review">Write a review</button>
+        </div>
+
+        <div class="reviews-grid" id="reviews-grid" tabindex="0" aria-live="polite" aria-label="Recent customer reviews">
+          <!-- preview reviews injected here -->
+        </div>
+
+        <div class="review-form" id="inline-review-form" style="display:none;">
+          <div class="review-form-title">Post your review</div>
+          <div class="review-form-row">
+            <input id="review-name" placeholder="Your name" />
+            <input id="review-location" placeholder="City / Place (optional)" />
+          </div>
+          <div class="review-form-row">
+            <select id="review-rating">
+              <option value="">Rating (1–5)</option>
+              <option value="5">★★★★★ – Loved it</option>
+              <option value="4">★★★★☆ – Very good</option>
+              <option value="3">★★★☆☆ – Good</option>
+              <option value="2">★★☆☆☆ – Okay</option>
+              <option value="1">★☆☆☆☆ – Not happy</option>
+            </select>
+          </div>
+          <div class="review-form-row">
+            <textarea id="review-text" placeholder="Write about the taste, packing, delivery experience..." maxlength="800"></textarea>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <div id="char-count" style="font-size:12px;color:#7a6a60;">0/800</div>
+            <div>
+              <button type="button" id="review-submit" class="btn">Submit Review</button>
+              <button type="button" id="review-cancel" class="btn secondary">Cancel</button>
+            </div>
+          </div>
+          <div class="review-form-note">Your review will appear here on this device. For public testimonials, we may also share highlights on our social media.</div>
+        </div>
+      </section>
+
+      <section class="referral-box" id="referral">
+        <h3>Share & Earn</h3>
+        <p style="margin:0;font-size:12px;color:#7a6a60;">Share your referral link with friends. On every successful order, both of you can get a discount (as per SRK Pickles offer).</p>
+        <div class="referral-input-row"><input id="ref-name" placeholder="Your name or phone (for ref code)" /></div>
+        <div class="referral-actions"><button type="button" id="ref-generate" class="btn secondary">Generate Link</button><button type="button" id="ref-share-wa" class="btn secondary">Share on WhatsApp</button></div>
+        <div id="ref-output" class="referral-link-output"></div>
+      </section>
     </div>
+  </div>
 
-    <div id="orders-list" style="margin-top:12px;"></div>
-
-    <div class="note">Orders shown here are stored locally in your browser for this demo. To sync across devices, we can connect a backend (Google Sheets, Firebase, or a small server).</div>
+  <section class="qr-poster">
+    <h3>Scan to Order on WhatsApp</h3>
+    <p>Show this QR in your shop or events. Customers can scan and chat directly with SRK Pickles.</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fwa.me%2F917075535180" alt="WhatsApp Order QR" />
+    <p>WhatsApp: +91 70755 35180</p>
   </section>
 
-  <section id="contact-section" class="card" style="display:none;">
-    <h2>Contact & Support</h2>
-    <p class="muted">For live support use WhatsApp or call. In a production site we'd connect real-time updates (SMS/WhatsApp) and courier tracking APIs.</p>
-    <p>WhatsApp: <a href="https://wa.me/917075535180" target="_blank">+91 70755 35180</a></p>
+  <section id="offers" class="info-section">
+    <h3>Offers & Discounts – How You Save</h3>
+    <p>At <strong>SRK Pickles</strong>, we want you to enjoy more flavours at a better value. Here is how all our offers work. These are applied automatically in your cart.</p>
+    <ul>
+      <li><strong>5% OFF</strong> on orders with subtotal <strong>₹1500 or more</strong></li>
+      <li><strong>10% OFF</strong> on orders with subtotal <strong>₹2500 or more</strong></li>
+    </ul>
+    <p>Coupon examples: <strong>SRKWELCOME</strong>, <strong>FEST10</strong>, <strong>PICKLELOVE</strong>.</p>
   </section>
+
+  <footer style="margin-top:22px;font-size:12px;text-align:center;color:#8b6f5a">© SRK Pickles • Handmade in India • Hosted on GitHub Pages</footer>
 </main>
 
-<footer>© SRK Pickles • Demo orders saved in browser (localStorage)</footer>
+<!-- Reviews Modal -->
+<div id="reviews-modal-backdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="reviews-modal" role="document">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3>All Customer Reviews</h3>
+      <div><button id="modal-scroll-top" class="btn secondary" title="Scroll to top">Top</button> <button id="btn-close-reviews-modal" class="btn secondary">Close</button></div>
+    </div>
+    <div style="margin-top:12px"><strong id="modal-average-text"></strong></div>
+    <div class="reviews-grid" id="reviews-modal-grid" tabindex="0" aria-live="polite"></div>
+    <div style="margin-top:12px;display:flex;justify-content:flex-end;"><button id="modal-write-review" class="btn">Write a review</button></div>
+  </div>
+</div>
+
+<!-- Offer Modal (first-visit) -->
+<div id="offer-modal" class="modal-backdrop" style="z-index:9999">
+  <div class="reviews-modal">
+    <button id="offer-close" class="btn secondary" style="float:right">Close</button>
+    <h3>Welcome to SRK Pickles!</h3>
+    <p>Get <strong>₹50 OFF</strong> on your first order above ₹500. Use coupon code: <strong>SRKWELCOME</strong></p>
+    <button id="offer-apply" class="btn">Apply SRKWELCOME</button>
+  </div>
+</div>
+
+<!-- Floating WhatsApp quick-chat button -->
+<a href="https://wa.me/917075535180" class="wa-float" target="_blank">💬</a>
 
 <script>
-/* ======= Simple product set for demo ======= */
+/* ======= CONFIG ======= */
+const OWNER_WHATSAPP_NUMBER = "917075535180";
+const UPI_ID = "tarunkrishna7651@ybl";
+const UPI_MOBILE = "7075535180";
+const REVIEWS_STORAGE_KEY = "srk_reviews_final_v1";
+let APPLIED_COUPON = null;
+const COUPONS = {
+  SRKWELCOME:{type:"flat",amount:50,minSubtotal:500,label:"₹50 OFF on orders above ₹500"},
+  FEST10:{type:"percent",amount:10,minSubtotal:1000,label:"10% OFF on orders above ₹1000"},
+  PICKLELOVE:{type:"percent",amount:7,minSubtotal:800,label:"7% OFF when you enjoy your favourite pickles"}
+};
+
+/* ======= PRODUCTS (same as earlier full file) ======= */
+const IMAGE_MAP = {
+  "mango-garlic":"images/mango-garlic.jpg","mango-no-garlic":"images/mango-plain.jpg","magaya":"images/magaya.jpg","bellam-avakaya":"images/bellam-avakaya.jpg","tomato":"images/tomato.jpg","gongura":"images/gongura.jpg","ginger":"images/ginger.jpg","red-chilli":"images/red-chilli.jpg","tamarind":"images/tamarind.jpg","amla":"images/amla.jpg","lemon":"images/lemon.jpg","kandi-podi":"images/kandi-podi.jpg","karapu-podi":"images/karapu-podi.jpg","karivepaku-podi":"images/karivepaku-podi.jpg","idly-chutney-podi":"images/idly-chutney-podi.jpg","sambar-podi":"images/sambar-podi.jpg","rasam-podi":"images/rasam-podi.jpg","combo-1":"images/combo-1.jpg","combo-2":"images/combo-2.jpg"
+};
 const PRODUCTS = [
-  { id: "mango-garlic", name: "Mango Pickle (With Garlic)", price500: 350, price1000: 700 },
-  { id: "gongura", name: "Gongura Pickle", price500: 350, price1000: 700 },
-  { id: "bellam-avakaya", name: "Bellam Avakaya", price500: 400, price1000: 800 }
+  { id:"mango-garlic", category:"pickles", name:"Mango Pickle (With Garlic)", desc:"Classic taste that stays with you.", prices:{ "500":400, "1000":800 } },
+  { id:"mango-no-garlic", category:"pickles", name:"Mango Pickle (Without Garlic)", desc:"Classic taste without garlic.", prices:{ "500":350, "1000":700 } },
+  { id:"magaya", category:"pickles", name:"Magaya Pickle", desc:"Sun-dried Mango pickle.", prices:{ "500":350, "1000":700 } },
+  { id:"bellam-avakaya", category:"pickles", name:"Bellam Avakaya", desc:"Sweet Avakaya blend with jaggery.", prices:{ "500":400, "1000":800 } },
+  { id:"tomato", category:"pickles", name:"Tomato Pickle", desc:"Spicy & tangy.", prices:{ "500":350, "1000":700 } },
+  { id:"gongura", category:"pickles", name:"Gongura Pickle", desc:"Sorrel leaves pickle.", prices:{ "500":350, "1000":700 } },
+  { id:"ginger", category:"pickles", name:"Ginger Pickle", desc:"Sweet & spicy ginger pickle.", prices:{ "500":350, "1000":700 } },
+  { id:"red-chilli", category:"pickles", name:"Red Chilli Pickle", desc:"Spicy and earthy.", prices:{ "500":350, "1000":700 } },
+  { id:"tamarind", category:"pickles", name:"Tamarind Pickle", desc:"Sharp & tangy.", prices:{ "500":350, "1000":700 } },
+  { id:"amla", category:"pickles", name:"Amla Pickle", desc:"Spicy & tangy amla.", prices:{ "500":350, "1000":700 } },
+  { id:"lemon", category:"pickles", name:"Lemon Pickle", desc:"Juicy marinated lemon.", prices:{ "500":350, "1000":700 } },
+  { id:"kandi-podi", category:"powders", name:"Kandi Podi", desc:"Toor dal powder.", prices:{ "500":300, "1000":600 } },
+  { id:"karapu-podi", category:"powders", name:"Karapu podi (Nalla karam)", desc:"Hot, spicy powder.", prices:{ "500":300, "1000":600 } },
+  { id:"karivepaku-podi", category:"powders", name:"Karivepaku podi", desc:"Curry leaves powder.", prices:{ "500":300, "1000":600 } },
+  { id:"idly-chutney-podi", category:"powders", name:"Idly chutney podi", desc:"Flavourful chutney powder.", prices:{ "500":300, "1000":600 } },
+  { id:"sambar-podi", category:"powders", name:"Sambar podi", desc:"Traditional sambar powder.", prices:{ "500":300, "1000":600 } },
+  { id:"rasam-podi", category:"powders", name:"Rasam podi", desc:"Flavourful rasam powder.", prices:{ "500":300, "1000":600 } },
+  { id:"combo-1", category:"combos", name:"Family Pickle Combo 1", desc:"Mango (with garlic), Ginger, Amla, Gongura – 500gm each.", prices:{ "combo":1450 }, mrp:1600 },
+  { id:"combo-2", category:"combos", name:"Family Pickle Combo 2", desc:"Gongura, Lemon, Magaya, Tomato – 500gm each.", prices:{ "combo":1450 }, mrp:1600 }
 ];
 
-const ORDERS_KEY = "srk_orders_demo_v1";
-let CART = [];
+/* ======= Helpers: discounts & totals ======= */
+function calculateAutoDiscount(subtotal){ if(subtotal>=2500) return Math.round(subtotal*0.10); if(subtotal>=1500) return Math.round(subtotal*0.05); return 0 }
+function calculateCouponDiscount(subtotal){ if(!APPLIED_COUPON) return 0; const c=APPLIED_COUPON; if(subtotal<c.minSubtotal) return 0; if(c.type==="flat") return c.amount; return Math.round((c.amount/100)*subtotal) }
+function calculateDelivery(subtotal){ return subtotal>=1200?0:80 }
 
-/* ======= UI render ======= */
-function renderProducts() {
-  const el = document.getElementById("products");
-  el.innerHTML = "";
-  PRODUCTS.forEach(p => {
-    const row = document.createElement("div");
-    row.className = "order-row";
-    row.innerHTML = `
-      <div style="display:flex;gap:12px;align-items:center">
-        <div style="flex:1">
-          <div style="font-weight:700">${p.name}</div>
-          <div class="small muted">500g: Rs.${p.price500} • 1kg: Rs.${p.price1000}</div>
-        </div>
-        <div style="width:220px">
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select data-pid="${p.id}" class="size-select" style="flex:1;padding:8px;border-radius:8px;border:1px solid #e6dcd1">
-              <option value="500">500g</option>
-              <option value="1000">1kg</option>
-            </select>
-            <input type="number" min="1" value="1" class="qty-input" style="width:70px;padding:8px;border-radius:8px;border:1px solid #e6dcd1" />
-          </div>
-          <div style="display:flex;gap:6px">
-            <button class="btn add-btn" data-id="${p.id}">Add to cart</button>
-            <button class="btn secondary buy-now" data-id="${p.id}">Buy now</button>
-          </div>
-        </div>
-      </div>
-    `;
-    el.appendChild(row);
-  });
-
-  // wire up buttons
-  document.querySelectorAll(".add-btn").forEach(b => b.addEventListener("click", e => {
-    const id = e.currentTarget.getAttribute("data-id");
-    const container = e.currentTarget.closest(".order-row");
-    const size = container.querySelector(".size-select").value;
-    const qty = parseInt(container.querySelector(".qty-input").value, 10) || 1;
-    const prod = PRODUCTS.find(x => x.id === id);
-    const unit = size === "500" ? prod.price500 : prod.price1000;
-    CART.push({ id: id, name: prod.name, size: size, qty: qty, unitPrice: unit });
-    alert("Added to cart: " + prod.name);
-  }));
-
-  document.querySelectorAll(".buy-now").forEach(b => b.addEventListener("click", e => {
-    const id = e.currentTarget.getAttribute("data-id");
-    const container = e.currentTarget.closest(".order-row");
-    const size = container.querySelector(".size-select").value;
-    const qty = parseInt(container.querySelector(".qty-input").value, 10) || 1;
-    const prod = PRODUCTS.find(x => x.id === id);
-    const unit = size === "500" ? prod.price500 : prod.price1000;
-    const tempCart = [{ id: id, name: prod.name, size: size, qty: qty, unitPrice: unit }];
-    openCheckoutModal(tempCart);
-  }));
+/* ======= Render products ======= */
+function makeProductCard(product){
+  const card=document.createElement("div"); card.className="product-card";
+  const img=document.createElement("img"); img.src=IMAGE_MAP[product.id]||"srk-logo.png"; img.alt=product.name; card.appendChild(img);
+  const info=document.createElement("div");
+  const h4=document.createElement("h4"); h4.textContent=product.name; info.appendChild(h4);
+  const desc=document.createElement("div"); desc.className="product-desc"; desc.textContent=product.desc; info.appendChild(desc);
+  const priceLine=document.createElement("div"); priceLine.className="price-line";
+  const keys=Object.keys(product.prices);
+  if(keys.includes("combo")){ priceLine.innerHTML='<span class="price-main">Rs.'+product.prices.combo+'</span> (Combo)'; info.appendChild(priceLine); if(product.mrp && product.mrp>product.prices.combo){ const save=document.createElement("div"); save.className="price-save"; save.textContent='Value Rs.'+product.mrp+' – You save Rs.'+(product.mrp-product.prices.combo); info.appendChild(save) } }
+  else{ priceLine.innerHTML='<span class="price-main">Rs.'+product.prices["1000"]+'/kg</span> | Rs.'+product.prices["500"]+'/500gm'; info.appendChild(priceLine) }
+  const actions=document.createElement("div"); actions.className="product-actions";
+  const sizeSelect=document.createElement("select");
+  if(keys.includes("combo")){ const o=document.createElement("option"); o.value="combo"; o.textContent="Combo – Rs."+product.prices.combo; sizeSelect.appendChild(o) } else { const o1=document.createElement("option"); o1.value="1000"; o1.textContent="1 kg – Rs."+product.prices["1000"]; const o2=document.createElement("option"); o2.value="500"; o2.textContent="500 gm – Rs."+product.prices["500"]; sizeSelect.appendChild(o1); sizeSelect.appendChild(o2) }
+  const qtyInput=document.createElement("input"); qtyInput.type="number"; qtyInput.min="1"; qtyInput.value="1";
+  const addBtn=document.createElement("button"); addBtn.className="btn-add"; addBtn.textContent="ADD TO CART";
+  addBtn.addEventListener("click",function(){ const size=sizeSelect.value; const qty=parseInt(qtyInput.value,10)||1; addToCart(product,size,qty) });
+  actions.appendChild(sizeSelect); actions.appendChild(qtyInput); actions.appendChild(addBtn);
+  info.appendChild(actions); card.appendChild(info); return card;
+}
+function renderProducts(){
+  const pickles=document.getElementById("pickles-list"), powders=document.getElementById("powders-list"), combos=document.getElementById("combos-list");
+  pickles.innerHTML=""; powders.innerHTML=""; combos.innerHTML=""; const search=document.getElementById("search").value.toLowerCase();
+  PRODUCTS.forEach(p=>{ const match=!search||p.name.toLowerCase().includes(search)||p.desc.toLowerCase().includes(search); if(!match) return; const card=makeProductCard(p); if(p.category==="pickles") pickles.appendChild(card); else if(p.category==="powders") powders.appendChild(card); else combos.appendChild(card) });
 }
 
-/* ======= Checkout modal (simple prompt flow) ======= */
-function openCheckoutModal(cartForCheckout) {
-  // simple form prompts for demo – in a real site you'd show a modal form
-  const name = prompt("Enter name for order:");
-  if (!name) return alert("Order cancelled");
-  const phone = prompt("Enter phone number (used to track order):");
-  if (!phone) return alert("Order cancelled");
-  const addr = prompt("Enter delivery address:");
-  if (!addr) return alert("Order cancelled");
-  // calculate totals
-  let subtotal = 0;
-  cartForCheckout.forEach(i => subtotal += i.unitPrice * i.qty);
-  const delivery = subtotal >= 1200 ? 0 : 80;
-  const order = {
-    id: "SRK" + Date.now().toString().slice(-6),
-    name, phone, addr, items: cartForCheckout, subtotal, delivery,
-    total: subtotal + delivery, createdAt: new Date().toISOString(),
-    statusHistory: [{ status: "Order Placed", time: new Date().toISOString() }]
-  };
-  saveOrder(order);
-  // simulate sending to WhatsApp by opening wa link with summary
-  const summary = cartForCheckout.map(i => `${i.name} (${i.size}) x${i.qty} = Rs.${i.unitPrice*i.qty}`).join("%0A");
-  const msg = `New SRK Pickles Order%0A%0AName: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(addr)}%0A%0AItems:%0A${summary}%0A%0ATotal: Rs.${order.total}`;
-  window.open("https://wa.me/917075535180?text=" + msg, "_blank");
-  alert("Order placed! Your Order ID: " + order.id + ". Use My Orders → Lookup to view tracking updates.");
-  // start simulated tracking progress in background (local only)
-  simulateOrderProgress(order.id);
+/* ======= CART ======= */
+let CART=[];
+function addToCart(product,size,qty){
+  const key=product.id+"|"+size; let found=null; for(let i=0;i<CART.length;i++){ if(CART[i].key===key){ found=CART[i]; break } }
+  const unitPrice=product.prices[size]; if(!unitPrice) return; if(found) found.qty+=qty; else CART.push({key,name:product.name,size,qty,unitPrice:unitPrice});
+  renderCart();
+}
+function getTotals(){ let subtotal=0,totalQty=0; CART.forEach(i=>{ subtotal+=i.unitPrice*i.qty; totalQty+=i.qty }); const auto=calculateAutoDiscount(subtotal); const coupon=calculateCouponDiscount(subtotal); let totalDisc=auto+coupon; if(totalDisc>subtotal) totalDisc=subtotal; const delivery=calculateDelivery(subtotal); const grand=subtotal-totalDisc+delivery; return {subtotal,autoDiscount:auto,couponDiscount:coupon,totalDiscount:totalDisc,delivery,grand,totalQty} }
+function renderCart(){ const cartItemsDiv=document.getElementById("cart-items"); const cartCount=document.getElementById("cart-count"); const subtotalSpan=document.getElementById("cart-subtotal"); const deliverySpan=document.getElementById("cart-delivery"); const grandSpan=document.getElementById("cart-grand"); const autoSpan=document.getElementById("cart-auto-discount"); const couponSpan=document.getElementById("cart-coupon-discount");
+  if(!CART.length){ cartItemsDiv.className="cart-items cart-empty"; cartItemsDiv.textContent="No items in cart"; cartCount.textContent="0"; subtotalSpan.textContent="Rs. 0"; deliverySpan.textContent="Rs. 0"; grandSpan.textContent="Rs. 0"; autoSpan.textContent="- Rs. 0"; couponSpan.textContent="- Rs. 0"; return }
+  cartItemsDiv.className="cart-items"; cartItemsDiv.innerHTML=""; const totals=getTotals();
+  CART.forEach((item,i)=>{ const row=document.createElement("div"); row.className="cart-row"; const left=document.createElement("div"); const title=document.createElement("div"); title.className="cart-row-title"; title.textContent=item.name; const sub=document.createElement("div"); sub.className="cart-row-sub"; const sizeLabel=item.size==="combo"?"Combo Pack":(item.size==="1000"?"1 kg":"500 gm"); sub.textContent=sizeLabel+" × "+item.qty; left.appendChild(title); left.appendChild(sub); const right=document.createElement("div"); right.textContent="Rs."+(item.unitPrice*item.qty); row.appendChild(left); row.appendChild(right); cartItemsDiv.appendChild(row) });
+  cartCount.textContent=String(totals.totalQty); subtotalSpan.textContent="Rs. "+totals.subtotal; deliverySpan.textContent="Rs. "+totals.delivery; grandSpan.textContent="Rs. "+totals.grand; autoSpan.textContent="- Rs. "+totals.autoDiscount; couponSpan.textContent="- Rs. "+totals.couponDiscount
 }
 
-/* ======= Orders storage & lookup ======= */
-function getStoredOrders() {
-  try { return JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]"); }
-  catch(e) { return []; }
-}
-function saveOrder(order) {
-  const arr = getStoredOrders();
-  arr.unshift(order);
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(arr));
-}
-function findOrdersByPhone(phone) {
-  if (!phone) return [];
-  const arr = getStoredOrders();
-  return arr.filter(o => (o.phone || "").replace(/\D/g, "").endsWith(phone.replace(/\D/g, "")));
+/* ======= COUPON ======= */
+function applyCouponFromCode(inputCode){
+  const msgEl=document.getElementById("coupon-message");
+  const raw=(typeof inputCode==="string"&&inputCode)||(document.getElementById("coupon-code")&&document.getElementById("coupon-code").value)||"";
+  const code=raw.trim().toUpperCase();
+  if(!code){ if(msgEl){ msgEl.textContent="Please enter a coupon code."; msgEl.className="coupon-message err" } return }
+  const conf=COUPONS[code]; if(!conf){ APPLIED_COUPON=null; if(msgEl){ msgEl.textContent="Invalid coupon code."; msgEl.className="coupon-message err" } renderCart(); return }
+  const subtotal = CART.reduce((s,i)=>s+i.unitPrice*i.qty,0);
+  if(subtotal<conf.minSubtotal){ APPLIED_COUPON=null; if(msgEl){ msgEl.textContent="This coupon needs minimum order of Rs."+conf.minSubtotal+"."; msgEl.className="coupon-message err" } renderCart(); return }
+  APPLIED_COUPON = { code: code, type: conf.type, amount: conf.amount, minSubtotal: conf.minSubtotal, label: conf.label };
 }
 
-/* ======= Render orders list for lookup ======= */
-function renderOrdersListForPhone(phone) {
-  const container = document.getElementById("orders-list");
-  container.innerHTML = "";
-  const list = findOrdersByPhone(phone || "");
-  if (!list.length) { container.innerHTML = "<div class='muted'>No orders found for this number.</div>"; return; }
-  list.forEach(order => {
-    const div = document.createElement("div");
-    div.className = "order-row";
-    div.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div class="order-id">Order: ${order.id}</div>
-          <div class="small muted">Placed: ${new Date(order.createdAt).toLocaleString()}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-weight:800">Rs.${order.total}</div>
-          <div class="small muted">${order.items.length} item(s)</div>
-        </div>
-      </div>
-      <div style="margin-top:8px">${order.items.map(it => `<div class="small">${it.name} • ${it.size} • x${it.qty} • Rs.${it.unitPrice*it.qty}</div>`).join("")}</div>
-      <div class="timeline" id="timeline-${order.id}"></div>
-      <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end;align-items:center">
-        <button class="btn secondary" onclick="showTrackingLink('${order.id}')">Courier Link</button>
-        <button class="btn" onclick="copyOrderId('${order.id}')">Copy Order ID</button>
-      </div>
-    `;
-    container.appendChild(div);
-    renderOrderTimeline(order);
-  });
-}
+/* ======= WHATSAPP ORDER (simple) ======= */
+function getSelectedPaymentMethod(){ const r=document.querySelectorAll('input[name="payment"]'); for(let i=0;i<r.length;i++){ if(r[i].checked) return r[i].value } return null }
+function buildUpiLink(total){ const params=new URLSearchParams({pa:UPI_ID,pn:"SRK Pickles",am:String(total),cu:"INR",tn:"SRK Pickles Order"}); return "upi://pay?"+params.toString() }
+function buildWhatsAppMessage(name,phone,addr,paymentMethod,totals){ let text="New SRK Pickles Order%0A%0A"; text+="Name: "+encodeURIComponent(name)+"%0A"; text+="Phone: "+encodeURIComponent(phone)+"%0A"; text+="Address: "+encodeURIComponent(addr)+"%0A"; text+="Payment Method: "+encodeURIComponent(paymentMethod)+"%0A%0A"; text+="Items:%0A"; CART.forEach(item=>{ let sizeLabel=item.size==="combo"?"Combo Pack":(item.size==="1000"?"1 kg":"500 gm"); const line="- "+item.name+" ("+sizeLabel+") x "+item.qty+" = Rs."+ (item.unitPrice*item.qty); text+=encodeURIComponent(line)+"%0A" }); text+="%0ASubtotal: Rs."+totals.subtotal; text+="%0AAuto Discount: Rs."+totals.autoDiscount; text+="%0ACoupon Discount: Rs."+totals.couponDiscount; text+="%0ADelivery: Rs."+totals.delivery; text+="%0ATotal Payable: Rs."+totals.grand; if(APPLIED_COUPON) text+="%0ACoupon Used: "+encodeURIComponent(APPLIED_COUPON.code); if(paymentMethod==="PhonePe"||paymentMethod==="Google Pay"){ const upiLink=buildUpiLink(totals.grand); text+="%0A%0AUPI Mobile: "+encodeURIComponent(UPI_MOBILE); text+="%0AUPI ID: "+encodeURIComponent(UPI_ID); text+="%0AUPI Payment Link (tap to pay):%0A"+encodeURIComponent(upiLink); text+="%0A%0A(Note: Once paid, please share payment screenshot / UTR on WhatsApp.)" } return text }
+function sendOrderOnWhatsApp(){ if(!CART.length){ alert("Please add at least one item to the cart."); return } const name=document.getElementById("cust-name").value.trim(); const phone=document.getElementById("cust-phone").value.trim(); const addr=document.getElementById("cust-address").value.trim(); const paymentMethod=getSelectedPaymentMethod(); if(!name||!phone||!addr){ alert("Please fill Name, Phone and Address."); return } if(!paymentMethod){ alert("Please select a payment method."); return } const totals=getTotals(); if(totals.grand<=0){ alert("Total amount is zero."); return } const msg=buildWhatsAppMessage(name,phone,addr,paymentMethod,totals); window.open("https://wa.me/"+OWNER_WHATSAPP_NUMBER+"?text="+msg,"_blank") }
 
-/* Render timeline for an order (statusHistory) */
-function renderOrderTimeline(order) {
-  const t = document.getElementById("timeline-" + order.id);
-  if (!t) return;
-  t.innerHTML = "";
-  const history = order.statusHistory || [];
-  history.forEach(h => {
-    const span = document.createElement("div");
-    span.className = "status-pill " + statusClass(h.status);
-    span.innerHTML = `<strong style="font-weight:700">${h.status}</strong><div class="small" style="margin-top:4px">${new Date(h.time).toLocaleString()}</div>`;
-    t.appendChild(span);
-  });
-}
+/* ======= REVIEWS (final improved) ======= */
+const STATIC_REVIEWS = [
+  { name:"Bhavani", location:"Vijayawada", rating:5, text:"Gongura and Mango (with garlic) are just like my mom used to make. Perfect spice and very fresh." },
+  { name:"Ramesh & Priya", location:"Hyderabad", rating:5, text:"Kandi podi and Idly chutney podi are must-try! Our breakfast became so easy and tasty." },
+  { name:"Sowjanya", location:"Bengaluru", rating:4, text:"Packing was neat, no leakage. Bellam Avakaya is our family favourite now." },
+  { name:"Tarun", location:"Guntur", rating:5, text:"Ginger pickle is a killer with hot rice and ghee. Ordered again for my parents too." },
+  { name:"Meghana", location:"Visakhapatnam", rating:5, text:"Loved the homemade taste. No strong preservatives smell, just pure Andhra flavours." },
+  { name:"Rahul", location:"Chennai", rating:4, text:"Delivery was a day late but the taste made up for it. Tomato and Lemon pickle are superb." }
+];
+function makeStars(r){ const rint=Math.max(1,Math.min(5,Number(r)||5)); return "★★★★★".slice(0,rint)+"☆☆☆☆☆".slice(0,5-rint) }
+function createReviewCard(review){ const card=document.createElement("article"); card.className="review-card"; const stars=document.createElement("div"); stars.className="review-stars"; stars.textContent=makeStars(review.rating); card.appendChild(stars); const text=document.createElement("div"); text.className="review-text"; text.textContent=review.text; card.appendChild(text); const user=document.createElement("div"); user.className="review-user"; user.innerHTML = '<span>' + (review.name || "Customer") + ',</span> ' + (review.location || ''); card.appendChild(user); return card }
+function renderReviewsInto(targetId,arr){ const el=document.getElementById(targetId); if(!el) return; el.innerHTML=""; arr.forEach(r=>el.appendChild(createReviewCard(r))) }
+function loadStoredReviews(){ try{ const raw=localStorage.getItem(REVIEWS_STORAGE_KEY); const stored=raw?JSON.parse(raw):[]; const merged=Array.isArray(stored)?stored.concat(STATIC_REVIEWS):STATIC_REVIEWS.slice(); renderReviewsInto("reviews-grid", merged.slice(0,4)); renderReviewsInto("reviews-modal-grid", merged); updateReviewsSummary(merged); }catch(e){ console.warn("loadStoredReviews failed",e); renderReviewsInto("reviews-grid", STATIC_REVIEWS.slice(0,4)); renderReviewsInto("reviews-modal-grid", STATIC_REVIEWS); updateReviewsSummary(STATIC_REVIEWS) } }
+function saveReviewToStorage(review){ try{ const raw=localStorage.getItem(REVIEWS_STORAGE_KEY); const arr=raw?JSON.parse(raw):[]; arr.unshift(review); if(arr.length>500) arr.length=500; localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(arr)); }catch(e){ console.warn("saveReview failed",e) } }
+function updateReviewsSummary(arr){ const reviews=Array.isArray(arr)?arr:[]; if(!reviews.length){ document.getElementById("reviews-average-stars").textContent="★★★★★"; document.getElementById("reviews-count").textContent="No reviews yet"; document.getElementById("modal-average-text").textContent=""; return } let total=0; reviews.forEach(r=>total+=Number(r.rating)||5); const avg=Math.round((total/reviews.length)*10)/10; const avgRounded=Math.round(avg); const starsText="★★★★★".slice(0,avgRounded)+"☆☆☆☆☆".slice(0,5-avgRounded); document.getElementById("reviews-average-stars").textContent=starsText; document.getElementById("reviews-count").textContent=avg+"/5 based on "+reviews.length+" review"+(reviews.length===1?"":"s"); document.getElementById("modal-average-text").textContent="Average rating: "+avg+" / 5 ("+reviews.length+" reviews)"; }
+function handleReviewSubmissionFromForm(name,location,rating,text){ if(!text||!rating||isNaN(Number(rating))){ alert("Please enter rating and review text."); return false } const review={name:name||"Customer",location:location||"",rating:Number(rating),text:text,createdAt:new Date().toISOString()}; const modalGrid=document.getElementById("reviews-modal-grid"); if(modalGrid) modalGrid.insertBefore(createReviewCard(review), modalGrid.firstChild); saveReviewToStorage(review); loadStoredReviews(); return true }
 
-/* Map status to class */
-function statusClass(status) {
-  if (status === "Order Placed") return "status-placed";
-  if (status === "Packed") return "status-packed";
-  if (status === "Shipped") return "status-shipped";
-  if (status === "Out for Delivery") return "status-otd";
-  if (status === "Delivered") return "status-delivered";
-  return "";
-}
+/* ===== MODAL CONTROLS ===== */
+const modalBackdrop=document.getElementById("reviews-modal-backdrop");
+function openReviewsModal(){ if(!modalBackdrop) return; modalBackdrop.classList.add("show"); modalBackdrop.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden"; const grid=document.getElementById("reviews-modal-grid"); if(grid) grid.focus(); }
+function closeReviewsModal(){ if(!modalBackdrop) return; modalBackdrop.classList.remove("show"); modalBackdrop.setAttribute("aria-hidden","true"); document.body.style.overflow=""; }
 
-/* Simulate background progression of order status for demo (local only) */
-function simulateOrderProgress(orderId) {
-  // find and update stored order with delays (short for demo)
-  const steps = ["Packed", "Shipped", "Out for Delivery", "Delivered"];
-  let delay = 5000; // 5s initial delay before first update for demo
-  steps.forEach((s, idx) => {
-    setTimeout(() => {
-      const arr = getStoredOrders();
-      const order = arr.find(o => o.id === orderId);
-      if (!order) return;
-      order.statusHistory.push({ status: s, time: new Date().toISOString() });
-      localStorage.setItem(ORDERS_KEY, JSON.stringify(arr));
-      // If the orders list is currently showing this phone, re-render timelines
-      const lookupPhone = document.getElementById("lookup-phone").value || "";
-      if (lookupPhone && findOrdersByPhone(lookupPhone).some(o => o.id === orderId)) {
-        renderOrdersListForPhone(lookupPhone);
-      }
-    }, delay * (idx + 1));
-  });
-}
+/* ===== Inline form show/hide ===== */
+function showInlineReviewForm(){ document.getElementById("inline-review-form").style.display=""; document.getElementById("review-name").focus() }
+function hideInlineReviewForm(){ document.getElementById("inline-review-form").style.display="none" }
 
-/* Show a fake courier link (demo) */
-function showTrackingLink(orderId) {
-  const url = "https://www.example.com/track?order=" + encodeURIComponent(orderId);
-  window.open(url, "_blank");
-}
+/* ====== event wiring ====== */
+document.getElementById("search").addEventListener("input", renderProducts);
+document.getElementById("apply-coupon-btn").addEventListener("click", function(){ applyCouponFromCode(); renderCart(); });
+document.getElementById("cart-button").addEventListener("click", function(){ const cart=document.querySelector(".cart-box"); if(cart) cart.scrollIntoView({behavior:"smooth",block:"start"}) });
+document.getElementById("btn-open-reviews-modal").addEventListener("click", openReviewsModal);
+document.getElementById("btn-close-reviews-modal").addEventListener("click", closeReviewsModal);
+document.getElementById("btn-write-review").addEventListener("click", function(){ showInlineReviewForm(); });
+document.getElementById("modal-write-review").addEventListener("click", function(){ closeReviewsModal(); showInlineReviewForm(); });
+document.getElementById("modal-scroll-top").addEventListener("click", function(){ const grid=document.getElementById("reviews-modal-grid"); if(grid) grid.scrollTo({top:0,behavior:"smooth"}); });
+document.getElementById("review-cancel").addEventListener("click", hideInlineReviewForm);
 
-/* Copy order id to clipboard */
-function copyOrderId(id) {
-  navigator.clipboard && navigator.clipboard.writeText(id);
-  alert("Order ID copied: " + id);
-}
-
-/* ======= Navigation wiring ======= */
-document.getElementById("nav-shop").addEventListener("click", function(){
-  document.getElementById("shop-section").style.display = ""; document.getElementById("orders-section").style.display = "none"; document.getElementById("contact-section").style.display = "none";
-});
-document.getElementById("nav-orders").addEventListener("click", function(){
-  document.getElementById("shop-section").style.display = "none"; document.getElementById("orders-section").style.display = ""; document.getElementById("contact-section").style.display = "none";
-});
-document.getElementById("nav-contact").addEventListener("click", function(){
-  document.getElementById("shop-section").style.display = "none"; document.getElementById("orders-section").style.display = "none"; document.getElementById("contact-section").style.display = "";
+// submit review
+document.getElementById("review-submit").addEventListener("click", function(){
+  const name=document.getElementById("review-name").value.trim();
+  const location=document.getElementById("review-location").value.trim();
+  const rating=document.getElementById("review-rating").value;
+  const text=document.getElementById("review-text").value.trim();
+  const ok=handleReviewSubmissionFromForm(name,location,rating,text);
+  if(ok){
+    document.getElementById("review-name").value="";
+    document.getElementById("review-location").value="";
+    document.getElementById("review-rating").value="";
+    document.getElementById("review-text").value="";
+    document.getElementById("char-count").textContent="0/800";
+    alert("Thank you — your review is saved and visible here.");
+    openReviewsModal();
+  }
 });
 
-/* Lookup button */
-document.getElementById("lookup-btn").addEventListener("click", function(){
-  const phone = (document.getElementById("lookup-phone").value || "").trim();
-  if(!phone){ alert("Enter phone number to lookup orders"); return; }
-  renderOrdersListForPhone(phone);
-});
+// char counter
+const reviewTextEl=document.getElementById("review-text");
+if(reviewTextEl){ reviewTextEl.addEventListener("input", function(){ document.getElementById("char-count").textContent = this.value.length + "/800"; }); }
 
-/* Cart button opens basic checkout for cart */
-document.getElementById("btn-open-cart").addEventListener("click", function(){
-  if(!CART.length){ alert("Cart is empty. Add items first."); return; }
-  openCheckoutModal(CART);
-  CART = []; // clear cart after attempting checkout
-});
+// modal backdrop click to close (not when clicking inside modal)
+modalBackdrop.addEventListener("click", function(e){ if(e.target===modalBackdrop) closeReviewsModal(); });
+document.addEventListener("keydown", function(e){ if(e.key==="Escape" && modalBackdrop.classList.contains("show")) closeReviewsModal(); });
 
-/* Init demo products */
-renderProducts();
+// smooth nav and open modal automatically for reviews
+function gotoSectionById(id){ const target=document.getElementById(id); if(!target) return; const header=document.querySelector("header"); const headerH=header?header.offsetHeight:80; const rect=target.getBoundingClientRect(); const absoluteTop=window.pageYOffset+rect.top; const offsetTop=Math.max(0,absoluteTop-headerH-12); window.scrollTo({top:offsetTop,behavior:"smooth"}); target.classList.add("highlight"); setTimeout(()=>target.classList.remove("highlight"),2500); if(id==="reviews"){ setTimeout(()=>openReviewsModal(),650) } }
+document.querySelectorAll('header nav a[href^="#"]').forEach(function(link){ link.addEventListener("click", function(e){ e.preventDefault(); const id=this.getAttribute("href").substring(1); gotoSectionById(id); }); });
 
-/* For demo: pre-seed one order if none present */
-if(!getStoredOrders().length){
-  const sample = {
-    id: "SRK999001",
-    name: "Sample Customer",
-    phone: "7075535180",
-    addr: "Demo Address",
-    items: [{ id:"mango-garlic", name:"Mango Pickle (With Garlic)", size:"500", qty:1, unitPrice:350 }],
-    subtotal: 350, delivery: 80, total: 430, createdAt: new Date().toISOString(),
-    statusHistory: [{ status:"Order Placed", time: new Date().toISOString() }]
-  };
-  saveOrder(sample);
-  // simulate progress slowly so users can see updates
-  setTimeout(()=>simulateOrderProgress(sample.id), 4000);
-}
-
-</script>
-</body>
-</html>
+// offer modal handling (first-visit)
+const offerModal=document.getElementById("offer-modal");
+document.getElementById("offer-close").addEventListener("click", function(){ offerModal.classList.remove("show"); try{ localStorage.setItem("srk_offer_seen","1") }catch(e){} document.body.style.overflow=""; });
+document.getElementById("offer-apply").addEventListener("click", function(){ document.getElementById("coupon-code").value="SRKWELCOME"; applyCouponFromCode("SRKWELCOME"); renderCart(); offerModal.classList.remove("show"); try{ localStorage.setItem("srk_offer_seen","1") }catch(e){} });
+try{ if(!localStorage.getItem("srk_offer_seen")) setTimeout(()=> offerModal.classList.add("show"), 1400); }catch(e){}\n\n// init\nrenderProducts(); renderCart(); loadStoredReviews();\n\n// simple WA order handler\ndocument.getElementById("btn-wa-order").addEventListener("click", sendOrderOnWhatsApp);\n\n</script>\n</body>\n</html>
