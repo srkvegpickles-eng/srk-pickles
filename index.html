@@ -780,6 +780,13 @@
         padding: 8px;
       }
     }
+
+    /* small highlight when user navigates to reviews */
+    .highlight {
+      box-shadow: 0 8px 26px rgba(192,57,43,0.12);
+      transform: translateY(-2px);
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
   </style>
 </head>
 
@@ -961,19 +968,19 @@
       </aside>
 
       <!-- Reviews column -->
-      <section class="reviews-section" id="reviews">
+      <section class="reviews-section" id="reviews" aria-label="Customer Reviews">
         <div class="reviews-header">
           <div>
             <div class="reviews-title">Customer Reviews</div>
             <div class="reviews-subtitle">Real feedback from homes that love SRK Pickles.</div>
           </div>
-          <div class="reviews-summary">
-            <div class="reviews-stars">★★★★★</div>
-            <div class="reviews-count">4.9/5 based on 120+ orders</div>
+          <div class="reviews-summary" id="reviews-summary">
+            <div class="reviews-stars" id="reviews-average-stars">★★★★★</div>
+            <div class="reviews-count" id="reviews-count">4.9/5 based on 120+ orders</div>
           </div>
         </div>
 
-        <div class="reviews-grid" id="reviews-grid">
+        <div class="reviews-grid" id="reviews-grid" tabindex="0" aria-live="polite">
           <!-- Static sample reviews -->
           <article class="review-card">
             <div class="review-stars">★★★★★</div>
@@ -1989,7 +1996,7 @@
     return "★★★★★".slice(0, r) + "☆☆☆☆☆".slice(0, 5 - r);
   }
 
-  function addReviewToDOM(review) {
+  function addReviewToDOM(review, atTop = true) {
     const grid = document.getElementById("reviews-grid");
     if (!grid) return;
     const card = document.createElement("article");
@@ -2007,12 +2014,26 @@
 
     const user = document.createElement("div");
     user.className = "review-user";
-    const locPart = review.location ? (", " + review.location) : "";
     user.innerHTML = "<span>" + (review.name || "Customer") + ",</span> " + (review.location || "");
     card.appendChild(user);
 
-    // Insert new review at TOP of list (after existing static ones visually)
-    grid.insertBefore(card, grid.firstChild);
+    if (atTop) {
+      grid.insertBefore(card, grid.firstChild);
+    } else {
+      grid.appendChild(card);
+    }
+    updateReviewsSummary();
+  }
+
+  function parseStaticReviewRatings() {
+    // Read existing static review-cards and extract the star counts
+    const stars = Array.from(document.querySelectorAll(".reviews-grid .review-card .review-stars"));
+    return stars.map(s => {
+      const txt = s.textContent || "";
+      // Count the number of '★' characters (fall back to measuring index of '☆')
+      const count = (txt.match(/★/g) || []).length;
+      return Math.max(1, Math.min(5, count));
+    });
   }
 
   function loadStoredReviews() {
@@ -2021,7 +2042,8 @@
       if (!raw) return;
       const arr = JSON.parse(raw);
       if (!Array.isArray(arr)) return;
-      arr.forEach(addReviewToDOM);
+      // Insert stored reviews AFTER the static ones (so they show on top)
+      arr.forEach(function(r) { addReviewToDOM(r, true); });
     } catch (e) {
       console.warn("Could not load stored reviews", e);
     }
@@ -2049,7 +2071,7 @@
     const rating = parseInt(ratingEl.value, 10);
     const text = (textEl.value || "").trim();
 
-    if (!text || !rating) {
+    if (!text || !rating || Number.isNaN(rating)) {
       alert("Please select a rating and write your review.");
       return;
     }
@@ -2062,7 +2084,7 @@
       createdAt: new Date().toISOString()
     };
 
-    addReviewToDOM(review);
+    addReviewToDOM(review, true);
     saveReview(review);
 
     nameEl.value = "";
@@ -2071,6 +2093,34 @@
     textEl.value = "";
 
     alert("Thank you! Your review has been added.");
+    // focus reviews area so user sees it
+    const grid = document.getElementById("reviews-grid");
+    if (grid) grid.focus();
+  }
+
+  function updateReviewsSummary() {
+    // compute average rating and count from static + stored cards
+    try {
+      const ratingNodes = document.querySelectorAll(".reviews-grid .review-card .review-stars");
+      let total = 0, count = 0;
+      ratingNodes.forEach(function(n) {
+        const txt = n.textContent || "";
+        const stars = (txt.match(/★/g) || []).length;
+        if (stars > 0) {
+          total += stars;
+          count += 1;
+        }
+      });
+      const avg = count ? (total / count) : 5;
+      const avgRounded = Math.round(avg*10)/10;
+      const starsText = "★★★★★".slice(0, Math.round(avg)) + "☆☆☆☆☆".slice(0, 5-Math.round(avg));
+      const starsEl = document.getElementById("reviews-average-stars");
+      const countEl = document.getElementById("reviews-count");
+      if (starsEl) starsEl.textContent = starsText;
+      if (countEl) countEl.textContent = avgRounded + "/5 based on " + count + " review" + (count===1?"":"s");
+    } catch (e) {
+      console.warn("updateReviewsSummary failed", e);
+    }
   }
 
   /* ========= INIT ========= */
@@ -2100,17 +2150,42 @@
   renderCart();
   initCountdown();
   initOfferModal();
-  loadStoredReviews();
 
-  /* ========= SMOOTH SCROLL FOR NAV (PICKLES / POWDERS / COMBOS / OFFERS / REVIEWS) ========= */
+  // Important: load stored reviews AFTER the rest of the page so they appear above static ones
+  loadStoredReviews();
+  // compute summary initially (includes static + stored)
+  updateReviewsSummary();
+
+  /* ========= SMOOTH SCROLL FOR NAV (IMPROVED) ========= */
+  function gotoSectionById(id) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const header = document.querySelector('header');
+    const headerH = header ? header.offsetHeight : 80;
+    // scroll so the section appears under the sticky header
+    const rect = target.getBoundingClientRect();
+    const absoluteTop = window.pageYOffset + rect.top;
+    const offsetTop = Math.max(0, absoluteTop - headerH - 12);
+    window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+
+    // small visual highlight to make it obvious
+    target.classList.add('highlight');
+    setTimeout(()=>target.classList.remove('highlight'), 900);
+
+    // if user clicked "reviews", also focus the reviews grid so keyboard/screen-reader users notice it
+    if (id === 'reviews') {
+      const grid = document.getElementById('reviews-grid');
+      if (grid) {
+        setTimeout(()=>grid.focus(), 500);
+      }
+    }
+  }
+
   document.querySelectorAll('header nav a[href^="#"]').forEach(function(link) {
     link.addEventListener("click", function (e) {
       e.preventDefault();
       var id = this.getAttribute("href").substring(1); // remove '#'
-      var target = document.getElementById(id);
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      gotoSectionById(id);
     });
   });
 </script>
