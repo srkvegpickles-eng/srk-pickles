@@ -13,6 +13,8 @@
       --bg: #fffdf7;
       --accent: #0f5b4f;
       --accent-2: #c0392b;
+      --accent-3: #f39c12;   /* warm yellow/orange */
+      --accent-4: #8e44ad;   /* purple for powders */
       --card: #ffffff;
       --muted: #7a6a60;
     }
@@ -617,7 +619,6 @@
       color: #7a6a60;
     }
 
-    /* Track order */
     .track-input-row {
       display:flex;
       flex-wrap:wrap;
@@ -1085,7 +1086,11 @@
     .why-item {
       padding: 10px 12px;
       border-radius: 14px;
-      background: rgba(255,255,255,0.9);
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.95),
+        rgba(255, 243, 224, 0.9)
+      );
       border: 1px solid #f1e1d5;
       font-size: 13px;
       color: #4d3825;
@@ -1108,9 +1113,94 @@
       }
     }
 
+    /* --- Category based colors for product cards --- */
+    .product-pickles {
+      border-color: rgba(192, 57, 43, 0.25);
+      background-image: linear-gradient(
+        135deg,
+        rgba(192,57,43,0.06),
+        rgba(255,255,255,0.9)
+      );
+    }
+    .product-powders {
+      border-color: rgba(142, 68, 173, 0.25);
+      background-image: linear-gradient(
+        135deg,
+        rgba(142,68,173,0.06),
+        rgba(255,255,255,0.95)
+      );
+    }
+    .product-combos {
+      border-color: rgba(243, 156, 18, 0.35);
+      background-image: linear-gradient(
+        135deg,
+        rgba(243,156,18,0.10),
+        rgba(255,255,255,0.96)
+      );
+    }
+
+    /* Color strip on top of cards */
+    .product-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--accent-2), var(--accent-3));
+      opacity: 0.7;
+    }
+    .product-powders::before {
+      background: linear-gradient(90deg, var(--accent-4), #f5b7b1);
+    }
+    .product-combos::before {
+      background: linear-gradient(90deg, var(--accent-3), #2ecc71);
+    }
+
+    /* More colorful section headings */
+    h2.section-title {
+      background: linear-gradient(90deg, rgba(255,255,255,0.9), rgba(243, 156, 18, 0.08));
+      padding: 6px 10px 8px;
+      border-radius: 12px;
+    }
+    h2.section-title::after {
+      height: 4px;
+    }
+
+    /* Colorful badges tweak */
+    .badge-bestseller {
+      background: linear-gradient(90deg,#ffe9df,#fdebd0);
+    }
+    .badge-offer {
+      background: linear-gradient(90deg,#e6fff5,#d5f5e3);
+    }
+    .badge-combo {
+      background: linear-gradient(90deg,#fff3d6,#fdebd0);
+    }
+
+    /* My Orders & Track sections soft tints */
+    .my-orders-section {
+      background: linear-gradient(
+        135deg,
+        rgba(46, 204, 113, 0.05),
+        rgba(255,255,255,0.95)
+      );
+    }
+    #track-order.info-section {
+      background: linear-gradient(
+        135deg,
+        rgba(52, 152, 219, 0.06),
+        rgba(255,255,255,0.96)
+      );
+    }
+
+    /* Free delivery gradient text */
     .delivery-free {
-      color: #0f5b4f;
-      font-weight: 700;
+      background: linear-gradient(90deg, #2ecc71, #f1c40f);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 800;
     }
   </style>
 </head>
@@ -1722,7 +1812,7 @@
 
   function makeProductCard(product) {
     const card = document.createElement("div");
-    card.className = "product-card";
+    card.className = "product-card product-" + product.category;
 
     const img = document.createElement("img");
     img.src = IMAGE_MAP[product.id] || "srk-logo.png";
@@ -2022,14 +2112,15 @@
       cartItemsDiv.appendChild(row);
     }
 
-    cartCountSpan.textContent = String(totals.totalQty);
-    subtotalSpan.textContent = "Rs. " + totals.subtotal;
-    deliverySpan.textContent = "Rs. " + totals.delivery;
-    grandSpan.textContent = "Rs. " + totals.grand;
-    autoDiscSpan.textContent = "- Rs. " + totals.autoDiscount;
-    couponDiscSpan.textContent = "- Rs. " + totals.couponDiscount;
+    const totals2 = getTotals();
+    cartCountSpan.textContent = String(totals2.totalQty);
+    subtotalSpan.textContent = "Rs. " + totals2.subtotal;
+    deliverySpan.textContent = "Rs. " + totals2.delivery;
+    grandSpan.textContent = "Rs. " + totals2.grand;
+    autoDiscSpan.textContent = "- Rs. " + totals2.autoDiscount;
+    couponDiscSpan.textContent = "- Rs. " + totals2.couponDiscount;
 
-    if (totals.delivery === 0) {
+    if (totals2.delivery === 0) {
       deliverySpan.classList.add("delivery-free");
     } else {
       deliverySpan.classList.remove("delivery-free");
