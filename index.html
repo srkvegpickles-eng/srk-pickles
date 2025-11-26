@@ -155,10 +155,18 @@
       background: linear-gradient(90deg,#c0392b,#f1b27a);
     }
 
+    /* small subtitle under section titles */
+    .section-subtext {
+      margin: 2px 0 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
     section.products-wrapper,
     .info-section,
     .reviews-section,
-    .qr-poster {
+    .qr-poster,
+    .my-orders-section {
       scroll-margin-top: 90px; /* so clicking nav scrolls nicely */
     }
 
@@ -186,11 +194,6 @@
       transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
       position: relative;
       overflow: hidden;
-    }
-    .product-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(15, 91, 79, 0.15);
-      border-color: #f1b27a;
     }
     .product-card img {
       width: 90px;
@@ -546,6 +549,82 @@
       padding-left: 18px;
     }
 
+    /* My Orders section */
+    .my-orders-section {
+      margin-top: 30px;
+    }
+    .my-orders-note {
+      font-size: 12px;
+      color: #7a6a60;
+      margin: 4px 0 10px;
+    }
+    .orders-list {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .orders-empty {
+      font-size: 13px;
+      color: #7a6a60;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.9);
+      border: 1px dashed #e6dcd1;
+    }
+    .order-card {
+      border-radius: 12px;
+      border: 1px solid #f1e1d5;
+      background: #fffdf9;
+      padding: 10px 12px;
+      box-shadow: 0 3px 8px rgba(16,24,40,0.04);
+      font-size: 13px;
+      color: #4d3825;
+    }
+    .order-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .order-id {
+      font-weight: 700;
+      font-size: 13px;
+      color: #0f5b4f;
+    }
+    .order-date {
+      font-size: 11px;
+      color: #7a6a60;
+    }
+    .order-total {
+      font-weight: 700;
+      font-size: 14px;
+      color: #c0392b;
+      white-space: nowrap;
+    }
+    .order-items {
+      margin-top: 4px;
+      font-size: 12px;
+    }
+    .order-items ul {
+      margin: 4px 0;
+      padding-left: 16px;
+    }
+    .order-items li {
+      margin: 2px 0;
+    }
+    .order-meta {
+      margin-top: 4px;
+      font-size: 11px;
+      color: #7a6a60;
+    }
+    .order-note {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #7a6a60;
+    }
+
     /* Customer reviews (right column) */
     .reviews-section {
       margin-top: 0;
@@ -559,7 +638,7 @@
       justify-content: space-between;
       align-items: baseline;
       gap: 10px;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .reviews-title {
       font-size: 16px;
@@ -584,6 +663,15 @@
       font-size: 11px;
       color: #7a6a60;
     }
+
+    /* new highlight text under reviews header */
+    .reviews-highlight {
+      margin: 2px 0 6px;
+      font-size: 12px;
+      color: #0f5b4f;
+      font-weight: 600;
+    }
+
     .reviews-grid {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
@@ -915,7 +1003,7 @@
       }
     }
 
-    /* Hero section styling */
+    /* Hero section layout */
     .hero-section {
       max-width: 1180px;
       margin: 18px auto 0;
@@ -941,6 +1029,49 @@
         flex-direction: column;
       }
     }
+
+    /* Why SRK strip */
+    .why-strip {
+      max-width: 1180px;
+      margin: 16px auto 0;
+      padding: 10px 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+      align-items: stretch;
+      text-align: left;
+    }
+    .why-item {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid #f1e1d5;
+      font-size: 13px;
+      color: #4d3825;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .why-icon {
+      font-size: 18px;
+      line-height: 1;
+      margin-top: 1px;
+    }
+    .why-text-title {
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    @media (max-width: 800px) {
+      .why-strip {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    /* free delivery highlight */
+    .delivery-free {
+      color: #0f5b4f;
+      font-weight: 700;
+    }
   </style>
 </head>
 
@@ -961,6 +1092,7 @@
     <a href="#combos">COMBOS</a>
     <a href="#offers">OFFERS</a>
     <a href="#reviews">REVIEWS</a>
+    <a href="#my-orders">MY ORDERS</a>
   </nav>
 
   <div class="search-wrap">
@@ -979,7 +1111,7 @@
 <!-- Hero section -->
 <section class="hero-section">
   <div style="flex:1;">
-    <h1 style="margin:0 0 8px;color:#0f5b4f;">
+    <h1 style="margin:0 0 8px;font-size:26px;color:#0f5b4f;">
       Authentic Homemade Andhra Pickles
     </h1>
     <p style="margin:0 0 14px;font-size:14px;color:#7a6a60;max-width:420px;">
@@ -997,7 +1129,7 @@
         font-weight:700;
         cursor:pointer;
       ">
-      Shop Pickles
+      Shop Bestselling Pickles
     </button>
   </div>
   <div style="
@@ -1016,11 +1148,39 @@
   </div>
 </section>
 
+<!-- WHY SRK PICKLES STRIP -->
+<section class="why-strip" aria-label="Why SRK Pickles">
+  <div class="why-item">
+    <div class="why-icon">🥄</div>
+    <div>
+      <div class="why-text-title">100% Homemade Taste</div>
+      <div>Traditional Andhra recipes prepared in small batches, just like we make at home.</div>
+    </div>
+  </div>
+  <div class="why-item">
+    <div class="why-icon">🧴</div>
+    <div>
+      <div class="why-text-title">No Preservatives Added</div>
+      <div>We rely on quality oil, spices and hygiene – not harsh chemicals.</div>
+    </div>
+  </div>
+  <div class="why-item">
+    <div class="why-icon">📦</div>
+    <div>
+      <div class="why-text-title">Neat Packing & Delivery</div>
+      <div>Leak-proof packing and WhatsApp updates until your order reaches safely.</div>
+    </div>
+  </div>
+</section>
+
 <main>
   <div class="layout">
     <!-- LEFT: Products -->
     <section class="products-wrapper">
       <h2 id="pickles" class="section-title">Pickles</h2>
+      <p class="section-subtext">
+        🧂 Prepared in fresh small batches every week • 🗓️ Best before 6 months from packing (when stored in a cool, dry place).
+      </p>
       <div id="pickles-list" class="products-grid"></div>
 
       <h2 id="powders" class="section-title">Powders</h2>
@@ -1110,7 +1270,7 @@
 
         <!-- This button will send order on WhatsApp with discounts & payment method -->
         <button id="btn-wa-order" class="btn-checkout">
-          Place Order on WhatsApp
+          Place Order on WhatsApp ✅
         </button>
       </aside>
 
@@ -1125,6 +1285,10 @@
             <div class="reviews-stars" id="reviews-average-stars">★★★★★</div>
             <div class="reviews-count" id="reviews-count">4.9/5 based on 120+ orders</div>
           </div>
+        </div>
+
+        <div class="reviews-highlight">
+          ⭐ 4.9/5 rating from happy homes across Andhra &amp; Telangana.
         </div>
 
         <div class="reviews-grid" id="reviews-grid" tabindex="0" aria-live="polite">
@@ -1188,6 +1352,17 @@
               <span>Rahul,</span> Chennai
             </div>
           </article>
+
+          <!-- New review focused on delivery & packing -->
+          <article class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <div class="review-text">
+              “Reached on time, packing was very neat and there was zero leakage. Family loved the taste and service.”
+            </div>
+            <div class="review-user">
+              <span>Anitha,</span> Rajahmundry
+            </div>
+          </article>
         </div>
 
         <!-- Review form -->
@@ -1244,7 +1419,18 @@
       src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fwa.me%2F917075535180"
       alt="WhatsApp Order QR"
     />
-    <p>WhatsApp: +91 70755 35180</p>
+    <p>WhatsApp: +91 70755 351 80</p>
+  </section>
+
+  <!-- MY ORDERS SECTION -->
+  <section id="my-orders" class="info-section my-orders-section">
+    <h3>My Orders</h3>
+    <p class="my-orders-note">
+      This section shows the orders placed from this browser/device using the
+      <strong>“Place Order on WhatsApp”</strong> button. For live delivery status, you can reply on WhatsApp
+      with your <strong>Order ID</strong>.
+    </p>
+    <div id="orders-list" class="orders-list"></div>
   </section>
 
   <!-- OFFERS SECTION -->
@@ -1388,7 +1574,7 @@
     <h3>Contact Us</h3>
     <p>Have a question about orders, payments or custom combos? Reach out to us:</p>
     <ul>
-      <li><strong>WhatsApp:</strong> <a href="https://wa.me/917075535180" target="_blank">+91 70755 35180</a></li>
+      <li><strong>WhatsApp:</strong> <a href="https://wa.me/917075535180" target="_blank">+91 70755 351 80</a></li>
       <li><strong>Email:</strong> <a href="mailto:srkpicklescare@gmail.com">srkpicklescare@gmail.com</a></li>
       <li><strong>Timings:</strong> 9:00 AM – 8:00 PM (IST), all days</li>
     </ul>
@@ -1505,7 +1691,7 @@
     { id:"sambar-podi", category:"powders", name:"Sambar podi", desc:"Traditional sambar powder.", prices:{ "500":300, "1000":600 } },
     { id:"rasam-podi", category:"powders", name:"Rasam podi", desc:"Flavourful, spicy and aromatic rasam powder.", prices:{ "500":300, "1000":600 } },
 
-    // Combos (UI with savings)
+    // Combos
     {
       id:"combo-1",
       category:"combos",
@@ -1772,6 +1958,7 @@
       grandSpan.textContent = "Rs. 0";
       autoDiscSpan.textContent = "- Rs. 0";
       couponDiscSpan.textContent = "- Rs. 0";
+      deliverySpan.classList.remove("delivery-free");
       return;
     }
 
@@ -1848,6 +2035,13 @@
     grandSpan.textContent = "Rs. " + totals.grand;
     autoDiscSpan.textContent = "- Rs. " + totals.autoDiscount;
     couponDiscSpan.textContent = "- Rs. " + totals.couponDiscount;
+
+    // Highlight free delivery in green
+    if (totals.delivery === 0) {
+      deliverySpan.classList.add("delivery-free");
+    } else {
+      deliverySpan.classList.remove("delivery-free");
+    }
   }
 
   /* ========= GOOGLE SHEETS (optional) ========= */
@@ -1945,8 +2139,9 @@
     return "upi://pay?" + params.toString();
   }
 
-  function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals) {
+  function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId) {
     let text = "New SRK Pickles Order%0A%0A";
+    text += "Order ID: " + encodeURIComponent(orderId) + "%0A";
     text += "Name: " + encodeURIComponent(name) + "%0A";
     text += "Phone: " + encodeURIComponent(phone) + "%0A";
     text += "Address: " + encodeURIComponent(addr) + "%0A";
@@ -1985,6 +2180,149 @@
     return text;
   }
 
+  /* ========= ORDER HISTORY (LOCAL) ========= */
+
+  const ORDERS_STORAGE_KEY = "srk_orders_history";
+
+  function saveOrderForHistory(orderPayload) {
+    try {
+      const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
+      let arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr)) arr = [];
+      const entry = {
+        orderId: orderPayload.orderId,
+        createdAt: orderPayload.createdAt,
+        total: orderPayload.total,
+        subtotal: orderPayload.subtotal,
+        delivery: orderPayload.delivery,
+        autoDiscount: orderPayload.autoDiscount,
+        couponDiscount: orderPayload.couponDiscount,
+        paymentMethod: orderPayload.paymentMethod,
+        couponCode: orderPayload.couponCode,
+        items: orderPayload.cart.map(function(c) {
+          return {
+            name: c.name,
+            size: c.size,
+            qty: c.qty,
+            unitPrice: c.unitPrice
+          };
+        })
+      };
+      arr.unshift(entry); // newest first
+      if (arr.length > 50) arr.length = 50;
+      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(arr));
+    } catch (e) {
+      console.warn("Could not save order history", e);
+    }
+  }
+
+  function sizeLabelForHistory(size) {
+    if (size === "combo") return "Combo Pack";
+    if (size === "1000") return "1 kg";
+    if (size === "500") return "500 gm";
+    return size;
+  }
+
+  function formatDateTime(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    const day = String(d.getDate()).padStart(2,"0");
+    const month = String(d.getMonth()+1).padStart(2,"0");
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2,"0");
+    const mins = String(d.getMinutes()).padStart(2,"0");
+    return day + "-" + month + "-" + year + " " + hours + ":" + mins;
+  }
+
+  function renderOrdersHistory() {
+    const container = document.getElementById("orders-list");
+    if (!container) return;
+    container.innerHTML = "";
+
+    let arr = [];
+    try {
+      const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
+      arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr)) arr = [];
+    } catch (e) {
+      arr = [];
+    }
+
+    if (!arr.length) {
+      const empty = document.createElement("div");
+      empty.className = "orders-empty";
+      empty.textContent = "No orders found on this device yet. Place an order and it will appear here.";
+      container.appendChild(empty);
+      return;
+    }
+
+    arr.forEach(function(order) {
+      const card = document.createElement("div");
+      card.className = "order-card";
+
+      const header = document.createElement("div");
+      header.className = "order-card-header";
+
+      const left = document.createElement("div");
+      const idEl = document.createElement("div");
+      idEl.className = "order-id";
+      idEl.textContent = "Order ID: " + (order.orderId || "N/A");
+      const dateEl = document.createElement("div");
+      dateEl.className = "order-date";
+      dateEl.textContent = "Placed on: " + formatDateTime(order.createdAt);
+      left.appendChild(idEl);
+      left.appendChild(dateEl);
+
+      const totalEl = document.createElement("div");
+      totalEl.className = "order-total";
+      totalEl.textContent = "Rs. " + (order.total || 0);
+
+      header.appendChild(left);
+      header.appendChild(totalEl);
+      card.appendChild(header);
+
+      const itemsDiv = document.createElement("div");
+      itemsDiv.className = "order-items";
+      const ul = document.createElement("ul");
+      (order.items || []).forEach(function(it) {
+        const li = document.createElement("li");
+        li.textContent =
+          it.name + " (" + sizeLabelForHistory(it.size) + ") x " + it.qty +
+          " – Rs." + (it.unitPrice * it.qty);
+        ul.appendChild(li);
+      });
+      itemsDiv.appendChild(ul);
+      card.appendChild(itemsDiv);
+
+      const metaDiv = document.createElement("div");
+      metaDiv.className = "order-meta";
+      metaDiv.textContent =
+        "Payment: " + (order.paymentMethod || "N/A") +
+        " • Subtotal: Rs." + (order.subtotal || 0) +
+        " • Delivery: Rs." + (order.delivery || 0);
+      card.appendChild(metaDiv);
+
+      if (order.couponCode || order.autoDiscount || order.couponDiscount) {
+        const discDiv = document.createElement("div");
+        discDiv.className = "order-meta";
+        discDiv.textContent =
+          "Auto Discount: Rs." + (order.autoDiscount || 0) +
+          " • Coupon Discount: Rs." + (order.couponDiscount || 0) +
+          (order.couponCode ? " • Coupon: " + order.couponCode : "");
+        card.appendChild(discDiv);
+      }
+
+      const noteDiv = document.createElement("div");
+      noteDiv.className = "order-note";
+      noteDiv.textContent =
+        "For live status, reply on WhatsApp with this Order ID and registered mobile number.";
+      card.appendChild(noteDiv);
+
+      container.appendChild(card);
+    });
+  }
+
   /* ========= WHATSAPP ORDER FLOW ========= */
 
   function sendOrderOnWhatsApp() {
@@ -2013,7 +2351,11 @@
       return;
     }
 
+    // Generate an Order ID
+    const orderId = "SRK" + new Date().toISOString().replace(/[-:T.Z]/g,"").slice(0,14);
+
     const orderPayload = {
+      orderId: orderId,
       name: name,
       phone: phone,
       address: addr,
@@ -2028,8 +2370,10 @@
       createdAt: new Date().toISOString()
     };
     sendOrderToGoogleSheets(orderPayload);
+    saveOrderForHistory(orderPayload);
+    renderOrdersHistory();
 
-    const msg = buildWhatsAppMessage(name, phone, addr, paymentMethod, totals);
+    const msg = buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId);
     const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
     window.open(url, "_blank");
   }
@@ -2172,24 +2516,12 @@
     updateReviewsSummary();
   }
 
-  function parseStaticReviewRatings() {
-    // Read existing static review-cards and extract the star counts
-    const stars = Array.from(document.querySelectorAll(".reviews-grid .review-card .review-stars"));
-    return stars.map(s => {
-      const txt = s.textContent || "";
-      // Count the number of '★' characters (fall back to measuring index of '☆')
-      const count = (txt.match(/★/g) || []).length;
-      return Math.max(1, Math.min(5, count));
-    });
-  }
-
   function loadStoredReviews() {
     try {
       const raw = localStorage.getItem(REVIEWS_STORAGE_KEY);
       if (!raw) return;
       const arr = JSON.parse(raw);
       if (!Array.isArray(arr)) return;
-      // Insert stored reviews AFTER the static ones (so they show on top)
       arr.forEach(function(r) { addReviewToDOM(r, true); });
     } catch (e) {
       console.warn("Could not load stored reviews", e);
@@ -2240,13 +2572,11 @@
     textEl.value = "";
 
     alert("Thank you! Your review has been added.");
-    // focus reviews area so user sees it
     const grid = document.getElementById("reviews-grid");
     if (grid) grid.focus();
   }
 
   function updateReviewsSummary() {
-    // compute average rating and count from static + stored cards
     try {
       const ratingNodes = document.querySelectorAll(".reviews-grid .review-card .review-stars");
       let total = 0, count = 0;
@@ -2298,28 +2628,27 @@
   initCountdown();
   initOfferModal();
 
-  // Important: load stored reviews AFTER the rest of the page so they appear above static ones
+  // load stored reviews and update summary
   loadStoredReviews();
-  // compute summary initially (includes static + stored)
   updateReviewsSummary();
 
-  /* ========= SMOOTH SCROLL FOR NAV (IMPROVED) ========= */
+  // load order history
+  renderOrdersHistory();
+
+  /* ========= SMOOTH SCROLL FOR NAV ========= */
   function gotoSectionById(id) {
     const target = document.getElementById(id);
     if (!target) return;
     const header = document.querySelector('header');
     const headerH = header ? header.offsetHeight : 80;
-    // scroll so the section appears under the sticky header
     const rect = target.getBoundingClientRect();
     const absoluteTop = window.pageYOffset + rect.top;
     const offsetTop = Math.max(0, absoluteTop - headerH - 12);
     window.scrollTo({ top: offsetTop, behavior: 'smooth' });
 
-    // small visual highlight to make it obvious
     target.classList.add('highlight');
     setTimeout(()=>target.classList.remove('highlight'), 900);
 
-    // if user clicked "reviews", also focus the reviews grid so keyboard/screen-reader users notice it
     if (id === 'reviews') {
       const grid = document.getElementById('reviews-grid');
       if (grid) {
@@ -2331,7 +2660,7 @@
   document.querySelectorAll('header nav a[href^="#"]').forEach(function(link) {
     link.addEventListener("click", function (e) {
       e.preventDefault();
-      var id = this.getAttribute("href").substring(1); // remove '#'
+      var id = this.getAttribute("href").substring(1);
       gotoSectionById(id);
     });
   });
