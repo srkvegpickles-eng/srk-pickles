@@ -155,13 +155,6 @@
       background: linear-gradient(90deg,#c0392b,#f1b27a);
     }
 
-    /* small subtitle under section titles */
-    .section-subtext {
-      margin: 2px 0 12px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
     section.products-wrapper,
     .info-section,
     .reviews-section,
@@ -193,6 +186,11 @@
       transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
       position: relative;
       overflow: hidden;
+    }
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(15, 91, 79, 0.15);
+      border-color: #f1b27a;
     }
     .product-card img {
       width: 90px;
@@ -561,7 +559,7 @@
       justify-content: space-between;
       align-items: baseline;
       gap: 10px;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .reviews-title {
       font-size: 16px;
@@ -586,15 +584,6 @@
       font-size: 11px;
       color: #7a6a60;
     }
-
-    /* new highlight text under reviews header */
-    .reviews-highlight {
-      margin: 2px 0 6px;
-      font-size: 12px;
-      color: #0f5b4f;
-      font-weight: 600;
-    }
-
     .reviews-grid {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
@@ -926,7 +915,7 @@
       }
     }
 
-    /* Hero section layout */
+    /* Hero section styling */
     .hero-section {
       max-width: 1180px;
       margin: 18px auto 0;
@@ -951,49 +940,6 @@
       .hero-section {
         flex-direction: column;
       }
-    }
-
-    /* Why SRK strip */
-    .why-strip {
-      max-width: 1180px;
-      margin: 16px auto 0;
-      padding: 10px 18px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 12px;
-      align-items: stretch;
-      text-align: left;
-    }
-    .why-item {
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.9);
-      border: 1px solid #f1e1d5;
-      font-size: 13px;
-      color: #4d3825;
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-    }
-    .why-icon {
-      font-size: 18px;
-      line-height: 1;
-      margin-top: 1px;
-    }
-    .why-text-title {
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-    @media (max-width: 800px) {
-      .why-strip {
-        grid-template-columns: minmax(0,1fr);
-      }
-    }
-
-    /* free delivery highlight */
-    .delivery-free {
-      color: #0f5b4f;
-      font-weight: 700;
     }
   </style>
 </head>
@@ -1033,7 +979,7 @@
 <!-- Hero section -->
 <section class="hero-section">
   <div style="flex:1;">
-    <h1 style="margin:0 0 8px;font-size:26px;color:#0f5b4f;">
+    <h1 style="margin:0 0 8px;color:#0f5b4f;">
       Authentic Homemade Andhra Pickles
     </h1>
     <p style="margin:0 0 14px;font-size:14px;color:#7a6a60;max-width:420px;">
@@ -1051,7 +997,7 @@
         font-weight:700;
         cursor:pointer;
       ">
-      Shop Bestselling Pickles
+      Shop Pickles
     </button>
   </div>
   <div style="
@@ -1070,39 +1016,11 @@
   </div>
 </section>
 
-<!-- WHY SRK PICKLES STRIP -->
-<section class="why-strip" aria-label="Why SRK Pickles">
-  <div class="why-item">
-    <div class="why-icon">🥄</div>
-    <div>
-      <div class="why-text-title">100% Homemade Taste</div>
-      <div>Traditional Andhra recipes prepared in small batches, just like we make at home.</div>
-    </div>
-  </div>
-  <div class="why-item">
-    <div class="why-icon">🧴</div>
-    <div>
-      <div class="why-text-title">No Preservatives Added</div>
-      <div>We rely on quality oil, spices and hygiene – not harsh chemicals.</div>
-    </div>
-  </div>
-  <div class="why-item">
-    <div class="why-icon">📦</div>
-    <div>
-      <div class="why-text-title">Neat Packing & Delivery</div>
-      <div>Leak-proof packing and WhatsApp updates until your order reaches safely.</div>
-    </div>
-  </div>
-</section>
-
 <main>
   <div class="layout">
     <!-- LEFT: Products -->
     <section class="products-wrapper">
       <h2 id="pickles" class="section-title">Pickles</h2>
-      <p class="section-subtext">
-        🧂 Prepared in fresh small batches every week • 🗓️ Best before 6 months from packing (when stored in a cool, dry place).
-      </p>
       <div id="pickles-list" class="products-grid"></div>
 
       <h2 id="powders" class="section-title">Powders</h2>
@@ -1192,7 +1110,7 @@
 
         <!-- This button will send order on WhatsApp with discounts & payment method -->
         <button id="btn-wa-order" class="btn-checkout">
-          Place Order on WhatsApp ✅
+          Place Order on WhatsApp
         </button>
       </aside>
 
@@ -1207,10 +1125,6 @@
             <div class="reviews-stars" id="reviews-average-stars">★★★★★</div>
             <div class="reviews-count" id="reviews-count">4.9/5 based on 120+ orders</div>
           </div>
-        </div>
-
-        <div class="reviews-highlight">
-          ⭐ 4.9/5 rating from happy homes across Andhra &amp; Telangana.
         </div>
 
         <div class="reviews-grid" id="reviews-grid" tabindex="0" aria-live="polite">
@@ -1274,17 +1188,6 @@
               <span>Rahul,</span> Chennai
             </div>
           </article>
-
-          <!-- New review focused on delivery & packing -->
-          <article class="review-card">
-            <div class="review-stars">★★★★★</div>
-            <div class="review-text">
-              “Reached on time, packing was very neat and there was zero leakage. Family loved the taste and service.”
-            </div>
-            <div class="review-user">
-              <span>Anitha,</span> Rajahmundry
-            </div>
-          </article>
         </div>
 
         <!-- Review form -->
@@ -1341,7 +1244,7 @@
       src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Fwa.me%2F917075535180"
       alt="WhatsApp Order QR"
     />
-    <p>WhatsApp: +91 70755 351 80</p>
+    <p>WhatsApp: +91 70755 35180</p>
   </section>
 
   <!-- OFFERS SECTION -->
@@ -1485,7 +1388,7 @@
     <h3>Contact Us</h3>
     <p>Have a question about orders, payments or custom combos? Reach out to us:</p>
     <ul>
-      <li><strong>WhatsApp:</strong> <a href="https://wa.me/917075535180" target="_blank">+91 70755 351 80</a></li>
+      <li><strong>WhatsApp:</strong> <a href="https://wa.me/917075535180" target="_blank">+91 70755 35180</a></li>
       <li><strong>Email:</strong> <a href="mailto:srkpicklescare@gmail.com">srkpicklescare@gmail.com</a></li>
       <li><strong>Timings:</strong> 9:00 AM – 8:00 PM (IST), all days</li>
     </ul>
@@ -1602,7 +1505,7 @@
     { id:"sambar-podi", category:"powders", name:"Sambar podi", desc:"Traditional sambar powder.", prices:{ "500":300, "1000":600 } },
     { id:"rasam-podi", category:"powders", name:"Rasam podi", desc:"Flavourful, spicy and aromatic rasam powder.", prices:{ "500":300, "1000":600 } },
 
-    // Combos
+    // Combos (UI with savings)
     {
       id:"combo-1",
       category:"combos",
@@ -1869,7 +1772,6 @@
       grandSpan.textContent = "Rs. 0";
       autoDiscSpan.textContent = "- Rs. 0";
       couponDiscSpan.textContent = "- Rs. 0";
-      deliverySpan.classList.remove("delivery-free");
       return;
     }
 
@@ -1946,13 +1848,6 @@
     grandSpan.textContent = "Rs. " + totals.grand;
     autoDiscSpan.textContent = "- Rs. " + totals.autoDiscount;
     couponDiscSpan.textContent = "- Rs. " + totals.couponDiscount;
-
-    // Highlight free delivery in green
-    if (totals.delivery === 0) {
-      deliverySpan.classList.add("delivery-free");
-    } else {
-      deliverySpan.classList.remove("delivery-free");
-    }
   }
 
   /* ========= GOOGLE SHEETS (optional) ========= */
@@ -2277,12 +2172,24 @@
     updateReviewsSummary();
   }
 
+  function parseStaticReviewRatings() {
+    // Read existing static review-cards and extract the star counts
+    const stars = Array.from(document.querySelectorAll(".reviews-grid .review-card .review-stars"));
+    return stars.map(s => {
+      const txt = s.textContent || "";
+      // Count the number of '★' characters (fall back to measuring index of '☆')
+      const count = (txt.match(/★/g) || []).length;
+      return Math.max(1, Math.min(5, count));
+    });
+  }
+
   function loadStoredReviews() {
     try {
       const raw = localStorage.getItem(REVIEWS_STORAGE_KEY);
       if (!raw) return;
       const arr = JSON.parse(raw);
       if (!Array.isArray(arr)) return;
+      // Insert stored reviews AFTER the static ones (so they show on top)
       arr.forEach(function(r) { addReviewToDOM(r, true); });
     } catch (e) {
       console.warn("Could not load stored reviews", e);
@@ -2333,11 +2240,13 @@
     textEl.value = "";
 
     alert("Thank you! Your review has been added.");
+    // focus reviews area so user sees it
     const grid = document.getElementById("reviews-grid");
     if (grid) grid.focus();
   }
 
   function updateReviewsSummary() {
+    // compute average rating and count from static + stored cards
     try {
       const ratingNodes = document.querySelectorAll(".reviews-grid .review-card .review-stars");
       let total = 0, count = 0;
@@ -2389,24 +2298,28 @@
   initCountdown();
   initOfferModal();
 
-  // load stored reviews and update summary
+  // Important: load stored reviews AFTER the rest of the page so they appear above static ones
   loadStoredReviews();
+  // compute summary initially (includes static + stored)
   updateReviewsSummary();
 
-  /* ========= SMOOTH SCROLL FOR NAV ========= */
+  /* ========= SMOOTH SCROLL FOR NAV (IMPROVED) ========= */
   function gotoSectionById(id) {
     const target = document.getElementById(id);
     if (!target) return;
     const header = document.querySelector('header');
     const headerH = header ? header.offsetHeight : 80;
+    // scroll so the section appears under the sticky header
     const rect = target.getBoundingClientRect();
     const absoluteTop = window.pageYOffset + rect.top;
     const offsetTop = Math.max(0, absoluteTop - headerH - 12);
     window.scrollTo({ top: offsetTop, behavior: 'smooth' });
 
+    // small visual highlight to make it obvious
     target.classList.add('highlight');
     setTimeout(()=>target.classList.remove('highlight'), 900);
 
+    // if user clicked "reviews", also focus the reviews grid so keyboard/screen-reader users notice it
     if (id === 'reviews') {
       const grid = document.getElementById('reviews-grid');
       if (grid) {
@@ -2418,7 +2331,7 @@
   document.querySelectorAll('header nav a[href^="#"]').forEach(function(link) {
     link.addEventListener("click", function (e) {
       e.preventDefault();
-      var id = this.getAttribute("href").substring(1);
+      var id = this.getAttribute("href").substring(1); // remove '#'
       gotoSectionById(id);
     });
   });
