@@ -106,7 +106,6 @@
       transform: translateY(-1px);
     }
 
-    /* Offer banner with countdown */
     .offer-banner {
       background: #c0392b;
       color: #fff;
@@ -618,6 +617,83 @@
       color: #7a6a60;
     }
 
+    /* Track order */
+    .track-input-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:8px;
+    }
+    .track-input-row input {
+      flex:1;
+      min-width:120px;
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid #e6dcd1;
+      font-size:12px;
+    }
+    .track-input-row button {
+      border-radius:999px;
+      border:none;
+      padding:6px 12px;
+      font-size:12px;
+      font-weight:600;
+      cursor:pointer;
+      background:#0f5b4f;
+      color:#fff;
+    }
+    .track-result {
+      margin-top:10px;
+      font-size:12px;
+      color:#4d3825;
+    }
+    .track-result-empty {
+      color:#7a6a60;
+    }
+    .track-summary {
+      margin-top:4px;
+      font-size:12px;
+      color:#4d3825;
+    }
+    .track-steps {
+      list-style:none;
+      padding-left:0;
+      margin:8px 0 0;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .track-step {
+      display:flex;
+      align-items:flex-start;
+      gap:6px;
+      font-size:12px;
+    }
+    .track-step-dot {
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      margin-top:3px;
+      border:2px solid #e0c8b8;
+      background:#fff;
+    }
+    .track-step.active .track-step-dot {
+      background:#0f5b4f;
+      border-color:#0f5b4f;
+    }
+    .track-step-label {
+      font-weight:600;
+    }
+    .track-step-desc {
+      font-size:11px;
+      color:#7a6a60;
+    }
+    .track-note {
+      margin-top:8px;
+      font-size:11px;
+      color:#7a6a60;
+    }
+
     .reviews-section {
       margin-top: 0;
       padding: 14px 12px 16px;
@@ -1056,6 +1132,7 @@
     <a href="#offers">OFFERS</a>
     <a href="#reviews">REVIEWS</a>
     <a href="#my-orders">MY ORDERS</a>
+    <a href="#track-order">TRACK ORDER</a>
   </nav>
 
   <div class="search-wrap">
@@ -1379,6 +1456,22 @@
       with your <strong>Order ID</strong>.
     </p>
     <div id="orders-list" class="orders-list"></div>
+  </section>
+
+  <section id="track-order" class="info-section">
+    <h3>Track My Order</h3>
+    <p style="font-size:12px;color:#7a6a60;margin:4px 0 8px;">
+      Enter your <strong>Order ID</strong> (shown in WhatsApp order message) and optionally the
+      <strong>last 4 digits</strong> of your phone number. We’ll show an estimated status based on the order date.
+    </p>
+    <div class="track-input-row">
+      <input id="track-order-id" placeholder="Order ID (e.g., SRK202511271230)" />
+      <input id="track-order-phone" placeholder="Last 4 digits of phone (optional)" />
+      <button type="button" id="track-order-btn">Track Order</button>
+    </div>
+    <div id="track-order-result" class="track-result track-result-empty">
+      No order searched yet. Enter your Order ID above to check status.
+    </div>
   </section>
 
   <section id="offers" class="info-section">
@@ -2075,6 +2168,20 @@
 
   const ORDERS_STORAGE_KEY = "srk_orders_history";
 
+  function getOrderStatusFromTime(createdAtIso) {
+    if (!createdAtIso) return { code: "placed", label: "Order placed (processing)" };
+    const created = new Date(createdAtIso);
+    if (Number.isNaN(created.getTime())) return { code: "placed", label: "Order placed (processing)" };
+    const now = new Date();
+    const diffMs = now - created;
+    const diffDays = diffMs / (1000*60*60*24);
+    if (diffDays < 1) return { code: "placed", label: "Order placed (processing)" };
+    if (diffDays < 3) return { code: "packed", label: "Packed (awaiting pickup / dispatch)" };
+    if (diffDays < 6) return { code: "shipped", label: "Shipped (in transit)" };
+    if (diffDays < 8) return { code: "out", label: "Out for delivery / near you" };
+    return { code: "delivered", label: "Delivered / likely delivered" };
+  }
+
   function saveOrderForHistory(orderPayload) {
     try {
       const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
@@ -2090,6 +2197,7 @@
         couponDiscount: orderPayload.couponDiscount,
         paymentMethod: orderPayload.paymentMethod,
         couponCode: orderPayload.couponCode,
+        phone: orderPayload.phone,
         items: orderPayload.cart.map(function(c) {
           return { name: c.name, size: c.size, qty: c.qty, unitPrice: c.unitPrice };
         })
@@ -2144,6 +2252,8 @@
     }
 
     arr.forEach(function(order) {
+      const status = getOrderStatusFromTime(order.createdAt);
+
       const card = document.createElement("div");
       card.className = "order-card";
 
@@ -2189,15 +2299,14 @@
         " • Delivery: Rs." + (order.delivery || 0);
       card.appendChild(metaDiv);
 
-      if (order.couponCode || order.autoDiscount || order.couponDiscount) {
-        const discDiv = document.createElement("div");
-        discDiv.className = "order-meta";
-        discDiv.textContent =
-          "Auto Discount: Rs." + (order.autoDiscount || 0) +
-          " • Coupon Discount: Rs." + (order.couponDiscount || 0) +
-          (order.couponCode ? " • Coupon: " + order.couponCode : "");
-        card.appendChild(discDiv);
-      }
+      const discDiv = document.createElement("div");
+      discDiv.className = "order-meta";
+      discDiv.textContent =
+        "Status: " + status.label +
+        " • Auto Discount: Rs." + (order.autoDiscount || 0) +
+        " • Coupon Discount: Rs." + (order.couponDiscount || 0) +
+        (order.couponCode ? " • Coupon: " + order.couponCode : "");
+      card.appendChild(discDiv);
 
       const noteDiv = document.createElement("div");
       noteDiv.className = "order-note";
@@ -2207,6 +2316,91 @@
 
       container.appendChild(card);
     });
+  }
+
+  function handleTrackOrder() {
+    const idInput = document.getElementById("track-order-id");
+    const phoneInput = document.getElementById("track-order-phone");
+    const resultEl = document.getElementById("track-order-result");
+    if (!resultEl) return;
+
+    const id = (idInput.value || "").trim();
+    const phoneLast = (phoneInput.value || "").trim();
+
+    if (!id) {
+      resultEl.textContent = "Please enter your Order ID (e.g., SRK202511271230).";
+      resultEl.className = "track-result track-result-empty";
+      return;
+    }
+
+    let arr = [];
+    try {
+      const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
+      arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr)) arr = [];
+    } catch (e) {
+      arr = [];
+    }
+
+    let match = null;
+    for (let i = 0; i < arr.length; i++) {
+      const o = arr[i];
+      if (!o.orderId) continue;
+      if (o.orderId.toLowerCase() === id.toLowerCase()) {
+        if (phoneLast) {
+          const storedPhone = (o.phone || "").replace(/\D/g,"");
+          if (!storedPhone.endsWith(phoneLast)) {
+            continue;
+          }
+        }
+        match = o;
+        break;
+      }
+    }
+
+    if (!match) {
+      resultEl.innerHTML =
+        "We could not find this order on this device. Please double-check the Order ID " +
+        "or check your WhatsApp chat for the latest status.";
+      resultEl.className = "track-result track-result-empty";
+      return;
+    }
+
+    const status = getOrderStatusFromTime(match.createdAt);
+    const steps = [
+      {code:"placed", label:"Order placed", desc:"We received your order details."},
+      {code:"packed", label:"Packed", desc:"Pickles are packed safely and ready to hand over to courier."},
+      {code:"shipped", label:"Shipped", desc:"Your order is handed over to the courier partner."},
+      {code:"out", label:"Out for delivery", desc:"Your parcel is near your delivery location."},
+      {code:"delivered", label:"Delivered", desc:"Order should be delivered. If not, please contact us on WhatsApp."}
+    ];
+
+    let html = '<div class="track-summary">';
+    html += "<div><strong>Order ID:</strong> " + match.orderId + "</div>";
+    html += "<div><strong>Placed on:</strong> " + formatDateTime(match.createdAt) + "</div>";
+    html += "<div><strong>Total:</strong> Rs. " + (match.total || 0) + "</div>";
+    html += "<div><strong>Current status:</strong> " + status.label + "</div>";
+    html += "</div>";
+
+    html += '<ul class="track-steps">';
+    let activeIndex = steps.findIndex(function(s){ return s.code === status.code; });
+    if (activeIndex === -1) activeIndex = 0;
+
+    steps.forEach(function(step, idx) {
+      const activeClass = idx <= activeIndex ? " active" : "";
+      html += '<li class="track-step' + activeClass + '">';
+      html += '<div class="track-step-dot"></div>';
+      html += '<div><div class="track-step-label">' + step.label + '</div>';
+      html += '<div class="track-step-desc">' + step.desc + '</div></div>';
+      html += '</li>';
+    });
+    html += '</ul>';
+
+    html += '<div class="track-note">Note: This is an estimated status based on typical timelines. ' +
+            'For exact live status or courier tracking, please reply on WhatsApp with this Order ID.</div>';
+
+    resultEl.innerHTML = html;
+    resultEl.className = "track-result";
   }
 
   function sendOrderOnWhatsApp() {
@@ -2485,6 +2679,7 @@
   document.getElementById("ref-generate").addEventListener("click", handleReferralGenerate);
   document.getElementById("ref-share-wa").addEventListener("click", handleReferralShareWA);
   document.getElementById("review-submit").addEventListener("click", handleReviewSubmit);
+  document.getElementById("track-order-btn").addEventListener("click", handleTrackOrder);
 
   renderProducts();
   renderCart();
