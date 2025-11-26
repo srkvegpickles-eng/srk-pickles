@@ -787,133 +787,161 @@
       transform: translateY(-2px);
       transition: box-shadow 0.25s ease, transform 0.25s ease;
     }
+
+    /* --- Visual polish additions --- */
+
+    /* Softer page background */
+    body {
+      background:
+        radial-gradient(circle at top left, #ffe8c7 0, #fffdf7 40%, #fffaf0 100%);
+    }
+
+    /* Header: more premium feel */
+    header {
+      box-shadow: 0 8px 22px rgba(15, 91, 79, 0.12);
+      border-bottom: none;
+    }
+
+    /* Nav link hover effect */
+    nav a {
+      position: relative;
+      overflow: hidden;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 6px;
+      width: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg,#c0392b,#f1b27a);
+      transform: translateX(-50%);
+      transition: width 0.2s ease;
+    }
+    nav a:hover::after {
+      width: 70%;
+    }
+
+    /* Offer banner: slight glow + pulse icon */
+    .offer-banner {
+      position: relative;
+      box-shadow: 0 6px 18px rgba(192,57,43,0.3);
+    }
+    .offer-banner::before {
+      content: "🔥";
+      margin-right: 6px;
+    }
+
+    /* Make main content cards feel “glass” */
+    .products-wrapper,
+    .cart-box,
+    .reviews-section,
+    .referral-box,
+    .info-section,
+    .qr-poster {
+      background: rgba(255, 253, 249, 0.96);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Elevate important right-column cards */
+    .cart-box,
+    .reviews-section,
+    .referral-box {
+      box-shadow: 0 10px 26px rgba(16,24,40,0.12);
+    }
+
+    /* Alternate background for info sections so it’s not a big white wall */
+    .info-section:nth-of-type(odd) {
+      background: #fff8f0;
+    }
+    .info-section:nth-of-type(even) {
+      background: #ffffff;
+    }
+
+    /* Product card: stronger hover + slight scale */
+    .product-card {
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 12px 24px rgba(15, 91, 79, 0.18);
+    }
+
+    /* Buttons: consistent “primary” feel */
+    .btn-pill,
+    .btn-add,
+    .btn-checkout {
+      letter-spacing: 0.02em;
+    }
+
+    /* Subtle “breathing” animation on main checkout button */
+    @keyframes srk-breathe {
+      0% { transform: translateY(0) scale(1); box-shadow: 0 4px 10px rgba(15,91,79,0.25); }
+      50% { transform: translateY(-1px) scale(1.01); box-shadow: 0 8px 20px rgba(15,91,79,0.35); }
+      100% { transform: translateY(0) scale(1); box-shadow: 0 4px 10px rgba(15,91,79,0.25); }
+    }
+    .btn-checkout {
+      animation: srk-breathe 3.2s ease-in-out infinite;
+    }
+
+    /* Reviews: make it stand out as “social proof” */
+    .reviews-section {
+      border: 1px solid #f4c9a3;
+    }
+    .review-card {
+      border-radius: 14px;
+    }
+
+    /* Footer: give it a band so page feels “finished” */
+    footer {
+      margin-top: 40px;
+      padding: 16px 10px 22px;
+      background: linear-gradient(90deg,#f7e8d9,#fffaf3);
+      border-top: 1px solid #f1e1d5;
+    }
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile: add little padding so content breathes */
+    @media (max-width: 600px) {
+      main {
+        padding-bottom: 60px;
+      }
+      .wa-float {
+        bottom: 16px;
+        right: 16px;
+      }
+    }
+
+    /* Hero section layout */
+    .hero-section {
+      max-width: 1180px;
+      margin: 18px auto 0;
+      padding: 22px 18px;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.7) 0, rgba(255,255,255,0) 50%),
+        linear-gradient(135deg,#ffe0b2,#fff3e0);
+      box-shadow: 0 12px 30px rgba(193, 125, 52, 0.35);
+    }
+    .hero-section > div:first-child h1 {
+      font-size: 28px;
+    }
+    .hero-section > div:last-child {
+      border-radius: 18px;
+      border: 1px dashed rgba(255,255,255,0.7);
+    }
+    @media (max-width: 900px) {
+      .hero-section {
+        flex-direction: column;
+      }
+    }
   </style>
-/* --- Visual polish additions --- */
-
-/* Softer page background */
-body {
-  background:
-    radial-gradient(circle at top left, #ffe8c7 0, #fffdf7 40%, #fffaf0 100%);
-}
-
-/* Header: more premium feel */
-header {
-  box-shadow: 0 8px 22px rgba(15, 91, 79, 0.12);
-  border-bottom: none;
-}
-
-/* Nav link hover effect */
-nav a {
-  position: relative;
-  overflow: hidden;
-}
-nav a::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 6px;
-  width: 0;
-  height: 2px;
-  border-radius: 999px;
-  background: linear-gradient(90deg,#c0392b,#f1b27a);
-  transform: translateX(-50%);
-  transition: width 0.2s ease;
-}
-nav a:hover::after {
-  width: 70%;
-}
-
-/* Offer banner: slight glow + pulse icon */
-.offer-banner {
-  position: relative;
-  box-shadow: 0 6px 18px rgba(192,57,43,0.3);
-}
-.offer-banner::before {
-  content: "🔥";
-  margin-right: 6px;
-}
-
-/* Make main content cards feel “glass” */
-.products-wrapper,
-.cart-box,
-.reviews-section,
-.referral-box,
-.info-section,
-.qr-poster {
-  background: rgba(255, 253, 249, 0.96);
-  backdrop-filter: blur(8px);
-}
-
-/* Elevate important right-column cards */
-.cart-box,
-.reviews-section,
-.referral-box {
-  box-shadow: 0 10px 26px rgba(16,24,40,0.12);
-}
-
-/* Alternate background for info sections so it’s not a big white wall */
-.info-section:nth-of-type(odd) {
-  background: #fff8f0;
-}
-.info-section:nth-of-type(even) {
-  background: #ffffff;
-}
-
-/* Product card: stronger hover + slight scale */
-.product-card {
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-.product-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 0 12px 24px rgba(15, 91, 79, 0.18);
-}
-
-/* Buttons: consistent “primary” feel */
-.btn-pill,
-.btn-add,
-.btn-checkout {
-  letter-spacing: 0.02em;
-}
-
-/* Subtle “breathing” animation on main checkout button */
-@keyframes srk-breathe {
-  0% { transform: translateY(0) scale(1); box-shadow: 0 4px 10px rgba(15,91,79,0.25); }
-  50% { transform: translateY(-1px) scale(1.01); box-shadow: 0 8px 20px rgba(15,91,79,0.35); }
-  100% { transform: translateY(0) scale(1); box-shadow: 0 4px 10px rgba(15,91,79,0.25); }
-}
-.btn-checkout {
-  animation: srk-breathe 3.2s ease-in-out infinite;
-}
-
-/* Reviews: make it stand out as “social proof” */
-.reviews-section {
-  border: 1px solid #f4c9a3;
-}
-.review-card {
-  border-radius: 14px;
-}
-
-/* Footer: give it a band so page feels “finished” */
-footer {
-  margin-top: 40px;
-  padding: 16px 10px 22px;
-  background: linear-gradient(90deg,#f7e8d9,#fffaf3);
-  border-top: 1px solid #f1e1d5;
-}
-.footer-links a:hover {
-  text-decoration: underline;
-}
-
-/* Mobile: add little padding so content breathes */
-@media (max-width: 600px) {
-  main {
-    padding-bottom: 60px;
-  }
-  .wa-float {
-    bottom: 16px;
-    right: 16px;
-  }
-}
 </head>
 
 <body>
@@ -948,33 +976,8 @@ footer {
   <span id="countdown"></span>
 </div>
 
-<!-- Optional hero section -->
+<!-- Hero section -->
 <section class="hero-section">
-.hero-section {
-  max-width: 1180px;
-  margin: 18px auto 0;
-  padding: 22px 18px;
-  display: flex;
-  gap: 24px;
-  align-items: center;
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at top left, rgba(255,255,255,0.7) 0, rgba(255,255,255,0) 50%),
-    linear-gradient(135deg,#ffe0b2,#fff3e0);
-  box-shadow: 0 12px 30px rgba(193, 125, 52, 0.35);
-}
-.hero-section > div:first-child h1 {
-  font-size: 28px;
-}
-.hero-section > div:last-child {
-  border-radius: 18px;
-  border: 1px dashed rgba(255,255,255,0.7);
-}
-@media (max-width: 900px) {
-  .hero-section {
-    flex-direction: column;
-  }
-}
   <div style="flex:1;">
     <h1 style="margin:0 0 8px;font-size:26px;color:#0f5b4f;">
       Authentic Homemade Andhra Pickles
@@ -1502,7 +1505,7 @@ footer {
     { id:"sambar-podi", category:"powders", name:"Sambar podi", desc:"Traditional sambar powder.", prices:{ "500":300, "1000":600 } },
     { id:"rasam-podi", category:"powders", name:"Rasam podi", desc:"Flavourful, spicy and aromatic rasam powder.", prices:{ "500":300, "1000":600 } },
 
-    // Combos (UI with savings)
+    // Combos
     {
       id:"combo-1",
       category:"combos",
@@ -2169,24 +2172,12 @@ footer {
     updateReviewsSummary();
   }
 
-  function parseStaticReviewRatings() {
-    // Read existing static review-cards and extract the star counts
-    const stars = Array.from(document.querySelectorAll(".reviews-grid .review-card .review-stars"));
-    return stars.map(s => {
-      const txt = s.textContent || "";
-      // Count the number of '★' characters (fall back to measuring index of '☆')
-      const count = (txt.match(/★/g) || []).length;
-      return Math.max(1, Math.min(5, count));
-    });
-  }
-
   function loadStoredReviews() {
     try {
       const raw = localStorage.getItem(REVIEWS_STORAGE_KEY);
       if (!raw) return;
       const arr = JSON.parse(raw);
       if (!Array.isArray(arr)) return;
-      // Insert stored reviews AFTER the static ones (so they show on top)
       arr.forEach(function(r) { addReviewToDOM(r, true); });
     } catch (e) {
       console.warn("Could not load stored reviews", e);
@@ -2237,13 +2228,11 @@ footer {
     textEl.value = "";
 
     alert("Thank you! Your review has been added.");
-    // focus reviews area so user sees it
     const grid = document.getElementById("reviews-grid");
     if (grid) grid.focus();
   }
 
   function updateReviewsSummary() {
-    // compute average rating and count from static + stored cards
     try {
       const ratingNodes = document.querySelectorAll(".reviews-grid .review-card .review-stars");
       let total = 0, count = 0;
@@ -2295,28 +2284,24 @@ footer {
   initCountdown();
   initOfferModal();
 
-  // Important: load stored reviews AFTER the rest of the page so they appear above static ones
+  // load stored reviews and update summary
   loadStoredReviews();
-  // compute summary initially (includes static + stored)
   updateReviewsSummary();
 
-  /* ========= SMOOTH SCROLL FOR NAV (IMPROVED) ========= */
+  /* ========= SMOOTH SCROLL FOR NAV ========= */
   function gotoSectionById(id) {
     const target = document.getElementById(id);
     if (!target) return;
     const header = document.querySelector('header');
     const headerH = header ? header.offsetHeight : 80;
-    // scroll so the section appears under the sticky header
     const rect = target.getBoundingClientRect();
     const absoluteTop = window.pageYOffset + rect.top;
     const offsetTop = Math.max(0, absoluteTop - headerH - 12);
     window.scrollTo({ top: offsetTop, behavior: 'smooth' });
 
-    // small visual highlight to make it obvious
     target.classList.add('highlight');
     setTimeout(()=>target.classList.remove('highlight'), 900);
 
-    // if user clicked "reviews", also focus the reviews grid so keyboard/screen-reader users notice it
     if (id === 'reviews') {
       const grid = document.getElementById('reviews-grid');
       if (grid) {
@@ -2328,11 +2313,10 @@ footer {
   document.querySelectorAll('header nav a[href^="#"]').forEach(function(link) {
     link.addEventListener("click", function (e) {
       e.preventDefault();
-      var id = this.getAttribute("href").substring(1); // remove '#'
+      var id = this.getAttribute("href").substring(1);
       gotoSectionById(id);
     });
   });
 </script>
 </body>
 </html>
-
