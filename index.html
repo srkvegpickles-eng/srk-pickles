@@ -869,6 +869,7 @@
       transition: box-shadow 0.25s ease, transform 0.25s ease;
     }
 
+    /* Visual polish */
     body {
       background:
         radial-gradient(circle at top left, #ffe8c7 0, #fffdf7 40%, #fffaf0 100%);
@@ -1175,7 +1176,7 @@
           <strong id="cart-grand">Rs. 0</strong>
         </div>
         <div class="cart-note">
-          Delivery rule: Free delivery for orders above Rs.1200, otherwise flat Rs.80.
+          Delivery rule: <strong class="delivery-free">Free delivery for orders above Rs.1200</strong>, otherwise flat Rs.80.
         </div>
 
         <div class="cart-form">
@@ -2410,7 +2411,7 @@
   function handleReviewSubmit() {
     const nameEl = document.getElementById("review-name");
     const locEl = document.getElementById("review-location");
-    const ratingEl = document.getElementById("review-rating"];
+    const ratingEl = document.getElementById("review-rating");
     const textEl = document.getElementById("review-text");
 
     const name = (nameEl.value || "").trim();
