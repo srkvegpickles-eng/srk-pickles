@@ -883,8 +883,8 @@
       background:#fffdf9;
       padding:16px 18px 18px;
       border-radius:16px;
-      max-width:420px;
-      width:92%;
+      max-width:360px;
+      width:90%;
       box-shadow:0 10px 30px rgba(0,0,0,0.3);
       border:1px solid #f1e1d5;
       font-size:14px;
@@ -1363,8 +1363,6 @@
 
         <div class="payment-methods">
           <div class="payment-methods-title">Payment Method</div>
-
-          <!-- Keep radio options but show helpful UPI action buttons -->
           <label class="payment-option">
             <input type="radio" name="payment" value="PhonePe" />
             PhonePe (UPI)
@@ -1377,17 +1375,18 @@
             <input type="radio" name="payment" value="Cash on Delivery" checked />
             Cash on Delivery (COD)
           </label>
-
-          <div class="upi-info" id="upi-info-block">
-            UPI Mobile Number: <strong id="upi-mobile-display">70755 35180</strong><br/>
-            UPI ID: <strong id="upi-id-display">tarunkrishna7651@ybl</strong><br/>
-            Tip: If paying via PhonePe/Google Pay, choose the UPI option above and click <strong>Place Order on WhatsApp</strong>.
-            We will open the payment intent on a mobile device or show a QR to scan as a fallback.
+          <div class="upi-info">
+            UPI Mobile Number: <strong>70755 35180</strong><br/>
+            UPI ID: <strong>tarunkrishna7651@ybl</strong><br/>
+            For PhonePe / Google Pay, you can either tap <strong>Pay via UPI</strong> button below or we will share
+            a payment link on WhatsApp after placing the order. If you make UPI payment manually, please share the
+            payment screenshot / UTR on WhatsApp for faster confirmation.
           </div>
 
-          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
-            <button id="copy-upi" class="btn-pill" type="button" style="background:#0f5b4f;">Copy UPI ID</button>
-            <button id="show-upi-qr" class="btn-pill" type="button" style="background:#c0392b;">Show UPI QR</button>
+          <!-- New: Pay via UPI button that triggers the UPI intent / QR modal -->
+          <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+            <button type="button" id="btn-upi-pay" class="btn-pill">Pay via UPI / PhonePe / GPay</button>
+            <button type="button" id="btn-upi-qr" class="btn-pill" style="background:#0f5b4f;">Show UPI QR</button>
           </div>
         </div>
 
@@ -1636,10 +1635,12 @@
     <h4 style="margin:10px 0 4px;font-size:14px;color:#4d3825;">7. Payment & UPI Offers</h4>
     <ul>
       <li>You can choose <strong>PhonePe</strong>, <strong>Google Pay</strong> (UPI) or <strong>Cash on Delivery</strong>.</li>
-      <li>For UPI, we share our UPI details and a payment link. On mobile devices we will attempt to open the UPI app directly.
-      If that's not possible we'll show a QR code to scan.</li>
-      <li>UPI ID: <strong id="upi-id-display-2">tarunkrishna7651@ybl</strong></li>
-      <li>UPI Mobile: <strong id="upi-mobile-display-2">7075535180</strong></li>
+      <li>For UPI, we share our UPI details and a payment link:
+        <ul>
+          <li>UPI ID: <strong>tarunkrishna7651@ybl</strong></li>
+          <li>UPI Mobile: <strong>70755 35180</strong></li>
+        </ul>
+      </li>
       <li>After UPI payment, you can send the screenshot / UTR number on WhatsApp for quick confirmation.</li>
     </ul>
 
@@ -1732,7 +1733,21 @@
 
 <a href="https://wa.me/917075535180" class="wa-float" target="_blank">💬</a>
 
-<!-- Offer modal (unchanged) -->
+<!-- UPI QR / Pay modal -->
+<div id="upi-modal" class="modal-backdrop">
+  <div class="modal">
+    <button class="modal-close" type="button" id="upi-close">×</button>
+    <h3>Pay via UPI</h3>
+    <p style="margin:0 0 8px;">Scan the QR or tap "Open UPI app" to pay the exact amount.</p>
+    <img id="upi-qr" src="" alt="UPI QR" style="width:260px;height:260px;margin:8px auto;display:block;" />
+    <div style="text-align:center;font-size:13px;color:#4d3825;margin-top:6px;" id="upi-id-display"></div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;">
+      <button id="upi-copy" class="btn-pill">Copy UPI ID</button>
+      <button id="upi-open" class="btn-pill" style="background:#0f5b4f;">Open UPI App</button>
+    </div>
+  </div>
+</div>
+
 <div id="offer-modal" class="modal-backdrop">
   <div class="modal">
     <button class="modal-close" type="button" id="offer-close">×</button>
@@ -1745,34 +1760,11 @@
   </div>
 </div>
 
-<!-- UPI / QR modal: used as fallback and to let customers scan the QR -->
-<div id="upi-modal" class="modal-backdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="upi-modal-title">
-    <button class="modal-close" type="button" id="upi-modal-close">×</button>
-    <h3 id="upi-modal-title">Pay via UPI</h3>
-    <p id="upi-modal-text">Scan this QR or copy the UPI ID to pay.</p>
-    <div style="text-align:center;margin:10px 0;">
-      <img id="upi-qr-img" src="" alt="UPI QR" style="max-width:240px;width:100%;height:auto;border-radius:8px;border:1px solid #f1e1d5;" />
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button id="upi-copy-id" class="btn-pill" type="button" style="background:#0f5b4f;">Copy UPI ID</button>
-      <button id="upi-copy-amount" class="btn-pill" type="button" style="background:#c0392b;">Copy Amount</button>
-      <button id="upi-open-intent" class="btn-pill" type="button" style="background:#f39c12;">Try Open UPI App</button>
-    </div>
-    <p style="font-size:12px;color:#7a6a60;margin-top:8px;">After payment, please share the payment screenshot/UTR on WhatsApp for confirmation.</p>
-  </div>
-</div>
-
 <script>
-  /* ================
-     Configuration
-     ================ */
-  const SHEETS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE"; // set if you use Sheets
-  const OWNER_WHATSAPP_NUMBER = "917075535180"; // with country code for wa.me (no +)
-  // UPI configuration
+  const SHEETS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+  const OWNER_WHATSAPP_NUMBER = "917075535180";
   const UPI_ID = "tarunkrishna7651@ybl";
-  const UPI_MOBILE = "7075535180";
-  const UPI_NAME = "SRK Pickles";
+  const UPI_MOBILE = "7075535180"; // no spaces for programmatic use
 
   let APPLIED_COUPON = null;
   const COUPONS = {
@@ -1781,9 +1773,6 @@
     PICKLELOVE: { type: "percent", amount: 7, minSubtotal: 800, label: "7% OFF when you enjoy your favourite pickles" }
   };
 
-  /* ================
-     Data (unchanged)
-     ================ */
   const IMAGE_MAP = {
     "mango-garlic": "images/mango-garlic.jpg",
     "mango-no-garlic": "images/mango-plain.jpg",
@@ -1830,9 +1819,6 @@
     { id:"combo-2", category:"combos", name:"Family Pickle Combo 2", desc:"Gongura, Lemon, Magaya, Tomato – 500gm each (Total 2kg).", prices:{ "combo":1450 }, mrp:1600 }
   ];
 
-  /* ================
-     Utilities & Cart logic (mostly unchanged)
-     ================ */
   function calculateAutoDiscount(subtotal) {
     if (subtotal >= 2500) return Math.round(subtotal * 0.10);
     if (subtotal >= 1500) return Math.round(subtotal * 0.05);
@@ -1936,3 +1922,1006 @@
 
       const opt1000 = document.createElement("option");
       opt1000.value = "1000";
+      opt1000.textContent = "1 kg – Rs." + product.prices["1000"];
+
+      sizeSelect.appendChild(opt500);
+      sizeSelect.appendChild(opt1000);
+    }
+
+    const qtyInput = document.createElement("input");
+    qtyInput.type = "number";
+    qtyInput.min = "1";
+    qtyInput.value = "1";
+
+    const addBtn = document.createElement("button");
+    addBtn.className = "btn-add";
+    addBtn.textContent = "ADD TO CART";
+
+    addBtn.addEventListener("click", function () {
+      const size = sizeSelect.value;
+      const qty = parseInt(qtyInput.value, 10) || 1;
+      addToCart(product, size, qty);
+    });
+
+    actions.appendChild(sizeSelect);
+    actions.appendChild(qtyInput);
+    actions.appendChild(addBtn);
+
+    info.appendChild(actions);
+    card.appendChild(info);
+    return card;
+  }
+
+  function renderProducts() {
+    const picklesList = document.getElementById("pickles-list");
+    const powdersList = document.getElementById("powders-list");
+    const combosList = document.getElementById("combos-list");
+    picklesList.innerHTML = "";
+    powdersList.innerHTML = "";
+    combosList.innerHTML = "";
+
+    const searchValue = document.getElementById("search").value.toLowerCase();
+
+    for (let i = 0; i < PRODUCTS.length; i++) {
+      const p = PRODUCTS[i];
+      const match =
+        !searchValue ||
+        p.name.toLowerCase().indexOf(searchValue) !== -1 ||
+        p.desc.toLowerCase().indexOf(searchValue) !== -1;
+
+      if (!match) continue;
+
+      const card = makeProductCard(p);
+      if (p.category === "pickles") picklesList.appendChild(card);
+      else if (p.category === "powders") powdersList.appendChild(card);
+      else if (p.category === "combos") combosList.appendChild(card);
+    }
+  }
+
+  let CART = [];
+
+  function addToCart(product, size, qty) {
+    const key = product.id + "|" + size;
+    let existing = null;
+    for (let i = 0; i < CART.length; i++) {
+      if (CART[i].key === key) {
+        existing = CART[i];
+        break;
+      }
+    }
+    const unitPrice = product.prices[size];
+    if (!unitPrice) return;
+
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      CART.push({
+        key: key,
+        name: product.name,
+        size: size,
+        qty: qty,
+        unitPrice: unitPrice
+      });
+    }
+    renderCart();
+  }
+
+  function getSubtotalOnly() {
+    let subtotal = 0;
+    for (let i = 0; i < CART.length; i++) {
+      subtotal += CART[i].unitPrice * CART[i].qty;
+    }
+    return subtotal;
+  }
+
+  function calculateDelivery(subtotalBeforeDiscount) {
+    if (subtotalBeforeDiscount >= 1200) return 0;
+    return 80;
+  }
+
+  function getTotals() {
+    let subtotal = 0;
+    let totalQty = 0;
+    for (let i = 0; i < CART.length; i++) {
+      subtotal += CART[i].unitPrice * CART[i].qty;
+      totalQty += CART[i].qty;
+    }
+
+    const autoDiscount = calculateAutoDiscount(subtotal);
+    const couponDiscount = calculateCouponDiscount(subtotal);
+    let totalDiscount = autoDiscount + couponDiscount;
+    if (totalDiscount > subtotal) totalDiscount = subtotal;
+
+    const delivery = calculateDelivery(subtotal);
+    const grand = subtotal - totalDiscount + delivery;
+
+    return {
+      subtotal,
+      autoDiscount,
+      couponDiscount,
+      totalDiscount,
+      delivery,
+      grand,
+      totalQty
+    };
+  }
+
+  function renderCart() {
+    const cartItemsDiv = document.getElementById("cart-items");
+    const cartCountSpan = document.getElementById("cart-count");
+    const subtotalSpan = document.getElementById("cart-subtotal");
+    const deliverySpan = document.getElementById("cart-delivery");
+    const grandSpan = document.getElementById("cart-grand");
+    const autoDiscSpan = document.getElementById("cart-auto-discount");
+    const couponDiscSpan = document.getElementById("cart-coupon-discount");
+
+    if (!CART.length) {
+      cartItemsDiv.className = "cart-items cart-empty";
+      cartItemsDiv.textContent = "No items in cart";
+      cartCountSpan.textContent = "0";
+      subtotalSpan.textContent = "Rs. 0";
+      deliverySpan.textContent = "Rs. 0";
+      grandSpan.textContent = "Rs. 0";
+      autoDiscSpan.textContent = "- Rs. 0";
+      couponDiscSpan.textContent = "- Rs. 0";
+      deliverySpan.classList.remove("delivery-free");
+      return;
+    }
+
+    cartItemsDiv.className = "cart-items";
+    cartItemsDiv.innerHTML = "";
+
+    const totals = getTotals();
+
+    for (let i = 0; i < CART.length; i++) {
+      const item = CART[i];
+
+      const row = document.createElement("div");
+      row.className = "cart-row";
+
+      const left = document.createElement("div");
+      const title = document.createElement("div");
+      title.className = "cart-row-title";
+      title.textContent = item.name;
+      const sub = document.createElement("div");
+      sub.className = "cart-row-sub";
+      let sizeLabel;
+      if (item.size === "combo") sizeLabel = "Combo Pack";
+      else sizeLabel = item.size === "1000" ? "1 kg" : "500 gm";
+      sub.textContent = sizeLabel + " × " + item.qty;
+      left.appendChild(title);
+      left.appendChild(sub);
+
+      const right = document.createElement("div");
+      const amount = document.createElement("div");
+      amount.textContent = "Rs." + (item.unitPrice * item.qty);
+
+      const controls = document.createElement("div");
+      controls.className = "cart-row-controls";
+
+      (function(index){
+        const minusBtn = document.createElement("button");
+        minusBtn.textContent = "-";
+        minusBtn.addEventListener("click", function () {
+          CART[index].qty -= 1;
+          if (CART[index].qty <= 0) CART.splice(index, 1);
+          renderCart();
+        });
+
+        const plusBtn = document.createElement("button");
+        plusBtn.textContent = "+";
+        plusBtn.addEventListener("click", function () {
+          CART[index].qty += 1;
+          renderCart();
+        });
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "x";
+        removeBtn.addEventListener("click", function () {
+          CART.splice(index, 1);
+          renderCart();
+        });
+
+        controls.appendChild(minusBtn);
+        controls.appendChild(plusBtn);
+        controls.appendChild(removeBtn);
+      })(i);
+
+      right.appendChild(amount);
+      right.appendChild(controls);
+
+      row.appendChild(left);
+      row.appendChild(right);
+      cartItemsDiv.appendChild(row);
+    }
+
+    const totals2 = getTotals();
+    cartCountSpan.textContent = String(totals2.totalQty);
+    subtotalSpan.textContent = "Rs. " + totals2.subtotal;
+    deliverySpan.textContent = "Rs. " + totals2.delivery;
+    grandSpan.textContent = "Rs. " + totals2.grand;
+    autoDiscSpan.textContent = "- Rs. " + totals2.autoDiscount;
+    couponDiscSpan.textContent = "- Rs. " + totals2.couponDiscount;
+
+    if (totals2.delivery === 0) {
+      deliverySpan.classList.add("delivery-free");
+    } else {
+      deliverySpan.classList.remove("delivery-free");
+    }
+  }
+
+  function sendOrderToGoogleSheets(orderData) {
+    if (!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL.indexOf("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1) {
+      console.warn("Google Sheets webhook URL not configured.");
+      return;
+    }
+    try {
+      fetch(SHEETS_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData)
+      }).catch(function(err) {
+        console.error("Sheets error:", err);
+      });
+    } catch (e) {
+      console.error("Sheets error:", e);
+    }
+  }
+
+  function applyCouponFromCode(inputCode) {
+    const msgEl = document.getElementById("coupon-message");
+    const raw = (typeof inputCode === "string" && inputCode) ||
+                (document.getElementById("coupon-code") && document.getElementById("coupon-code").value) ||
+                "";
+    const code = raw.trim().toUpperCase();
+
+    if (!code) {
+      if (msgEl) {
+        msgEl.textContent = "Please enter a coupon code.";
+        msgEl.className = "coupon-message err";
+      }
+      return;
+    }
+
+    const conf = COUPONS[code];
+    if (!conf) {
+      APPLIED_COUPON = null;
+      if (msgEl) {
+        msgEl.textContent = "Invalid coupon code.";
+        msgEl.className = "coupon-message err";
+      }
+      renderCart();
+      return;
+    }
+
+    const subtotal = getSubtotalOnly();
+    if (subtotal < conf.minSubtotal) {
+      APPLIED_COUPON = null;
+      if (msgEl) {
+        msgEl.textContent = "This coupon needs minimum order of Rs." + conf.minSubtotal + ".";
+        msgEl.className = "coupon-message err";
+      }
+      renderCart();
+      return;
+    }
+
+    APPLIED_COUPON = {
+      code,
+      type: conf.type,
+      amount: conf.amount,
+      minSubtotal: conf.minSubtotal,
+      label: conf.label
+    };
+
+    if (msgEl) {
+      msgEl.textContent = "Coupon " + code + " applied: " + conf.label;
+      msgEl.className = "coupon-message ok";
+    }
+    renderCart();
+  }
+
+  function getSelectedPaymentMethod() {
+    const radios = document.querySelectorAll('input[name="payment"]');
+    for (let i = 0; i < radios.length; i++) {
+      if (radios[i].checked) return radios[i].value;
+    }
+    return null;
+  }
+
+  function buildUpiUri(totalAmount) {
+    // Ensure we pass amount with two decimals
+    const am = (Number(totalAmount) || 0).toFixed(2);
+    const params = new URLSearchParams({
+      pa: UPI_ID,
+      pn: "SRK Pickles",
+      am: String(am),
+      cu: "INR",
+      tn: "SRK Pickles Order"
+    });
+    return "upi://pay?" + params.toString();
+  }
+
+  function getUpiQrUrl(upiUri) {
+    return "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(upiUri);
+  }
+
+  function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId) {
+    let text = "New SRK Pickles Order%0A%0A";
+    text += "Order ID: " + encodeURIComponent(orderId) + "%0A";
+    text += "Name: " + encodeURIComponent(name) + "%0A";
+    text += "Phone: " + encodeURIComponent(phone) + "%0A";
+    text += "Address: " + encodeURIComponent(addr) + "%0A";
+    text += "Payment Method: " + encodeURIComponent(paymentMethod) + "%0A%0A";
+
+    text += "Items:%0A";
+    for (let i = 0; i < CART.length; i++) {
+      const item = CART[i];
+      let sizeLabel;
+      if (item.size === "combo") sizeLabel = "Combo Pack";
+      else sizeLabel = item.size === "1000" ? "1 kg" : "500 gm";
+      const line =
+        "- " + item.name + " (" + sizeLabel + ") x " + item.qty +
+        " = Rs." + (item.unitPrice * item.qty);
+      text += encodeURIComponent(line) + "%0A";
+    }
+
+    text += "%0ASubtotal: Rs." + totals.subtotal;
+    text += "%0AAuto Discount: Rs." + totals.autoDiscount;
+    text += "%0ACoupon Discount: Rs." + totals.couponDiscount;
+    text += "%0ADelivery: Rs." + totals.delivery;
+    text += "%0ATotal Payable: Rs." + totals.grand;
+
+    if (APPLIED_COUPON) {
+      text += "%0ACoupon Used: " + encodeURIComponent(APPLIED_COUPON.code);
+    }
+
+    // Add plain UPI details (fallback) and a QR link for convenience
+    if (paymentMethod === "PhonePe" || paymentMethod === "Google Pay") {
+      const upiUri = buildUpiUri(totals.grand);
+      text += "%0A%0AUPI ID: " + encodeURIComponent(UPI_ID);
+      text += "%0AUPI Mobile: " + encodeURIComponent(UPI_MOBILE);
+      text += "%0AUPI Payment URI: " + encodeURIComponent(upiUri);
+      text += "%0AQR (open in browser): " + encodeURIComponent(getUpiQrUrl(upiUri));
+      text += "%0A%0A(Note: Once paid, please share payment screenshot / UTR on WhatsApp.)";
+    }
+
+    return text;
+  }
+
+  const ORDERS_STORAGE_KEY = "srk_orders_history";
+
+  function getOrderStatusFromTime(createdAtIso) {
+    if (!createdAtIso) return { code: "placed", label: "Order placed (processing)" };
+    const created = new Date(createdAtIso);
+    if (Number.isNaN(created.getTime())) return { code: "placed", label: "Order placed (processing)" };
+    const now = new Date();
+    const diffMs = now - created;
+    const diffDays = diffMs / (1000*60*60*24);
+    if (diffDays < 1) return { code: "placed", label: "Order placed (processing)" };
+    if (diffDays < 3) return { code: "packed", label: "Packed (awaiting pickup / dispatch)" };
+    if (diffDays < 6) return { code: "shipped", label: "Shipped (in transit)" };
+    if (diffDays < 8) return { code: "out", label: "Out for delivery / near you" };
+    return { code: "delivered", label: "Delivered / likely delivered" };
+  }
+
+  function saveOrderForHistory(orderPayload) {
+    try {
+      const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
+      let arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr)) arr = [];
+      const entry = {
+        orderId: orderPayload.orderId,
+        createdAt: orderPayload.createdAt,
+        total: orderPayload.total,
+        subtotal: orderPayload.subtotal,
+        delivery: orderPayload.delivery,
+        autoDiscount: orderPayload.autoDiscount,
+        couponDiscount: orderPayload.couponDiscount,
+        paymentMethod: orderPayload.paymentMethod,
+        couponCode: orderPayload.couponCode,
+        phone: orderPayload.phone,
+        items: orderPayload.cart.map(function(c) {
+          return { name: c.name, size: c.size, qty: c.qty, unitPrice: c.unitPrice };
+        })
+      };
+      arr.unshift(entry);
+      if (arr.length > 50) arr.length = 50;
+      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(arr));
+    } catch (e) {
+      console.warn("Could not save order history", e);
+    }
+  }
+
+  function sizeLabelForHistory(size) {
+    if (size === "combo") return "Combo Pack";
+    if (size === "1000") return "1 kg";
+    if (size === "500") return "500 gm";
+    return size;
+  }
+
+  function formatDateTime(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    const day = String(d.getDate()).padStart(2,"0");
+    const month = String(d.getMonth()+1).padStart(2,"0");
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2,"0");
+    const mins = String(d.getMinutes()).padStart(2,"0");
+    return day + "-" + month + "-" + year + " " + hours + ":" + mins;
+  }
+
+  function renderOrdersHistory() {
+    const container = document.getElementById("orders-list");
+    if (!container) return;
+    container.innerHTML = "";
+
+    let arr = [];
+    try {
+      const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
+      arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr)) arr = [];
+    } catch (e) {
+      arr = [];
+    }
+
+    if (!arr.length) {
+      const empty = document.createElement("div");
+      empty.className = "orders-empty";
+      empty.textContent = "No orders found on this device yet. Place an order and it will appear here.";
+      container.appendChild(empty);
+      return;
+    }
+
+    arr.forEach(function(order) {
+      const status = getOrderStatusFromTime(order.createdAt);
+
+      const card = document.createElement("div");
+      card.className = "order-card";
+
+      const header = document.createElement("div");
+      header.className = "order-card-header";
+
+      const left = document.createElement("div");
+      const idEl = document.createElement("div");
+      idEl.className = "order-id";
+      idEl.textContent = "Order ID: " + (order.orderId || "N/A");
+      const dateEl = document.createElement("div");
+      dateEl.className = "order-date";
+      dateEl.textContent = "Placed on: " + formatDateTime(order.createdAt);
+      left.appendChild(idEl);
+      left.appendChild(dateEl);
+
+      const totalEl = document.createElement("div");
+      totalEl.className = "order-total";
+      totalEl.textContent = "Rs. " + (order.total || 0);
+
+      header.appendChild(left);
+      header.appendChild(totalEl);
+      card.appendChild(header);
+
+      const itemsDiv = document.createElement("div");
+      itemsDiv.className = "order-items";
+      const ul = document.createElement("ul");
+      (order.items || []).forEach(function(it) {
+        const li = document.createElement("li");
+        li.textContent =
+          it.name + " (" + sizeLabelForHistory(it.size) + ") x " + it.qty +
+          " – Rs." + (it.unitPrice * it.qty);
+        ul.appendChild(li);
+      });
+      itemsDiv.appendChild(ul);
+      card.appendChild(itemsDiv);
+
+      const metaDiv = document.createElement("div");
+      metaDiv.className = "order-meta";
+      metaDiv.textContent =
+        "Payment: " + (order.paymentMethod || "N/A") +
+        " • Subtotal: Rs." + (order.subtotal || 0) +
+        " • Delivery: Rs." + (order.delivery || 0);
+      card.appendChild(metaDiv);
+
+      const discDiv = document.createElement("div");
+      discDiv.className = "order-meta";
+      discDiv.textContent =
+        "Status: " + status.label +
+        " • Auto Discount: Rs." + (order.autoDiscount || 0) +
+        " • Coupon Discount: Rs." + (order.couponDiscount || 0) +
+        (order.couponCode ? " • Coupon: " + order.couponCode : "");
+      card.appendChild(discDiv);
+
+      const noteDiv = document.createElement("div");
+      noteDiv.className = "order-note";
+      noteDiv.textContent =
+        "For live status, reply on WhatsApp with this Order ID and registered mobile number.";
+      card.appendChild(noteDiv);
+
+      container.appendChild(card);
+    });
+  }
+
+  function handleTrackOrder() {
+    const idInput = document.getElementById("track-order-id");
+    const phoneInput = document.getElementById("track-order-phone");
+    const resultEl = document.getElementById("track-order-result");
+    if (!resultEl) return;
+
+    const id = (idInput.value || "").trim();
+    const phoneLast = (phoneInput.value || "").trim();
+
+    if (!id) {
+      resultEl.textContent = "Please enter your Order ID (e.g., SRK202511271230).";
+      resultEl.className = "track-result track-result-empty";
+      return;
+    }
+
+    let arr = [];
+    try {
+      const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
+      arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr)) arr = [];
+    } catch (e) {
+      arr = [];
+    }
+
+    let match = null;
+    for (let i = 0; i < arr.length; i++) {
+      const o = arr[i];
+      if (!o.orderId) continue;
+      if (o.orderId.toLowerCase() === id.toLowerCase()) {
+        if (phoneLast) {
+          const storedPhone = (o.phone || "").replace(/\D/g,"");
+          if (!storedPhone.endsWith(phoneLast)) {
+            continue;
+          }
+        }
+        match = o;
+        break;
+      }
+    }
+
+    if (!match) {
+      resultEl.innerHTML =
+        "We could not find this order on this device. Please double-check the Order ID " +
+        "or check your WhatsApp chat for the latest status.";
+      resultEl.className = "track-result track-result-empty";
+      return;
+    }
+
+    const status = getOrderStatusFromTime(match.createdAt);
+    const steps = [
+      {code:"placed", label:"Order placed", desc:"We received your order details."},
+      {code:"packed", label:"Packed", desc:"Pickles are packed safely and ready to hand over to courier."},
+      {code:"shipped", label:"Shipped", desc:"Your order is handed over to the courier partner."},
+      {code:"out", label:"Out for delivery", desc:"Your parcel is near your delivery location."},
+      {code:"delivered", label:"Delivered", desc:"Order should be delivered. If not, please contact us on WhatsApp."}
+    ];
+
+    let html = '<div class="track-summary">';
+    html += "<div><strong>Order ID:</strong> " + match.orderId + "</div>";
+    html += "<div><strong>Placed on:</strong> " + formatDateTime(match.createdAt) + "</div>";
+    html += "<div><strong>Total:</strong> Rs. " + (match.total || 0) + "</div>";
+    html += "<div><strong>Current status:</strong> " + status.label + "</div>";
+    html += "</div>";
+
+    html += '<ul class="track-steps">';
+    let activeIndex = steps.findIndex(function(s){ return s.code === status.code; });
+    if (activeIndex === -1) activeIndex = 0;
+
+    steps.forEach(function(step, idx) {
+      const activeClass = idx <= activeIndex ? " active" : "";
+      html += '<li class="track-step' + activeClass + '">';
+      html += '<div class="track-step-dot"></div>';
+      html += '<div><div class="track-step-label">' + step.label + '</div>';
+      html += '<div class="track-step-desc">' + step.desc + '</div></div>';
+      html += '</li>';
+    });
+    html += '</ul>';
+
+    html += '<div class="track-note">Note: This is an estimated status based on typical timelines. ' +
+            'For exact live status or courier tracking, please reply on WhatsApp with this Order ID.</div>';
+
+    resultEl.innerHTML = html;
+    resultEl.className = "track-result";
+  }
+
+  function sendOrderOnWhatsApp() {
+    if (!CART.length) {
+      alert("Please add at least one item to the cart.");
+      return;
+    }
+
+    const name = document.getElementById("cust-name").value.trim();
+    const phone = document.getElementById("cust-phone").value.trim();
+    const addr = document.getElementById("cust-address").value.trim();
+    const paymentMethod = getSelectedPaymentMethod();
+
+    if (!name || !phone || !addr) {
+      alert("Please fill Name, Phone and Address.");
+      return;
+    }
+    if (!paymentMethod) {
+      alert("Please select a payment method.");
+      return;
+    }
+
+    const totals = getTotals();
+    if (totals.grand <= 0) {
+      alert("Total amount is zero.");
+      return;
+    }
+
+    const orderId = "SRK" + new Date().toISOString().replace(/[-:T.Z]/g,"").slice(0,14);
+
+    const orderPayload = {
+      orderId: orderId,
+      name: name,
+      phone: phone,
+      address: addr,
+      cart: CART,
+      subtotal: totals.subtotal,
+      autoDiscount: totals.autoDiscount,
+      couponDiscount: totals.couponDiscount,
+      delivery: totals.delivery,
+      total: totals.grand,
+      paymentMethod: paymentMethod,
+      couponCode: APPLIED_COUPON ? APPLIED_COUPON.code : null,
+      createdAt: new Date().toISOString()
+    };
+    sendOrderToGoogleSheets(orderPayload);
+    saveOrderForHistory(orderPayload);
+    renderOrdersHistory();
+
+    const msg = buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId);
+    const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
+    window.open(url, "_blank");
+  }
+
+  function generateReferralCode(raw) {
+    const base = raw.replace(/\s+/g,'').toUpperCase().slice(0,8);
+    const rnd = Math.floor(Math.random()*900 + 100);
+    return base || ("SRK" + rnd);
+  }
+
+  function getBaseUrl() {
+    const loc = window.location;
+    return loc.origin + loc.pathname.replace(/index\.html$/i, "");
+  }
+
+  function handleReferralGenerate() {
+    const nameRaw = document.getElementById("ref-name").value.trim();
+    const code = generateReferralCode(nameRaw || "SRK");
+    const link = getBaseUrl() + "?ref=" + encodeURIComponent(code);
+    const out = document.getElementById("ref-output");
+    if (out) {
+      out.innerHTML =
+        "Your referral code: <strong>" + code +
+        "</strong><br/>Referral link:<br/>" + link;
+    }
+    return { code, link };
+  }
+
+  function handleReferralShareWA() {
+    const { code, link } = handleReferralGenerate();
+    const text =
+      "Hi! Try SRK Pickles – homemade Andhra pickles and powders.%0A" +
+      "Use my referral code: " + encodeURIComponent(code) + "%0A" +
+      "Order here: " + encodeURIComponent(link);
+    const url = "https://wa.me/?text=" + text;
+    window.open(url, "_blank");
+  }
+
+  function initCountdown() {
+    const el = document.getElementById("countdown");
+    if (!el) return;
+    const target = new Date("2025-12-31T23:59:59");
+
+    function update() {
+      const now = new Date();
+      const diff = target - now;
+      if (diff <= 0) {
+        el.textContent = "Offer ends soon!";
+        return;
+      }
+      const d = Math.floor(diff / (1000*60*60*24));
+      const h = Math.floor((diff / (1000*60*60)) % 24);
+      const m = Math.floor((diff / (1000*60)) % 60);
+      el.textContent = "Ends in " + d + "d " + h + "h " + m + "m";
+    }
+    update();
+    setInterval(update, 60000);
+  }
+
+  function initOfferModal() {
+    const modal = document.getElementById("offer-modal");
+    if (!modal) return;
+    const closeBtn = document.getElementById("offer-close");
+    const applyBtn = document.getElementById("offer-apply");
+
+    function closeModal() {
+      modal.classList.remove("show");
+      try {
+        localStorage.setItem("srk_offer_seen", "1");
+      } catch(e) {}
+    }
+
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+
+    if (applyBtn) {
+      applyBtn.addEventListener("click", function() {
+        const input = document.getElementById("coupon-code");
+        if (input) input.value = "SRKWELCOME";
+        applyCouponFromCode("SRKWELCOME");
+        closeModal();
+        const cartBox = document.querySelector(".cart-box");
+        if (cartBox) cartBox.scrollIntoView({behavior:"smooth"});
+      });
+    }
+
+    try {
+      const seen = localStorage.getItem("srk_offer_seen");
+      if (seen) return;
+    } catch(e) {}
+
+    setTimeout(function() {
+      modal.classList.add("show");
+    }, 2000);
+  }
+
+  const REVIEWS_STORAGE_KEY = "srk_reviews_extra";
+
+  function makeStars(rating) {
+    const r = Math.max(1, Math.min(5, rating || 5));
+    return "★★★★★".slice(0, r) + "☆☆☆☆☆".slice(0, 5 - r);
+  }
+
+  function addReviewToDOM(review, atTop = true) {
+    const grid = document.getElementById("reviews-grid");
+    if (!grid) return;
+    const card = document.createElement("article");
+    card.className = "review-card";
+
+    const stars = document.createElement("div");
+    stars.className = "review-stars";
+    stars.textContent = makeStars(review.rating);
+    card.appendChild(stars);
+
+    const text = document.createElement("div");
+    text.className = "review-text";
+    text.textContent = review.text;
+    card.appendChild(text);
+
+    const user = document.createElement("div");
+    user.className = "review-user";
+    user.innerHTML = "<span>" + (review.name || "Customer") + ",</span> " + (review.location || "");
+    card.appendChild(user);
+
+    if (atTop) grid.insertBefore(card, grid.firstChild);
+    else grid.appendChild(card);
+    updateReviewsSummary();
+  }
+
+  function loadStoredReviews() {
+    try {
+      const raw = localStorage.getItem(REVIEWS_STORAGE_KEY);
+      if (!raw) return;
+      const arr = JSON.parse(raw);
+      if (!Array.isArray(arr)) return;
+      arr.forEach(function(r) { addReviewToDOM(r, true); });
+    } catch (e) {
+      console.warn("Could not load stored reviews", e);
+    }
+  }
+
+  function saveReview(review) {
+    try {
+      const raw = localStorage.getItem(REVIEWS_STORAGE_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      arr.push(review);
+      localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(arr));
+    } catch (e) {
+      console.warn("Could not save review", e);
+    }
+  }
+
+  function handleReviewSubmit() {
+    const nameEl = document.getElementById("review-name");
+    const locEl = document.getElementById("review-location");
+    const ratingEl = document.getElementById("review-rating");
+    const textEl = document.getElementById("review-text");
+
+    const name = (nameEl.value || "").trim();
+    const location = (locEl.value || "").trim();
+    const rating = parseInt(ratingEl.value, 10);
+    const text = (textEl.value || "").trim();
+
+    if (!text || !rating || Number.isNaN(rating)) {
+      alert("Please select a rating and write your review.");
+      return;
+    }
+
+    const review = {
+      name: name || "Customer",
+      location: location,
+      rating: rating,
+      text: text,
+      createdAt: new Date().toISOString()
+    };
+
+    addReviewToDOM(review, true);
+    saveReview(review);
+
+    nameEl.value = "";
+    locEl.value = "";
+    ratingEl.value = "";
+    textEl.value = "";
+
+    alert("Thank you! Your review has been added.");
+    const grid = document.getElementById("reviews-grid");
+    if (grid) grid.focus();
+  }
+
+  function updateReviewsSummary() {
+    try {
+      const ratingNodes = document.querySelectorAll(".reviews-grid .review-card .review-stars");
+      let total = 0, count = 0;
+      ratingNodes.forEach(function(n) {
+        const txt = n.textContent || "";
+        const stars = (txt.match(/★/g) || []).length;
+        if (stars > 0) {
+          total += stars;
+          count += 1;
+        }
+      });
+      const avg = count ? (total / count) : 5;
+      const avgRounded = Math.round(avg*10)/10;
+      const starsText = "★★★★★".slice(0, Math.round(avg)) + "☆☆☆☆☆".slice(0, 5-Math.round(avg));
+      const starsEl = document.getElementById("reviews-average-stars");
+      const countEl = document.getElementById("reviews-count");
+      if (starsEl) starsEl.textContent = starsText;
+      if (countEl) countEl.textContent = avgRounded + "/5 based on " + count + " review" + (count===1?"":"s");
+    } catch (e) {
+      console.warn("updateReviewsSummary failed", e);
+    }
+  }
+
+  // UPI helpers (new and improved)
+  function initiateUpiPayment() {
+    if (!CART.length) { alert('Cart is empty'); return; }
+    const totals = getTotals();
+    if (!totals || typeof totals.grand === 'undefined') { alert('Could not determine amount'); return; }
+
+    const upiUri = buildUpiUri(totals.grand);
+
+    // Try to open UPI app via intent / upi:// scheme. On many mobile devices this will prompt a UPI app.
+    // Fallback: show QR modal so user can scan with their UPI app.
+    try {
+      // first attempt: open using location change (works on many mobile browsers)
+      window.location.href = upiUri;
+
+      // after a short delay, show the QR modal as a fallback (if the UPI app didn't open)
+      setTimeout(function(){
+        showUpiModal(totals.grand);
+      }, 1200);
+    } catch (e) {
+      showUpiModal(totals.grand);
+    }
+  }
+
+  function showUpiModal(amount) {
+    const upiUri = buildUpiUri(amount);
+    const qr = document.getElementById('upi-qr');
+    const idDisp = document.getElementById('upi-id-display');
+    qr.src = getUpiQrUrl(upiUri);
+    idDisp.textContent = 'UPI ID: ' + UPI_ID + ' • Mobile: ' + UPI_MOBILE;
+    const modal = document.getElementById('upi-modal');
+    if (modal) modal.classList.add('show');
+
+    // attach open and copy handlers (idempotent)
+    const copyBtn = document.getElementById('upi-copy');
+    if (copyBtn && !copyBtn._attached) {
+      copyBtn.addEventListener('click', function(){
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(UPI_ID).then(function(){ alert('UPI ID copied to clipboard'); }).catch(function(){ alert('Copy failed. Please copy manually.'); });
+        } else {
+          alert('Copy not supported in this browser.');
+        }
+      });
+      copyBtn._attached = true;
+    }
+    const openBtn = document.getElementById('upi-open');
+    if (openBtn && !openBtn._attached) {
+      openBtn.addEventListener('click', function(){
+        // open UPI URI in same way
+        window.location.href = buildUpiUri(amount);
+      });
+      openBtn._attached = true;
+    }
+
+    const close = document.getElementById('upi-close');
+    if (close && !close._attached) {
+      close.addEventListener('click', function(){
+        modal.classList.remove('show');
+      });
+      close._attached = true;
+    }
+  }
+
+  // Event: show QR only
+  function showUpiQrOnly() {
+    if (!CART.length) { alert('Cart is empty'); return; }
+    const totals = getTotals();
+    showUpiModal(totals.grand);
+  }
+
+  function buildUpiLinkForWhatsApp(totalAmount) {
+    return buildUpiUri(totalAmount); // kept for compatibility naming
+  }
+
+  const ORDERS_STORAGE_KEY = 'srk_orders_history';
+
+  document.getElementById('btn-upi-pay').addEventListener('click', function(){
+    initiateUpiPayment();
+  });
+  document.getElementById('btn-upi-qr').addEventListener('click', function(){
+    showUpiQrOnly();
+  });
+
+  document.getElementById("btn-wa-order").addEventListener("click", sendOrderOnWhatsApp);
+  document.getElementById("search").addEventListener("input", renderProducts);
+  document.getElementById("apply-coupon-btn").addEventListener("click", function() {
+    applyCouponFromCode();
+  });
+
+  document.getElementById("cart-button").addEventListener("click", function () {
+    const cartBox = document.querySelector(".cart-box");
+    if (cartBox) {
+      cartBox.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+
+  document.getElementById("ref-generate").addEventListener("click", handleReferralGenerate);
+  document.getElementById("ref-share-wa").addEventListener("click", handleReferralShareWA);
+  document.getElementById("review-submit").addEventListener("click", handleReviewSubmit);
+  document.getElementById("track-order-btn").addEventListener("click", handleTrackOrder);
+
+  // restore existing functionality
+  renderProducts();
+  renderCart();
+  initCountdown();
+  initOfferModal();
+  loadStoredReviews();
+  updateReviewsSummary();
+  renderOrdersHistory();
+
+  function gotoSectionById(id) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const header = document.querySelector('header');
+    const headerH = header ? header.offsetHeight : 80;
+    const rect = target.getBoundingClientRect();
+    const absoluteTop = window.pageYOffset + rect.top;
+    const offsetTop = Math.max(0, absoluteTop - headerH - 12);
+    window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+
+    target.classList.add('highlight');
+    setTimeout(()=>target.classList.remove('highlight'), 900);
+
+    if (id === 'reviews') {
+      const grid = document.getElementById('reviews-grid');
+      if (grid) {
+        setTimeout(()=>grid.focus(), 500);
+      }
+    }
+  }
+
+  document.querySelectorAll('header nav a[href^="#"]').forEach(function(link) {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      var id = this.getAttribute("href").substring(1);
+      gotoSectionById(id);
+    });
+  });
+</script>
+</body>
+</html>
