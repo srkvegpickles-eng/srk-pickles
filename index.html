@@ -883,8 +883,8 @@
       background:#fffdf9;
       padding:16px 18px 18px;
       border-radius:16px;
-      max-width:420px;
-      width:92%;
+      max-width:320px;
+      width:90%;
       box-shadow:0 10px 30px rgba(0,0,0,0.3);
       border:1px solid #f1e1d5;
       font-size:14px;
@@ -1202,13 +1202,6 @@
       color: transparent;
       font-weight: 800;
     }
-
-    /* small helper for modal content layout */
-    .upi-grid { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-    .upi-qr { width: 160px; height: 160px; border-radius:8px; border:1px solid #eee; background:#fff; display:flex; align-items:center; justify-content:center; }
-    .upi-info-block { flex:1; min-width:180px; font-size:13px; color:#4d3825; }
-    .small-muted { font-size:12px; color:#7a6a60; margin-top:6px; }
-    .btn-ghost { border-radius:8px; border:1px solid #e6dcd1; background:transparent; padding:8px 10px; cursor:pointer; }
   </style>
 </head>
 
@@ -1383,30 +1376,9 @@
             Cash on Delivery (COD)
           </label>
           <div class="upi-info">
-            UPI Mobile Number: <strong id="upi-mobile-display">70755 35180</strong><br/>
-            UPI ID: <strong id="upi-id-display">tarunkrishna7651@ybl</strong><br/>
-            For PhonePe / Google Pay, scan the QR below or open your UPI app using the modal button.
-          </div>
-
-          <!-- Persistent cart QR block (NEW) -->
-          <div id="cart-upi-block" style="margin-top:10px;display:none;border-radius:8px;padding:8px;background:#fffefb;border:1px dashed #e6dcd1;">
-            <div style="font-size:13px;color:#4d3825;font-weight:700;margin-bottom:6px;">Pay via UPI — Scan QR to pay</div>
-            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-              <div style="width:120px;height:120px;border-radius:8px;border:1px solid #eee;background:#fff;display:flex;align-items:center;justify-content:center;">
-                <img id="cart-upi-qr-img" src="" alt="UPI QR" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" />
-              </div>
-              <div style="flex:1;min-width:180px;">
-                <div style="font-size:13px;color:#7a6a60;">Amount: <strong id="cart-upi-amount">Rs. 0</strong></div>
-                <div style="margin-top:6px;font-size:13px;color:#7a6a60;">UPI ID: <strong id="cart-upi-id">tarunkrishna7651@ybl</strong></div>
-                <div style="margin-top:8px;display:flex;gap:8px;">
-                  <button id="cart-upi-open" class="btn-checkout" style="padding:8px 10px;flex:1;">Open UPI app</button>
-                  <button id="cart-copy-upi" class="btn-ghost">Copy UPI ID</button>
-                </div>
-                <div style="margin-top:6px;font-size:12px;color:#7a6a60;">
-                  After paying, click <em>I have paid — Continue</em> when the modal appears or send the screenshot/UTR on WhatsApp.
-                </div>
-              </div>
-            </div>
+            UPI Mobile Number: <strong>70755 35180</strong><br/>
+            UPI ID: <strong>tarunkrishna7651@ybl</strong><br/>
+            For PhonePe / Google Pay, we’ll also send a UPI payment link in WhatsApp.
           </div>
         </div>
 
@@ -1655,8 +1627,13 @@
     <h4 style="margin:10px 0 4px;font-size:14px;color:#4d3825;">7. Payment & UPI Offers</h4>
     <ul>
       <li>You can choose <strong>PhonePe</strong>, <strong>Google Pay</strong> (UPI) or <strong>Cash on Delivery</strong>.</li>
-      <li>For UPI, we present a QR and pay link for the exact amount so customers can complete payment on their phone.</li>
-      <li>After UPI payment, customers should share screenshot / UTR number on WhatsApp for quick confirmation.</li>
+      <li>For UPI, we share our UPI details and a payment link:
+        <ul>
+          <li>UPI ID: <strong>tarunkrishna7651@ybl</strong></li>
+          <li>UPI Mobile: <strong>70755 35180</strong></li>
+        </ul>
+      </li>
+      <li>After UPI payment, you can send the screenshot / UTR number on WhatsApp for quick confirmation.</li>
     </ul>
 
     <p style="margin-top:10px;">
@@ -1748,7 +1725,6 @@
 
 <a href="https://wa.me/917075535180" class="wa-float" target="_blank">💬</a>
 
-<!-- Offer modal -->
 <div id="offer-modal" class="modal-backdrop">
   <div class="modal">
     <button class="modal-close" type="button" id="offer-close">×</button>
@@ -1761,56 +1737,11 @@
   </div>
 </div>
 
-<!-- UPI payment modal -->
-<div id="upi-modal" class="modal-backdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="upi-modal-title">
-    <button class="modal-close" type="button" id="upi-close" title="Close">×</button>
-    <h3 id="upi-modal-title">Pay with UPI</h3>
-
-    <div class="upi-grid">
-      <div class="upi-qr" id="upi-qr-wrap">
-        <img id="upi-qr-img" src="" alt="UPI QR" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" />
-      </div>
-
-      <div class="upi-info-block">
-        <div><strong>Pay to:</strong> SRK Pickles</div>
-        <div class="small-muted">UPI ID: <strong id="modal-upi-id">tarunkrishna7651@ybl</strong></div>
-        <div class="small-muted">UPI Mobile: <strong id="modal-upi-mobile">7075535180</strong></div>
-        <div id="modal-upi-amount" style="margin-top:6px;font-weight:700;color:#c0392b;"></div>
-        <div class="small-muted">Scan the QR or open your UPI app using the button below.</div>
-      </div>
-    </div>
-
-    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-      <button id="upi-open-app" class="btn-checkout" style="flex:1">Open UPI app to pay</button>
-      <button id="upi-copy-id" class="btn-ghost">Copy UPI ID</button>
-      <button id="upi-paid-continue" class="btn-pill">I have paid — Continue</button>
-    </div>
-
-    <div style="margin-top:8px;font-size:12px;color:#7a6a60;">
-      After paying, please share the payment screenshot/UTR on WhatsApp for quick confirmation.
-    </div>
-  </div>
-</div>
-
 <script>
-  // === CONFIG - change these to your actual values ===
   const SHEETS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
-  const OWNER_WHATSAPP_NUMBER = "917075535180"; // no plus
+  const OWNER_WHATSAPP_NUMBER = "917075535180";
   const UPI_ID = "tarunkrishna7651@ybl";
-  const UPI_MOBILE = "7075535180"; // numeric string without spaces
-
-  // Format for display
-  document.addEventListener('DOMContentLoaded', () => {
-    const upiDisplayEl = document.getElementById('upi-mobile-display');
-    const upiIdDisplayEl = document.getElementById('upi-id-display');
-    if (upiDisplayEl) upiDisplayEl.textContent = UPI_MOBILE.replace(/(\d{5})(\d{5})/, '$1 $2');
-    if (upiIdDisplayEl) upiIdDisplayEl.textContent = UPI_ID;
-    const modalUpi = document.getElementById('modal-upi-id');
-    const modalMobile = document.getElementById('modal-upi-mobile');
-    if (modalUpi) modalUpi.textContent = UPI_ID;
-    if (modalMobile) modalMobile.textContent = UPI_MOBILE;
-  });
+  const UPI_MOBILE = "7075535180";
 
   let APPLIED_COUPON = null;
   const COUPONS = {
@@ -2092,57 +2023,6 @@
     };
   }
 
-  function getUpiLinkForAmount(amount, txnNote) {
-    const params = new URLSearchParams({
-      pa: UPI_ID,
-      pn: "SRK Pickles",
-      am: String(amount),
-      cu: "INR",
-      tn: txnNote || "SRK Pickles Order"
-    });
-    return "upi://pay?" + params.toString();
-  }
-
-  function getUpiQrImageUrl(amount, orderId) {
-    const upiLink = getUpiLinkForAmount(amount, "Order " + (orderId || "SRK"));
-    return "https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=" + encodeURIComponent(upiLink);
-  }
-
-  function updateCartUpiBlock(totals, orderId) {
-    const block = document.getElementById("cart-upi-block");
-    const qrImg = document.getElementById("cart-upi-qr-img");
-    const amountEl = document.getElementById("cart-upi-amount");
-    const cartUpiId = document.getElementById("cart-upi-id");
-    const openBtn = document.getElementById("cart-upi-open");
-    const copyBtn = document.getElementById("cart-copy-upi");
-
-    if (!block || !qrImg || !amountEl || !cartUpiId) return;
-    if (!totals || totals.grand <= 0) {
-      block.style.display = "none";
-      qrImg.src = "";
-      amountEl.textContent = "Rs. 0";
-      return;
-    }
-    const qrUrl = getUpiQrImageUrl(totals.grand, orderId);
-    qrImg.src = qrUrl;
-    amountEl.textContent = "Rs. " + totals.grand;
-    cartUpiId.textContent = UPI_ID;
-    block.style.display = "block";
-
-    // attach handlers (remove previous handlers by replacing node)
-    openBtn.onclick = function() {
-      const upiLink = getUpiLinkForAmount(totals.grand, "SRK Pickles Order " + (orderId || ""));
-      window.location.href = upiLink;
-    };
-    copyBtn.onclick = function() {
-      navigator.clipboard && navigator.clipboard.writeText(UPI_ID).then(function(){
-        alert("UPI ID copied to clipboard. You can paste it in your UPI app.");
-      }).catch(function(){
-        alert("Could not copy automatically. Please copy: " + UPI_ID);
-      });
-    };
-  }
-
   function renderCart() {
     const cartItemsDiv = document.getElementById("cart-items");
     const cartCountSpan = document.getElementById("cart-count");
@@ -2162,7 +2042,6 @@
       autoDiscSpan.textContent = "- Rs. 0";
       couponDiscSpan.textContent = "- Rs. 0";
       deliverySpan.classList.remove("delivery-free");
-      updateCartUpiBlock(null);
       return;
     }
 
@@ -2246,9 +2125,6 @@
     } else {
       deliverySpan.classList.remove("delivery-free");
     }
-
-    // update persistent QR block with latest totals (orderId optional)
-    updateCartUpiBlock(totals2, null);
   }
 
   function sendOrderToGoogleSheets(orderData) {
@@ -2329,7 +2205,18 @@
     return null;
   }
 
-  function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId, includeQrUrl) {
+  function buildUpiLink(totalAmount) {
+    const params = new URLSearchParams({
+      pa: UPI_ID,
+      pn: "SRK Pickles",
+      am: String(totalAmount),
+      cu: "INR",
+      tn: "SRK Pickles Order"
+    });
+    return "upi://pay?" + params.toString();
+  }
+
+  function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId) {
     let text = "New SRK Pickles Order%0A%0A";
     text += "Order ID: " + encodeURIComponent(orderId) + "%0A";
     text += "Name: " + encodeURIComponent(name) + "%0A";
@@ -2360,12 +2247,11 @@
     }
 
     if (paymentMethod === "PhonePe" || paymentMethod === "Google Pay") {
+      const upiLink = buildUpiLink(totals.grand);
       text += "%0A%0AUPI Mobile: " + encodeURIComponent(UPI_MOBILE);
       text += "%0AUPI ID: " + encodeURIComponent(UPI_ID);
-      text += "%0A(Note: Please share payment screenshot / UTR on WhatsApp if you paid.)";
-      if (includeQrUrl) {
-        text += "%0A%0AUPI QR: " + encodeURIComponent(includeQrUrl);
-      }
+      text += "%0AUPI Payment Link (tap to pay):%0A" + encodeURIComponent(upiLink);
+      text += "%0A%0A(Note: Once paid, please share payment screenshot / UTR on WhatsApp.)";
     }
 
     return text;
@@ -2608,64 +2494,7 @@
     resultEl.className = "track-result";
   }
 
-  // New: opens UPI modal with QR & pay link
-  function openUpiModalForOrder(totals, orderId, onContinueCallback) {
-    const modalWrap = document.getElementById('upi-modal');
-    const qrImg = document.getElementById('upi-qr-img');
-    const amountEl = document.getElementById('modal-upi-amount');
-    const upiClose = document.getElementById('upi-close');
-    const openAppBtn = document.getElementById('upi-open-app');
-    const copyIdBtn = document.getElementById('upi-copy-id');
-    const paidContinueBtn = document.getElementById('upi-paid-continue');
-
-    if (!modalWrap) {
-      onContinueCallback && onContinueCallback();
-      return;
-    }
-
-    const upiLink = getUpiLinkForAmount(totals.grand, "SRK Pickles Order " + orderId);
-    const qrData = encodeURIComponent(upiLink);
-    const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=" + qrData;
-    qrImg.src = qrUrl;
-    amountEl.textContent = "Amount: Rs. " + totals.grand;
-
-    function closeModal() {
-      modalWrap.classList.remove('show');
-      modalWrap.setAttribute('aria-hidden', 'true');
-      upiClose.removeEventListener('click', closeModal);
-      openAppBtn.removeEventListener('click', openAppHandler);
-      copyIdBtn.removeEventListener('click', copyHandler);
-      paidContinueBtn.removeEventListener('click', paidContinueHandler);
-    }
-
-    function openAppHandler() {
-      window.location.href = upiLink;
-    }
-
-    function copyHandler() {
-      navigator.clipboard && navigator.clipboard.writeText(UPI_ID).then(function(){
-        alert("UPI ID copied to clipboard. You can paste it in your UPI app.");
-      }).catch(function(){
-        alert("Could not copy automatically. Please long-press the UPI ID and copy: " + UPI_ID);
-      });
-    }
-
-    function paidContinueHandler() {
-      closeModal();
-      onContinueCallback && onContinueCallback();
-    }
-
-    upiClose.addEventListener('click', closeModal);
-    openAppBtn.addEventListener('click', openAppHandler);
-    copyIdBtn.addEventListener('click', copyHandler);
-    paidContinueBtn.addEventListener('click', paidContinueHandler);
-
-    modalWrap.classList.add('show');
-    modalWrap.setAttribute('aria-hidden', 'false');
-  }
-
-  // New: entry point for placing an order. shows UPI modal if needed.
-  function handlePlaceOrder() {
+  function sendOrderOnWhatsApp() {
     if (!CART.length) {
       alert("Please add at least one item to the cart.");
       return;
@@ -2691,7 +2520,6 @@
       return;
     }
 
-    // Create an order id
     const orderId = "SRK" + new Date().toISOString().replace(/[-:T.Z]/g,"").slice(0,14);
 
     const orderPayload = {
@@ -2699,7 +2527,7 @@
       name: name,
       phone: phone,
       address: addr,
-      cart: CART.slice(), // copy
+      cart: CART,
       subtotal: totals.subtotal,
       autoDiscount: totals.autoDiscount,
       couponDiscount: totals.couponDiscount,
@@ -2709,24 +2537,11 @@
       couponCode: APPLIED_COUPON ? APPLIED_COUPON.code : null,
       createdAt: new Date().toISOString()
     };
-
-    if (paymentMethod === "PhonePe" || paymentMethod === "Google Pay") {
-      openUpiModalForOrder(totals, orderId, function() {
-        sendOrderAfterPayment(orderPayload, totals, orderId);
-      });
-    } else {
-      sendOrderAfterPayment(orderPayload, totals, orderId);
-    }
-  }
-
-  function sendOrderAfterPayment(orderPayload, totals, orderId) {
     sendOrderToGoogleSheets(orderPayload);
     saveOrderForHistory(orderPayload);
     renderOrdersHistory();
 
-    // include QR image URL in the WhatsApp message for quick reference
-    const qrUrl = getUpiQrImageUrl(totals.grand, orderId);
-    const msg = buildWhatsAppMessage(orderPayload.name, orderPayload.phone, orderPayload.address, orderPayload.paymentMethod, totals, orderPayload.orderId, qrUrl);
+    const msg = buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId);
     const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
     window.open(url, "_blank");
   }
@@ -2939,8 +2754,7 @@
     }
   }
 
-  // -- event handlers binding --
-  document.getElementById("btn-wa-order").addEventListener("click", handlePlaceOrder);
+  document.getElementById("btn-wa-order").addEventListener("click", sendOrderOnWhatsApp);
   document.getElementById("search").addEventListener("input", renderProducts);
   document.getElementById("apply-coupon-btn").addEventListener("click", function() {
     applyCouponFromCode();
@@ -2966,7 +2780,6 @@
   updateReviewsSummary();
   renderOrdersHistory();
 
-  // small helper for highlighting sections when navigating
   function gotoSectionById(id) {
     const target = document.getElementById(id);
     if (!target) return;
@@ -2994,14 +2807,6 @@
       var id = this.getAttribute("href").substring(1);
       gotoSectionById(id);
     });
-  });
-
-  // UPI modal close on outer click
-  document.getElementById('upi-modal').addEventListener('click', function(e){
-    if (e.target === this) {
-      this.classList.remove('show');
-      this.setAttribute('aria-hidden', 'true');
-    }
   });
 </script>
 </body>
