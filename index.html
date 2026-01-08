@@ -1773,17 +1773,17 @@
   };
 
   const PRODUCTS = [
-    { id:"mango-garlic", category:"pickles", name:"Mango Pickle (With Garlic)", desc:"Classic taste that stays with you forever - best of all.", prices:{ "500":400, "1000":800 } },
-    { id:"mango-no-garlic", category:"pickles", name:"Mango Pickle (Without Garlic)", desc:"Classic taste that stays with you forever - best of all.", prices:{ "500":350, "1000":700 } },
-    { id:"magaya", category:"pickles", name:"Magaya Pickle", desc:"Sun-dried Mango pickle. An aromatic preparation that is an all-time favourite.", prices:{ "500":350, "1000":700 } },
-    { id:"bellam-avakaya", category:"pickles", name:"Bellam Avakaya", desc:"Sweet Avakaya. Blend of classic Avakaya & jaggery.", prices:{ "500":400, "1000":800 } },
-    { id:"tomato", category:"pickles", name:"Tomato Pickle", desc:"Spicy, tangy and savoury tomato pickle.", prices:{ "500":350, "1000":700 } },
-    { id:"gongura", category:"pickles", name:"Gongura Pickle", desc:"Sorrel Leaves pickle, heartthrob of Telugu people.", prices:{ "500":350, "1000":700 } },
-    { id:"ginger", category:"pickles", name:"Ginger Pickle", desc:"Sweet and spicy ginger pickle for anytime and anything.", prices:{ "500":350, "1000":700 } },
-    { id:"red-chilli", category:"pickles", name:"Red Chilli Pickle", desc:"Red Chilli Pickle, Korivi Karam – spicy earthy flavour.", prices:{ "500":400, "1000":800 } },
-    { id:"tamarind", category:"pickles", name:"Tamarind Pickle", desc:"Sharp, spicy and tangy flavoured pickle.", prices:{ "500":350, "1000":700 } },
-    { id:"amla", category:"pickles", name:"Amla Pickle", desc:"Spicy, tangy amla pickle.", prices:{ "500":350, "1000":700 } },
-    { id:"lemon", category:"pickles", name:"Lemon Pickle", desc:"Juicy marinated lemon pickle.", prices:{ "500":350, "1000":700 } },
+    { id:"mango-garlic", category:"pickles", name:"Mango Pickle (With Garlic)", desc:"Classic taste that stays with you forever - best of all.", prices:{ "250":200, "500":400, "1000":800 } },
+    { id:"mango-no-garlic", category:"pickles", name:"Mango Pickle (Without Garlic)", desc:"Classic taste that stays with you forever - best of all.", prices:{ "250":200, "500":350, "1000":700 } },
+    { id:"magaya", category:"pickles", name:"Magaya Pickle", desc:"Sun-dried Mango pickle. An aromatic preparation that is an all-time favourite.", prices:{ "250":200, "500":350, "1000":700 } },
+    { id:"bellam-avakaya", category:"pickles", name:"Bellam Avakaya", desc:"Sweet Avakaya. Blend of classic Avakaya & jaggery.", prices:{ "250":200, "500":400, "1000":800 } },
+    { id:"tomato", category:"pickles", name:"Tomato Pickle", desc:"Spicy, tangy and savoury tomato pickle.", prices:{ "250":200, "500"400:, "1000":800 } },
+    { id:"gongura", category:"pickles", name:"Gongura Pickle", desc:"Sorrel Leaves pickle, heartthrob of Telugu people.", prices:{ "250":200, "500":400, "1000":800 } },
+    { id:"ginger", category:"pickles", name:"Ginger Pickle", desc:"Sweet and spicy ginger pickle for anytime and anything.", prices:{ "250":200, "500":350, "1000":700 } },
+    { id:"red-chilli", category:"pickles", name:"Red Chilli Pickle", desc:"Red Chilli Pickle, Korivi Karam – spicy earthy flavour.", prices:{ "250":200, "500":400, "1000":800 } },
+    { id:"tamarind", category:"pickles", name:"Tamarind Pickle", desc:"Sharp, spicy and tangy flavoured pickle.", prices:{ "250":200, "500":350, "1000":700 } },
+    { id:"amla", category:"pickles", name:"Amla Pickle", desc:"Spicy, tangy amla pickle.", prices:{ "250":200, "500":350, "1000":700 } },
+    { id:"lemon", category:"pickles", name:"Lemon Pickle", desc:"Juicy marinated lemon pickle.", prices:{ "250":200, "500":350, "1000":700 } },
 
     { id:"kandi-podi", category:"powders", name:"Kandi Podi", desc:"Toor Dal Powder – spicy lentil powder.", prices:{ "500":300, "1000":600 } },
     { id:"karapu-podi", category:"powders", name:"Karapu podi (Nalla karam)", desc:"Hot, spicy and tangy powder.", prices:{ "500":300, "1000":600 } },
@@ -1877,7 +1877,7 @@
     } else {
       priceLine.innerHTML =
         '<span class="price-main">Rs.' + product.prices["1000"] +
-        '/kg</span> | Rs.' + product.prices["500"] + '/500gm';
+        '/kg</span> | Rs.' + product.prices["500"] + '/500gm | Rs.' + product.prices["250"] + '/250gm';
       info.appendChild(priceLine);
     }
 
@@ -1892,6 +1892,10 @@
       opt.textContent = "Combo Pack – Rs." + product.prices.combo;
       sizeSelect.appendChild(opt);
     } else {
+      const opt250 = document.createElement("option");
+      opt250.value = "250";
+      opt250.textContent = "250 gm – Rs." + product.prices["250"];
+      
       const opt500 = document.createElement("option");
       opt500.value = "500";
       opt500.textContent = "500 gm – Rs." + product.prices["500"];
@@ -1901,6 +1905,7 @@
       opt1000.value = "1000";
       opt1000.textContent = "1 kg – Rs." + product.prices["1000"];
 
+      sizeSelect.appendChild(opt250);
       sizeSelect.appendChild(opt500);
       sizeSelect.appendChild(opt1000);
     }
@@ -2064,7 +2069,7 @@
       sub.className = "cart-row-sub";
       let sizeLabel;
       if (item.size === "combo") sizeLabel = "Combo Pack";
-      else sizeLabel = item.size === "1000" ? "1 kg" : "500 gm";
+      else sizeLabel = item.size === "1000" ? "1 kg" : "500 gm" : "250 gm";
       sub.textContent = sizeLabel + " × " + item.qty;
       left.appendChild(title);
       left.appendChild(sub);
@@ -2305,6 +2310,7 @@
     if (size === "combo") return "Combo Pack";
     if (size === "1000") return "1 kg";
     if (size === "500") return "500 gm";
+    if (size === "250") return "250 gm";
     return size;
   }
 
@@ -2811,3 +2817,4 @@
 </script>
 </body>
 </html>
+
