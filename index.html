@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
   <style>
     :root {
       --bg: #fffdf7;
@@ -1777,7 +1776,7 @@
     { id:"mango-no-garlic", category:"pickles", name:"Mango Pickle (Without Garlic)", desc:"Classic taste that stays with you forever - best of all.", prices:{ "250":200, "500":350, "1000":700 } },
     { id:"magaya", category:"pickles", name:"Magaya Pickle", desc:"Sun-dried Mango pickle. An aromatic preparation that is an all-time favourite.", prices:{ "250":200, "500":350, "1000":700 } },
     { id:"bellam-avakaya", category:"pickles", name:"Bellam Avakaya", desc:"Sweet Avakaya. Blend of classic Avakaya & jaggery.", prices:{ "250":200, "500":400, "1000":800 } },
-    { id:"tomato", category:"pickles", name:"Tomato Pickle", desc:"Spicy, tangy and savoury tomato pickle.", prices:{ "250":200, "500"400:, "1000":800 } },
+    { id:"tomato", category:"pickles", name:"Tomato Pickle", desc:"Spicy, tangy and savoury tomato pickle.", prices:{ "250":200, "500":400, "1000":800 } },
     { id:"gongura", category:"pickles", name:"Gongura Pickle", desc:"Sorrel Leaves pickle, heartthrob of Telugu people.", prices:{ "250":200, "500":400, "1000":800 } },
     { id:"ginger", category:"pickles", name:"Ginger Pickle", desc:"Sweet and spicy ginger pickle for anytime and anything.", prices:{ "250":200, "500":350, "1000":700 } },
     { id:"red-chilli", category:"pickles", name:"Red Chilli Pickle", desc:"Red Chilli Pickle, Korivi Karam – spicy earthy flavour.", prices:{ "250":200, "500":400, "1000":800 } },
@@ -2069,7 +2068,11 @@
       sub.className = "cart-row-sub";
       let sizeLabel;
       if (item.size === "combo") sizeLabel = "Combo Pack";
-      else sizeLabel = item.size === "1000" ? "1 kg" : "500 gm" : "250 gm";
+      if (item.size === "combo") sizeLabel = "Combo Pack";
+        else if (item.size === "1000") sizeLabel = "1 kg";
+          else if (item.size === "500") sizeLabel = "500 gm";
+            else sizeLabel = "250 gm";
+
       sub.textContent = sizeLabel + " × " + item.qty;
       left.appendChild(title);
       left.appendChild(sub);
@@ -2817,4 +2820,5 @@
 </script>
 </body>
 </html>
+
 
