@@ -1776,8 +1776,8 @@
     { id:"mango-no-garlic", category:"pickles", name:"Mango Pickle (Without Garlic)", desc:"Classic taste that stays with you forever - best of all.", prices:{ "250":200, "500":350, "1000":700 } },
     { id:"magaya", category:"pickles", name:"Magaya Pickle", desc:"Sun-dried Mango pickle. An aromatic preparation that is an all-time favourite.", prices:{ "250":200, "500":350, "1000":700 } },
     { id:"bellam-avakaya", category:"pickles", name:"Bellam Avakaya", desc:"Sweet Avakaya. Blend of classic Avakaya & jaggery.", prices:{ "250":200, "500":400, "1000":800 } },
-    { id:"tomato", category:"pickles", name:"Tomato Pickle", desc:"Spicy, tangy and savoury tomato pickle.", prices:{ "250":200, "500":400, "1000":800 } },
-    { id:"gongura", category:"pickles", name:"Gongura Pickle", desc:"Sorrel Leaves pickle, heartthrob of Telugu people.", prices:{ "250":200, "500":400, "1000":800 } },
+    { id:"tomato", category:"pickles", name:"Tomato Pickle", desc:"Spicy, tangy and savoury tomato pickle.", prices:{ "250":200, "500":350, "1000":700 } },
+    { id:"gongura", category:"pickles", name:"Gongura Pickle", desc:"Sorrel Leaves pickle, heartthrob of Telugu people.", prices:{ "250":200, "500":350, "1000":700 } },
     { id:"ginger", category:"pickles", name:"Ginger Pickle", desc:"Sweet and spicy ginger pickle for anytime and anything.", prices:{ "250":200, "500":350, "1000":700 } },
     { id:"red-chilli", category:"pickles", name:"Red Chilli Pickle", desc:"Red Chilli Pickle, Korivi Karam – spicy earthy flavour.", prices:{ "250":200, "500":400, "1000":800 } },
     { id:"tamarind", category:"pickles", name:"Tamarind Pickle", desc:"Sharp, spicy and tangy flavoured pickle.", prices:{ "250":200, "500":350, "1000":700 } },
@@ -1875,9 +1875,9 @@
       }
     } else {
       priceLine.innerHTML =
-        '<span class="price-main">Rs.' + product.prices["1000"] +
-        '/kg</span> | Rs.' + product.prices["500"] + '/500gm | Rs.' + product.prices["250"] + '/250gm';
-      info.appendChild(priceLine);
+        '<span class="price-main">Rs.' + product.prices["250"] + '/250gm</span> | ' +
+        'Rs.' + product.prices["500"] + '/500gm | Rs.' + product.prices["1000"] + '/kg';
+         info.appendChild(priceLine);
     }
 
     const actions = document.createElement("div");
@@ -1894,11 +1894,11 @@
       const opt250 = document.createElement("option");
       opt250.value = "250";
       opt250.textContent = "250 gm – Rs." + product.prices["250"];
-      
+      opt250.selected = true;
+
       const opt500 = document.createElement("option");
       opt500.value = "500";
       opt500.textContent = "500 gm – Rs." + product.prices["500"];
-      opt500.selected = true;
 
       const opt1000 = document.createElement("option");
       opt1000.value = "1000";
@@ -2237,7 +2237,9 @@
       const item = CART[i];
       let sizeLabel;
       if (item.size === "combo") sizeLabel = "Combo Pack";
-      else sizeLabel = item.size === "1000" ? "1 kg" : "500 gm";
+      else if (item.size === "1000") sizeLabel = "1 kg";
+      else if (item.size === "500") sizeLabel = "500 gm";
+      else sizeLabel = "250 gm";
       const line =
         "- " + item.name + " (" + sizeLabel + ") x " + item.qty +
         " = Rs." + (item.unitPrice * item.qty);
@@ -2820,5 +2822,6 @@
 </script>
 </body>
 </html>
+
 
 
