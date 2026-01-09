@@ -1201,6 +1201,158 @@
       color: transparent;
       font-weight: 800;
     }
+    /* ======= PREMIUM MENU ======= */
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.nav-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(15,91,79,0.15);
+  box-shadow: 0 6px 18px rgba(15,91,79,0.12);
+}
+
+.main-nav a {
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: var(--accent);
+  position: relative;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.main-nav a:hover {
+  background: linear-gradient(135deg,#ffe0b2,#fff3e0);
+  color: var(--accent-2);
+  transform: translateY(-1px);
+}
+
+.main-nav a.active {
+  background: linear-gradient(135deg,#c0392b,#e67e22);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(192,57,43,0.35);
+}
+
+/* underline glow */
+.main-nav a::after {
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:3px;
+  width:0;
+  height:2px;
+  background:#c0392b;
+  border-radius:999px;
+  transform:translateX(-50%);
+  transition:0.2s;
+}
+
+.main-nav a:hover::after {
+  width:60%;
+}
+
+/* ======= MOBILE MENU ======= */
+
+.menu-toggle {
+  display: none;
+  border: none;
+  background: linear-gradient(135deg,#0f5b4f,#1abc9c);
+  color: #fff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(15,91,79,0.35);
+}
+
+@media (max-width: 900px) {
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-left {
+    position: absolute;
+    top: 78px;
+    left: 10px;
+    right: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 18px;
+    padding: 10px;
+    display: none;
+    animation: menuDrop 0.25s ease;
+  }
+
+  .nav-left.show {
+    display: flex;
+  }
+
+  .main-nav a {
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+@keyframes menuDrop {
+  from { opacity:0; transform: translateY(-8px); }
+  to { opacity:1; transform: translateY(0); }
+}
+    /* ======= MENU LOGIC ======= */
+
+const menuToggle = document.getElementById("menuToggle");
+const navBox = document.querySelector(".nav-left");
+
+if (menuToggle && navBox) {
+  menuToggle.addEventListener("click", () => {
+    navBox.classList.toggle("show");
+  });
+}
+
+/* Active menu highlight on scroll */
+const navLinks = document.querySelectorAll(".main-nav a");
+const sections = [...navLinks].map(a => document.getElementById(a.getAttribute("href").substring(1)));
+
+window.addEventListener("scroll", () => {
+  let current = "";
+
+  sections.forEach(sec => {
+    if (!sec) return;
+    const top = sec.offsetTop - 120;
+    if (pageYOffset >= top) current = sec.id;
+  });
+
+  navLinks.forEach(a => {
+    a.classList.remove("active");
+    if (a.getAttribute("href") === "#" + current) {
+      a.classList.add("active");
+    }
+  });
+});
+
+/* close menu after click (mobile) */
+navLinks.forEach(a => {
+  a.addEventListener("click", () => {
+    if (navBox.classList.contains("show")) {
+      navBox.classList.remove("show");
+    }
+  });
+});
   </style>
 </head>
 
@@ -1215,13 +1367,19 @@
   </div>
 
   <nav>
-    <a href="#pickles">PICKLES</a>
-    <a href="#powders">POWDERS</a>
-    <a href="#combos">COMBOS</a>
-    <a href="#offers">OFFERS</a>
-    <a href="#reviews">REVIEWS</a>
-    <a href="#my-orders">MY ORDERS</a>
-    <a href="#track-order">TRACK ORDER</a>
+    <nav class="main-nav">
+  <div class="nav-left">
+    <button class="menu-toggle" id="menuToggle">☰</button>
+    <a href="#pickles">🥭 Pickles</a>
+    <a href="#powders">🌶 Powders</a>
+    <a href="#combos">🎁 Combos</a>
+    <a href="#offers">🔥 Offers</a>
+    <a href="#reviews">⭐ Reviews</a>
+    <a href="#my-orders">📦 My Orders</a>
+    <a href="#track-order">🚚 Track</a>
+  </div>
+</nav>
+
   </nav>
 
   <div class="search-wrap">
@@ -2822,6 +2980,7 @@
 </script>
 </body>
 </html>
+
 
 
 
