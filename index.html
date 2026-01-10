@@ -1315,44 +1315,6 @@
 }
     /* ======= MENU LOGIC ======= */
 
-const menuToggle = document.getElementById("menuToggle");
-const navBox = document.querySelector(".nav-left");
-
-if (menuToggle && navBox) {
-  menuToggle.addEventListener("click", () => {
-    navBox.classList.toggle("show");
-  });
-}
-
-/* Active menu highlight on scroll */
-const navLinks = document.querySelectorAll(".main-nav a");
-const sections = [...navLinks].map(a => document.getElementById(a.getAttribute("href").substring(1)));
-
-window.addEventListener("scroll", () => {
-  let current = "";
-
-  sections.forEach(sec => {
-    if (!sec) return;
-    const top = sec.offsetTop - 120;
-    if (pageYOffset >= top) current = sec.id;
-  });
-
-  navLinks.forEach(a => {
-    a.classList.remove("active");
-    if (a.getAttribute("href") === "#" + current) {
-      a.classList.add("active");
-    }
-  });
-});
-
-/* close menu after click (mobile) */
-navLinks.forEach(a => {
-  a.addEventListener("click", () => {
-    if (navBox.classList.contains("show")) {
-      navBox.classList.remove("show");
-    }
-  });
-});
   </style>
 </head>
 
@@ -1366,8 +1328,7 @@ navLinks.forEach(a => {
     </div>
   </div>
 
-  <nav>
-    <nav class="main-nav">
+  <nav class="main-nav">
   <div class="nav-left">
     <button class="menu-toggle" id="menuToggle">☰</button>
     <a href="#pickles">🥭 Pickles</a>
@@ -1379,7 +1340,6 @@ navLinks.forEach(a => {
     <a href="#track-order">🚚 Track</a>
   </div>
 </nav>
-
   </nav>
 
   <div class="search-wrap">
@@ -1903,6 +1863,48 @@ navLinks.forEach(a => {
 </div>
 
 <script>
+  /* ===== MOBILE MENU LOGIC ===== */
+
+document.addEventListener("DOMContentLoaded", function () {
+  const menuToggle = document.getElementById("menuToggle");
+  const navBox = document.querySelector(".nav-left");
+
+  if (menuToggle && navBox) {
+    menuToggle.addEventListener("click", () => {
+      navBox.classList.toggle("show");
+    });
+  }
+
+  const navLinks = document.querySelectorAll(".main-nav a");
+  const sections = [...navLinks].map(a =>
+    document.getElementById(a.getAttribute("href").substring(1))
+  );
+
+  window.addEventListener("scroll", () => {
+    let current = "";
+    sections.forEach(sec => {
+      if (!sec) return;
+      const top = sec.offsetTop - 120;
+      if (pageYOffset >= top) current = sec.id;
+    });
+
+    navLinks.forEach(a => {
+      a.classList.remove("active");
+      if (a.getAttribute("href") === "#" + current) {
+        a.classList.add("active");
+      }
+    });
+  });
+
+  navLinks.forEach(a => {
+    a.addEventListener("click", () => {
+      if (navBox.classList.contains("show")) {
+        navBox.classList.remove("show");
+      }
+    });
+  });
+});
+
   const SHEETS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
   const OWNER_WHATSAPP_NUMBER = "917075535180";
   const UPI_ID = "tarunkrishna7651@ybl";
@@ -3010,6 +3012,7 @@ navLinks.forEach(a => {
 </script>
 </body>
 </html>
+
 
 
 
