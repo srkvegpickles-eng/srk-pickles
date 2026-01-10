@@ -1548,9 +1548,17 @@ navLinks.forEach(a => {
           <div id="coupon-message" class="coupon-message"></div>
         </div>
 
-        <button id="btn-wa-order" class="btn-checkout">
-          Place Order on WhatsApp ✅
+        <button id="btn-pay-now" class="btn-checkout" style="background:#c0392b;">
+        💳 Pay Now (UPI)
         </button>
+        <button id="btn-wa-order" class="btn-checkout" style="margin-top:6px;">
+        ✅ Place Order on WhatsApp
+        </button>
+
+        <div style="font-size:11px;color:#7a6a60;margin-top:6px;text-align:center;">
+        After UPI payment, click “Place Order on WhatsApp” and send screenshot / UTR.
+        </div>
+
       </aside>
 
       <section class="reviews-section" id="reviews" aria-label="Customer Reviews">
@@ -2923,7 +2931,7 @@ navLinks.forEach(a => {
     }
   }
 
-  document.getElementById("btn-wa-order").addEventListener("click", sendOrderOnWhatsApp);
+  document.getElementById("btn-pay-now").addEventListener("click", handlePayNow);
   document.getElementById("search").addEventListener("input", renderProducts);
   document.getElementById("apply-coupon-btn").addEventListener("click", function() {
     applyCouponFromCode();
@@ -2977,9 +2985,32 @@ navLinks.forEach(a => {
       gotoSectionById(id);
     });
   });
+  function handlePayNow() {
+  if (!CART.length) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  const totals = getTotals();
+  if (totals.grand <= 0) {
+    alert("Invalid amount.");
+    return;
+  }
+
+  const upiLink = buildUpiLink(totals.grand);
+
+  // open UPI app
+  window.location.href = upiLink;
+
+  // friendly reminder
+  setTimeout(function(){
+    alert("After completing payment, please return and click 'Place Order on WhatsApp' to confirm your order.");
+  }, 1200);
+}
 </script>
 </body>
 </html>
+
 
 
 
