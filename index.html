@@ -2393,7 +2393,7 @@ document.addEventListener("DOMContentLoaded", function () {
     text += "Name: " + encodeURIComponent(name) + "%0A";
     text += "Phone: " + encodeURIComponent(phone) + "%0A";
     text += "Address: " + encodeURIComponent(addr) + "%0A";
-    text += "Payment Method: " + encodeURIComponent(paymentMethod) + "%0A%0A";
+    Payment Method: UPI
 
     text += "Items:%0A";
     for (let i = 0; i < CART.length; i++) {
@@ -2419,7 +2419,7 @@ document.addEventListener("DOMContentLoaded", function () {
       text += "%0ACoupon Used: " + encodeURIComponent(APPLIED_COUPON.code);
     }
 
-    if (paymentMethod === "PhonePe" || paymentMethod === "Google Pay") {
+    if (paymentMethod === "UPI") {
       const upiLink = buildUpiLink(totals.grand);
       text += "%0A%0AUPI Mobile: " + encodeURIComponent(UPI_MOBILE);
       text += "%0AUPI ID: " + encodeURIComponent(UPI_ID);
@@ -3007,6 +3007,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 </body>
 </html>
+
 
 
 
