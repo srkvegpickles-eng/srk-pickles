@@ -1488,11 +1488,21 @@
          <input type="radio" name="payment" value="Cash on Delivery" />
           Cash on Delivery (COD)
         </label>
-         <div class="upi-info">
-          UPI Mobile Number: <strong>70755 35180</strong><br/>
-          UPI ID: <strong>tarunkrishna7651@ybl</strong><br/>
-          After payment, please share screenshot / UTR on WhatsApp.
+         <div id="upi-qr-box" style="display:none; text-align:center; margin-top:10px;">
+         <div style="font-weight:700; margin-bottom:6px; color:#0f5b4f;">
+          Scan & Pay via UPI
         </div>
+       <img
+        id="upi-qr-img"
+        src=""
+        alt="UPI QR Code"
+        style="width:220px; height:220px; border:1px dashed #e6dcd1; border-radius:12px; padding:6px; background:#fff;"
+      />
+      <div style="font-size:11px; color:#7a6a60; margin-top:6px;">
+      After payment, share screenshot / UTR on WhatsApp.
+      </div>
+    </div>
+
       </div>
         <div class="coupon-box">
           <label for="coupon-code">Have a coupon?</label>
@@ -1506,7 +1516,7 @@
         <button id="btn-pay-now" class="btn-checkout" style="background:#c0392b;">
         💳 Pay Now (UPI)
         </button>
-        <button id="btn-wa-order" class="btn-checkout">
+        <button id="btn-wa-order" class="btn-checkout" style="display:none;">
         Place Order on WhatsApp ✅
         </button>
         
@@ -2261,6 +2271,7 @@ document.addEventListener("DOMContentLoaded", function () {
         plusBtn.addEventListener("click", function () {
           CART[index].qty += 1;
           renderCart();
+          updatePaymentUI();
         });
 
         const removeBtn = document.createElement("button");
@@ -3004,9 +3015,46 @@ document.addEventListener("DOMContentLoaded", function () {
     alert("After completing payment, please return and click 'Place Order on WhatsApp' to confirm your order.");
   }, 1200);
 }
+  function updatePaymentUI() {
+  const selected = getSelectedPaymentMethod();
+  const qrBox = document.getElementById("upi-qr-box");
+  const qrImg = document.getElementById("upi-qr-img");
+  const orderBtn = document.getElementById("btn-wa-order");
+
+  if (!selected) {
+    if (qrBox) qrBox.style.display = "none";
+    if (orderBtn) orderBtn.style.display = "none";
+    return;
+  }
+
+  // Always show Place Order button once a method is selected
+  if (orderBtn) orderBtn.style.display = "block";
+
+  // If UPI selected → show QR, else hide it
+  if (selected === "UPI") {
+    const totals = getTotals();
+    const upiLink = buildUpiLink(totals.grand);
+
+    // Free QR generator
+    const qrUrl =
+      "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+      encodeURIComponent(upiLink);
+
+    if (qrImg) qrImg.src = qrUrl;
+    if (qrBox) qrBox.style.display = "block";
+  } else {
+    if (qrBox) qrBox.style.display = "none";
+  }
+}
+
+// Attach change event to payment radios
+document.querySelectorAll('input[name="payment"]').forEach(function(radio) {
+  radio.addEventListener("change", updatePaymentUI);
+});
 </script>
 </body>
 </html>
+
 
 
 
