@@ -2271,7 +2271,6 @@ document.addEventListener("DOMContentLoaded", function () {
         plusBtn.addEventListener("click", function () {
           CART[index].qty += 1;
           renderCart();
-          updatePaymentUI();
         });
 
         const removeBtn = document.createElement("button");
@@ -2307,6 +2306,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       deliverySpan.classList.remove("delivery-free");
     }
+    updatePaymentUI();
   }
 
   function sendOrderToGoogleSheets(orderData) {
@@ -2398,48 +2398,42 @@ document.addEventListener("DOMContentLoaded", function () {
     return "upi://pay?" + params.toString();
   }
 
-  function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId) {
-    let text = "New SRK Pickles Order%0A%0A";
-    text += "Order ID: " + encodeURIComponent(orderId) + "%0A";
-    text += "Name: " + encodeURIComponent(name) + "%0A";
-    text += "Phone: " + encodeURIComponent(phone) + "%0A";
-    text += "Address: " + encodeURIComponent(addr) + "%0A";
-    Payment Method: UPI
+function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId) {
+  let text = "New SRK Pickles Order%0A%0A";
+  text += "Order ID: " + encodeURIComponent(orderId) + "%0A";
+  text += "Name: " + encodeURIComponent(name) + "%0A";
+  text += "Phone: " + encodeURIComponent(phone) + "%0A";
+  text += "Address: " + encodeURIComponent(addr) + "%0A";
+  text += "Payment Method: " + encodeURIComponent(paymentMethod) + "%0A%0A";
 
-    text += "Items:%0A";
-    for (let i = 0; i < CART.length; i++) {
-      const item = CART[i];
-      let sizeLabel;
-      if (item.size === "combo") sizeLabel = "Combo Pack";
-      else if (item.size === "1000") sizeLabel = "1 kg";
-      else if (item.size === "500") sizeLabel = "500 gm";
-      else sizeLabel = "250 gm";
-      const line =
-        "- " + item.name + " (" + sizeLabel + ") x " + item.qty +
-        " = Rs." + (item.unitPrice * item.qty);
-      text += encodeURIComponent(line) + "%0A";
-    }
+  text += "Items:%0A";
+  CART.forEach(item => {
+    let sizeLabel =
+      item.size === "combo" ? "Combo Pack" :
+      item.size === "1000" ? "1 kg" :
+      item.size === "500" ? "500 gm" : "250 gm";
 
-    text += "%0ASubtotal: Rs." + totals.subtotal;
-    text += "%0AAuto Discount: Rs." + totals.autoDiscount;
-    text += "%0ACoupon Discount: Rs." + totals.couponDiscount;
-    text += "%0ADelivery: Rs." + totals.delivery;
-    text += "%0ATotal Payable: Rs." + totals.grand;
+    const line = `- ${item.name} (${sizeLabel}) x ${item.qty} = Rs.${item.unitPrice * item.qty}`;
+    text += encodeURIComponent(line) + "%0A";
+  });
 
-    if (APPLIED_COUPON) {
-      text += "%0ACoupon Used: " + encodeURIComponent(APPLIED_COUPON.code);
-    }
+  text += "%0A--- Bill ---";
+  text += "%0ASubtotal: Rs." + totals.subtotal;
+  text += "%0AAuto Discount: Rs." + totals.autoDiscount;
+  text += "%0ACoupon Discount: Rs." + totals.couponDiscount;
+  text += "%0ADelivery: Rs." + totals.delivery;
+  text += "%0ATotal Payable: Rs." + totals.grand;
 
-    if (paymentMethod === "UPI") {
-      const upiLink = buildUpiLink(totals.grand);
-      text += "%0A%0AUPI Mobile: " + encodeURIComponent(UPI_MOBILE);
-      text += "%0AUPI ID: " + encodeURIComponent(UPI_ID);
-      text += "%0AUPI Payment Link (tap to pay):%0A" + encodeURIComponent(upiLink);
-      text += "%0A%0A(Note: Once paid, please share payment screenshot / UTR on WhatsApp.)";
-    }
-
-    return text;
+  if (paymentMethod === "UPI") {
+    const upiLink = buildUpiLink(totals.grand);
+    text += "%0A%0AUPI ID: " + encodeURIComponent(UPI_ID);
+    text += "%0AUPI Mobile: " + encodeURIComponent(UPI_MOBILE);
+    text += "%0AUPI Link: " + encodeURIComponent(upiLink);
+    text += "%0A(Please share payment screenshot / UTR)";
   }
+
+  return text;
+}
 
   const ORDERS_STORAGE_KEY = "srk_orders_history";
 
@@ -2959,11 +2953,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   renderProducts();
   renderCart();
+  updatePaymentUI();
   initCountdown();
   initOfferModal();
   loadStoredReviews();
   updateReviewsSummary();
   renderOrdersHistory();
+
 
   function gotoSectionById(id) {
     const target = document.getElementById(id);
@@ -3019,31 +3015,27 @@ document.addEventListener("DOMContentLoaded", function () {
   const selected = getSelectedPaymentMethod();
   const qrBox = document.getElementById("upi-qr-box");
   const qrImg = document.getElementById("upi-qr-img");
+  const payBtn = document.getElementById("btn-pay-now");
   const orderBtn = document.getElementById("btn-wa-order");
 
-  if (!selected) {
-    if (qrBox) qrBox.style.display = "none";
-    if (orderBtn) orderBtn.style.display = "none";
-    return;
-  }
+  if (!selected) return;
 
-  // Always show Place Order button once a method is selected
-  if (orderBtn) orderBtn.style.display = "block";
+  orderBtn.style.display = "block";
 
-  // If UPI selected → show QR, else hide it
   if (selected === "UPI") {
+    payBtn.style.display = "block";
+
     const totals = getTotals();
     const upiLink = buildUpiLink(totals.grand);
 
-    // Free QR generator
-    const qrUrl =
+    qrImg.src =
       "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
       encodeURIComponent(upiLink);
 
-    if (qrImg) qrImg.src = qrUrl;
-    if (qrBox) qrBox.style.display = "block";
+    qrBox.style.display = "block";
   } else {
-    if (qrBox) qrBox.style.display = "none";
+    qrBox.style.display = "none";
+    payBtn.style.display = "none";
   }
 }
 
@@ -3051,9 +3043,16 @@ document.addEventListener("DOMContentLoaded", function () {
 document.querySelectorAll('input[name="payment"]').forEach(function(radio) {
   radio.addEventListener("change", updatePaymentUI);
 });
+  
+  document.getElementById("btn-wa-order").addEventListener("click", sendOrderOnWhatsApp);
+  document.querySelectorAll('input[name="payment"]').forEach(radio => {
+  radio.addEventListener("change", updatePaymentUI);
+});
+
 </script>
 </body>
 </html>
+
 
 
 
