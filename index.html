@@ -1513,16 +1513,17 @@
           <div id="coupon-message" class="coupon-message"></div>
         </div>
 
-        <button id="btn-pay-now" class="btn-checkout" style="background:#c0392b;">
-        💳 Pay Now (UPI)
+        <button id="btn-wa-order" class="btn-checkout" style="background:#25d366;">
+        🟢 Place Order on WhatsApp
         </button>
-        <button id="btn-wa-order" class="btn-checkout" style="display:none;">
-        Place Order on WhatsApp ✅
+
+        <button id="btn-pay-now" class="btn-checkout" style="background:#c0392b; animation:none;">
+        💳 Pay via UPI (Optional)
         </button>
-        
-        <div style="font-size:11px;color:#7a6a60;margin-top:6px;text-align:center;">
-        After UPI payment, click “Place Order on WhatsApp” and send screenshot / UTR.
-        </div>
+
+<div style="font-size:11px;color:#7a6a60;margin-top:6px;text-align:center;">
+After placing order on WhatsApp, you can pay via UPI or choose Cash on Delivery.
+</div>
 
       </aside>
 
@@ -2675,7 +2676,7 @@ function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId)
 
   function sendOrderOnWhatsApp() {
   if (!CART.length) {
-    alert("Please add at least one item to the cart.");
+    alert("Your cart is empty.");
     return;
   }
 
@@ -2690,7 +2691,6 @@ function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId)
   }
 
   const totals = getTotals();
-
   const orderId = "SRK" + new Date().toISOString().replace(/[-:T.Z]/g,"").slice(0,14);
 
   const orderPayload = {
@@ -2709,22 +2709,17 @@ function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId)
     createdAt: new Date().toISOString()
   };
 
-  // Save locally (My Orders)
+  // Save order
   saveOrderForHistory(orderPayload);
   renderOrdersHistory();
-
-  // Send to Google Sheets (if connected)
   sendOrderToGoogleSheets(orderPayload);
 
-  // Build WhatsApp message
   const msg = buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId);
   const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
 
-  // Open WhatsApp
   window.open(url, "_blank");
 
-  // Optional success message
-  alert("Your order is ready on WhatsApp. Please send the message to confirm ✅");
+  alert("Your order has been prepared. Please send the message on WhatsApp to confirm ✅");
 }
 
   function generateReferralCode(raw) {
@@ -3013,16 +3008,11 @@ function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId)
     alert("After completing payment, please return and click 'Place Order on WhatsApp' to confirm your order.");
   }, 1200);
 }
-  function updatePaymentUI() {
+ function updatePaymentUI() {
   const selected = getSelectedPaymentMethod();
   const qrBox = document.getElementById("upi-qr-box");
   const qrImg = document.getElementById("upi-qr-img");
   const payBtn = document.getElementById("btn-pay-now");
-  const orderBtn = document.getElementById("btn-wa-order");
-
-  if (!selected) return;
-
-  orderBtn.style.display = "block";
 
   if (selected === "UPI") {
     payBtn.style.display = "block";
@@ -3054,6 +3044,7 @@ document.querySelectorAll('input[name="payment"]').forEach(function(radio) {
 </script>
 </body>
 </html>
+
 
 
 
