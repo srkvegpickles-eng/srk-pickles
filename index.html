@@ -2674,56 +2674,58 @@ function buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId)
   }
 
   function sendOrderOnWhatsApp() {
-    if (!CART.length) {
-      alert("Please add at least one item to the cart.");
-      return;
-    }
-
-    const name = document.getElementById("cust-name").value.trim();
-    const phone = document.getElementById("cust-phone").value.trim();
-    const addr = document.getElementById("cust-address").value.trim();
-    const paymentMethod = getSelectedPaymentMethod();
-
-    if (!name || !phone || !addr) {
-      alert("Please fill Name, Phone and Address.");
-      return;
-    }
-    if (!paymentMethod) {
-      alert("Please select a payment method.");
-      return;
-    }
-
-    const totals = getTotals();
-    if (totals.grand <= 0) {
-      alert("Total amount is zero.");
-      return;
-    }
-
-    const orderId = "SRK" + new Date().toISOString().replace(/[-:T.Z]/g,"").slice(0,14);
-
-    const orderPayload = {
-      orderId: orderId,
-      name: name,
-      phone: phone,
-      address: addr,
-      cart: CART,
-      subtotal: totals.subtotal,
-      autoDiscount: totals.autoDiscount,
-      couponDiscount: totals.couponDiscount,
-      delivery: totals.delivery,
-      total: totals.grand,
-      paymentMethod: paymentMethod,
-      couponCode: APPLIED_COUPON ? APPLIED_COUPON.code : null,
-      createdAt: new Date().toISOString()
-    };
-    sendOrderToGoogleSheets(orderPayload);
-    saveOrderForHistory(orderPayload);
-    renderOrdersHistory();
-
-    const msg = buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId);
-    const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
-    window.open(url, "_blank");
+  if (!CART.length) {
+    alert("Please add at least one item to the cart.");
+    return;
   }
+
+  const name = document.getElementById("cust-name").value.trim();
+  const phone = document.getElementById("cust-phone").value.trim();
+  const addr = document.getElementById("cust-address").value.trim();
+  const paymentMethod = getSelectedPaymentMethod();
+
+  if (!name || !phone || !addr) {
+    alert("Please fill Name, Phone and Address.");
+    return;
+  }
+
+  const totals = getTotals();
+
+  const orderId = "SRK" + new Date().toISOString().replace(/[-:T.Z]/g,"").slice(0,14);
+
+  const orderPayload = {
+    orderId,
+    name,
+    phone,
+    address: addr,
+    cart: CART,
+    subtotal: totals.subtotal,
+    autoDiscount: totals.autoDiscount,
+    couponDiscount: totals.couponDiscount,
+    delivery: totals.delivery,
+    total: totals.grand,
+    paymentMethod,
+    couponCode: APPLIED_COUPON ? APPLIED_COUPON.code : null,
+    createdAt: new Date().toISOString()
+  };
+
+  // Save locally (My Orders)
+  saveOrderForHistory(orderPayload);
+  renderOrdersHistory();
+
+  // Send to Google Sheets (if connected)
+  sendOrderToGoogleSheets(orderPayload);
+
+  // Build WhatsApp message
+  const msg = buildWhatsAppMessage(name, phone, addr, paymentMethod, totals, orderId);
+  const url = "https://wa.me/" + OWNER_WHATSAPP_NUMBER + "?text=" + msg;
+
+  // Open WhatsApp
+  window.open(url, "_blank");
+
+  // Optional success message
+  alert("Your order is ready on WhatsApp. Please send the message to confirm ✅");
+}
 
   function generateReferralCode(raw) {
     const base = raw.replace(/\s+/g,'').toUpperCase().slice(0,8);
@@ -3052,6 +3054,7 @@ document.querySelectorAll('input[name="payment"]').forEach(function(radio) {
 </script>
 </body>
 </html>
+
 
 
 
